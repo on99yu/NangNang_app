@@ -1,0 +1,16 @@
+.b_category {
+  padding-top: 175px;
+  margin-bottom: 260px; /* add margin to create space below */
+  border: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+
+  top: -170px;
+  gap: 150px;
+  border-bottom: 1px solid #ccc;
+}
