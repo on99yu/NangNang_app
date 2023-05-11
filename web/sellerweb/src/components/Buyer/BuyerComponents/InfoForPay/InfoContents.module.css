@@ -1,0 +1,21 @@
+.info_contents {
+  padding-top: 10px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 1365px;
+  position: relative;
+  top: -400px;
+}
+.info_contents > div {
+  flex: 1;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+  display: flex;
+}
+
+.info_contents > div:last-child {
+  margin-right: 0;
+  border-right: none;
+}

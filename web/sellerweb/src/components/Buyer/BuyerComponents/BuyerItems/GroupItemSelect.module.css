@@ -1,0 +1,8 @@
+.group_select {
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+  top: -20px;
+}
