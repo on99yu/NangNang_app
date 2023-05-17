@@ -1,0 +1,22 @@
+.buyerinfo {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+  top: -20px;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  justify-content: space-between;
+}
+
+.b_info {
+  color: #00a2ae;
+}
+
+.update {
+  text-decoration: underline;
+}

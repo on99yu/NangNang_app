@@ -1,0 +1,55 @@
+.paymentrecords_wrap {
+  border: 1px solid black;
+  width: 100%;
+  max-width: 881px;
+  height: 100%;
+  min-height: 440px;
+  padding: 20px 30px 20px 30px;
+}
+
+.paymentrecords {
+  width: 100%;
+  height: 100%;
+  min-height: 440px;
+}
+
+.paymentrecords_text {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.paymentrecords_table_wrap {
+  padding: 20px 30px 20px 30px;
+  width: 100%;
+  max-width: 821px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+}
+
+.check_table {
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  height: 20px;
+  border-bottom: 1px solid black;
+}
+
+.check_table_text {
+  padding-right: 10px;
+  font-weight: 600;
+}
+
+.date_bar {
+  padding-right: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.check_table_button {
+  width: 50px;
+  background-color: #ccc;
+  font-weight: 600;
+}
