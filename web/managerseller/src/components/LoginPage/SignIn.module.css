@@ -1,0 +1,35 @@
+.wrap {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signbuttons {
+  display: flex;
+  flex-direction: row;
+  height:50px;
+  width: 200px;
+  gap: 20px;
+}
+
+.signinbutton {
+  background-color: aqua;
+
+}
+
+.signupbutton {
+  background-color: aqua;
+
+}

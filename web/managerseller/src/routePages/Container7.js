@@ -1,8 +1,8 @@
-import classes from "./Container.module.css";
-import Header from "../components/Header/Header";
-import Category from "../components/Category/Category";
-import Footer from "../components/Footer/Footer";
-import WalletView from "../components/ContainerComponents/BlockchainManager/WalletView/WalletView";
+import classes from './Container.module.css';
+import Header from '../components/MainPage/Header/Header';
+import Category from '../components/MainPage/Category/Category';
+import Footer from '../components/MainPage/Footer/Footer';
+import WalletView from '../components/MainPage/ContainerComponents/BlockchainManager/WalletView/WalletView';
 
 const Container7 = () => {
   return (
