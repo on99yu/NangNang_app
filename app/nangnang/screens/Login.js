@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { Image, Text, View, StyleSheet} from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../constants/colors';
 import HeaderLogo from '../components/HeaderLogo';
 import InputText from '../components/InputText';
@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
             [key]: value,
         }));
     }
-    const LoginHandler = () => {
+    const LoginHandler = async () => {
         axios({
             method:"POST",
             url:"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
@@ -42,14 +42,16 @@ const Login = ({ navigation }) => {
                 password:loginInput.password,
             }
         }).then((res)=>{
+            const uid = res.data.localId
             setUser(res.data);
             console.log(res.data);
+            console.log(uid)
         }).catch((e)=>{
             console.log(e.message);
         }).finally(()=>{
             setIsloading(false);
         })
-
+        await AsyncStorage.setItem('userId',uid);
     }
 
     return (

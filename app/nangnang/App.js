@@ -5,12 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 import Colors from './constants/colors';
-import GetStarted from './screens/GetStarted';
 import Login from './screens/Login';
 import Main from './screens/Main';
-import MyWallets from './screens/MyWallets';
+import SelectWallet from './screens/SelectWallet';
 import Register from './screens/Register';
-
+import MyWallets from './screens/MyWallets';
 
 import QRCodeScanner from './screens/QRCodeScanner';
 import Payinfo from './screens/Payinfo'
@@ -37,9 +36,10 @@ const Navigator = () =>{
   return (
       <Stack.Navigator screenOptions={{headerShown : false}}>
         <Stack.Screen name="Main" component={Main}/>
-        <Stack.Screen name="MyWallets" component={MyWallets}/>
+        <Stack.Screen name="SelectWallet" component={SelectWallet}/>
         <Stack.Screen name="Payinfo" component={Payinfo}/>
         <Stack.Screen name="QRCodeScanner" component={QRCodeScanner}/>
+        <Stack.Screen name="MyWallets" component={MyWallets}/>
       </Stack.Navigator>
   )
 }
