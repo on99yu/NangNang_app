@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect,useContext} from 'react';
 import { SafeAreaView, StyleSheet, Text, View, BackHandler, Alert} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -15,13 +15,13 @@ import QRCodeScanner from './screens/QRCodeScanner';
 import Payinfo from './screens/Payinfo'
 
 import AuthProvider from './constants/AuthContext';
-import { useAuth } from './constants/AuthContext';
+import {AuthContext } from './constants/AuthContext';
 import PayinfoProvider from './constants/PayinfoContext';
+import { useAuth } from './constants/AuthContext';
 const Stack = createNativeStackNavigator();
 
 const Navigator = () =>{
   const [user] = useAuth();
-
   if(!user){
     return (
         <Stack.Navigator screenOptions={{headerShown : false}}>
