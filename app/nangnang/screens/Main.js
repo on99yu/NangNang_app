@@ -12,14 +12,14 @@ const Main = ({ navigation }) => {
             <View style={styles.ButtonView}>
                 <SubmitButton
                     onPress={()=>navigation.navigate('MyWallets')}
-                    >지갑등록 / 지갑확인</SubmitButton>
+                    >내 지갑 / 지갑 등록</SubmitButton>
                 <SubmitButton>내 결제 내역</SubmitButton>
                 <SubmitButton>내 정보</SubmitButton>
-                <Pressable
+                {/* <Pressable
                     style={styles.button}
                     onPress={()=>navigation.navigate('MyWallets')}>
                     <Text style={styles.text}>결제하러가기</Text>
-                </Pressable>
+                </Pressable> */}
                 <TouchableOpacity onPress={()=>navigation.navigate('QRCodeScanner')}>
                     <Image
                         style={styles.QRcode} 
