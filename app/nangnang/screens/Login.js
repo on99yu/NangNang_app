@@ -18,12 +18,19 @@ import { useAuth } from '../constants/AuthContext';
 const Login = ({ navigation }) => {
     const [isLoading, setIsloading] =useState(false);
     const [loginInput, setLoginInput] = useState({
-        email:"dgjjanggu@gmail.com",
-        password:"dg990912@@",
+        email:"test@gmail.com",
+        password:"test123",
     });
-
+// test@gmail.com
+// test123
+// test2@gmail.com
+// test2123
     const [_, setUser] = useAuth();
-
+    const setuid = async (uid) =>{
+        await AsyncStorage.setItem('userId',uid)
+        const res = await AsyncStorage.getItem('userId')
+        console.log(res)
+    }
     const LoginInputHandler = (key, value) => {
         setLoginInput(prevState => ({
             ...prevState,
@@ -44,14 +51,13 @@ const Login = ({ navigation }) => {
         }).then((res)=>{
             const uid = res.data.localId
             setUser(res.data);
+            setuid(uid);
             console.log(res.data);
-            console.log(uid)
         }).catch((e)=>{
             console.log(e.message);
         }).finally(()=>{
             setIsloading(false);
         })
-        await AsyncStorage.setItem('userId',uid);
     }
 
     return (
