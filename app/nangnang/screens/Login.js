@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { Image, Text, View, StyleSheet} from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
@@ -9,8 +9,8 @@ import InputText from '../components/InputText';
 import ScreenTitle from '../components/ScreenTitle';
 import SubmitButton from '../components/Buttons/SubmitButton';
 import GoogleButton from '../components/Buttons/GoogleButton';
+import { AuthContext } from '../constants/AuthContext';
 import { useAuth } from '../constants/AuthContext';
-
 // web : 185496097106-sp0mrog1pvfhkg0kijstue30hf0ugtf6.apps.googleusercontent.com
 // IOS : 185496097106-9losums1qg0iljj25kgt1krhcsp4h5eg.apps.googleusercontent.com
 // Android : 185496097106-35agk1e07b0h6t2egjm0sdh88odo1u5k.apps.googleusercontent.com
@@ -18,18 +18,27 @@ import { useAuth } from '../constants/AuthContext';
 const Login = ({ navigation }) => {
     const [isLoading, setIsloading] =useState(false);
     const [loginInput, setLoginInput] = useState({
-        email:"dgjjanggu@gmail.com",
-        password:"dg990912@@",
+        email:"test@gmail.com",
+        password:"test123",
+        // test@gmail.com
+        // test123
+        // test2@gmail.com
+        // test2123
     });
-
-    const [_, setUser] = useAuth();
-
+3
+    const setuid = async (uid) =>{
+        await AsyncStorage.setItem('userId',uid)
+        const res = await AsyncStorage.getItem('userId')
+        console.log(res)
+    }
     const LoginInputHandler = (key, value) => {
         setLoginInput(prevState => ({
             ...prevState,
             [key]: value,
         }));
     }
+
+    const [user,setUser] = useAuth();
     const LoginHandler = async () => {
         axios({
             method:"POST",
@@ -43,15 +52,13 @@ const Login = ({ navigation }) => {
             }
         }).then((res)=>{
             const uid = res.data.localId
-            setUser(res.data);
-            console.log(res.data);
-            console.log(uid)
+            setUser(res.data)
+            setuid(uid);
         }).catch((e)=>{
             console.log(e.message);
         }).finally(()=>{
             setIsloading(false);
         })
-        await AsyncStorage.setItem('userId',uid);
     }
 
     return (

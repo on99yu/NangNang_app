@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Pressable,Image } from 'react-native';
 
 import Colors from '../constants/colors';
 import Logo from '../components/Logo';
 import SubmitButton from '../components/Buttons/SubmitButton';
-
+import { usePayinfo } from '../constants/PayinfoContext';
+import { useAuth } from '../constants/AuthContext';
+import { AuthContext } from '../constants/AuthContext';
 const Main = ({ navigation }) => {
+
+    const [payinfo] = usePayinfo();
+    const [user] = useAuth();
+    const logoutHandler = ()=>{
+        setUser(null)
+    }
     return (
         <View style={styles.MainView}>
             <Logo/>
@@ -15,11 +23,14 @@ const Main = ({ navigation }) => {
                     >내 지갑 / 지갑 등록</SubmitButton>
                 <SubmitButton>내 결제 내역</SubmitButton>
                 <SubmitButton>내 정보</SubmitButton>
-                {/* <Pressable
+                {user && (<SubmitButton
+                    onPress={logoutHandler}>로그아웃</SubmitButton>)}
+                {payinfo && ( 
+                    <Pressable
                     style={styles.button}
-                    onPress={()=>navigation.navigate('MyWallets')}>
+                    onPress={()=>navigation.navigate('SelectWallet')}>
                     <Text style={styles.text}>결제하러가기</Text>
-                </Pressable> */}
+                </Pressable>)}
                 <TouchableOpacity onPress={()=>navigation.navigate('QRCodeScanner')}>
                     <Image
                         style={styles.QRcode} 

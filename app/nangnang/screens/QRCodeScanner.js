@@ -22,27 +22,24 @@ function QRCodeScanner ({navigation}){
     })();
   },[]);
 
-  let time = new Date();
-  const dummydata={
-    Name:"kimchi",
-    Price:"5000",
-    Wallet:"metamask",
-    Coin:"ETH",
-    WalletKey:"******",
-    PaymentTime: time.toLocaleString()
-  }
-
   const handlerBarCodeScanned = ({type, data})=>{
-    
+    var arrdata = data.split(',')
+
+    const Payinfo ={
+      Name:arrdata[1],
+      Price:arrdata[2],
+      Wallet:arrdata[3],
+      Coin:arrdata[4],
+      WalletKey:arrdata[5],
+    }
     if(data){
       setScanData(true);
       // setPayinfo(data);
-      setPayinfo(dummydata);
+      setPayinfo(Payinfo);
       console.log(`${data}`);
-      navigation.navigate('MyWallets');
+      navigation.navigate('SelectWallet');
     }
     else{
-      console.log(`Data: ${data.email}`);
       console.log(`Type: ${type}`);
       setScanData(false)
     }

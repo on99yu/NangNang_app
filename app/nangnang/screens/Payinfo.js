@@ -11,6 +11,7 @@ import ContentsBox from '../components/ContentsBox';
 import { usePayinfo } from '../constants/PayinfoContext';
 import { useAuth } from '../constants/AuthContext';
 const Payinfo = ({navigation}) => {
+    
     const [user] = useAuth();
     const [payinfo] = usePayinfo();
 
@@ -31,13 +32,9 @@ const Payinfo = ({navigation}) => {
                 <ContentsBox title="사용 지갑" contents={payinfo.Wallet}/>
                 <ContentsBox title="사용 코인" contents={payinfo.Coin}/>
                 <ContentsBox title="지갑 키" contents={payinfo.WalletKey}/>
-                <ContentsBox title="결제 시간" contents={payinfo.PaymentTime}/>
-                {/* <ContentsBox title="제품명" contents="내용"/>
-                <ContentsBox title="제품명" contents="내용"/>
-                <ContentsBox title="제품명" contents="내용"/> */}
             </ScrollView>
             <View style={styles.button}>
-                <SubmitButton onPress={() => navigation.navigate('MyWallets')}>지갑 선택으로</SubmitButton>
+                <SubmitButton onPress={() => navigation.navigate('SelectWallet')}>지갑 선택으로</SubmitButton>
             </View>
         </View>
     );
