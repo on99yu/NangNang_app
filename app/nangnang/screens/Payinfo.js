@@ -7,12 +7,10 @@ import ScreenTitle from '../components/ScreenTitle';
 import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
 import ContentsBox from '../components/ContentsBox';
+import { usePayinfo } from '../context/PayinfoContext';
 
-import { usePayinfo } from '../constants/PayinfoContext';
-import { useAuth } from '../constants/AuthContext';
 const Payinfo = ({navigation}) => {
     
-    const [user] = useAuth();
     const [payinfo] = usePayinfo();
 
 

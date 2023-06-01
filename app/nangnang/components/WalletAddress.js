@@ -7,38 +7,24 @@ import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
 
 import { AuthContext } from '../context/AuthContext';
-const WalletInputModal = (props) => {
+const WalletAddress = (props) => {
 
     const [state, dispatch] = useContext(AuthContext)
-    const [walletAddress, setWalletAddress] = useState("");
-
-    // @@@@@ State 공부해서 최적화 시켜야한다.
+    const [walletAddress, setWalletAddress] = useState("0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9");
     const [Ether, setEther] = useState(0);
-    const [Dollar, setDollar] = useState(0);
-
-    const NowBalance = async () => {
-        const address = "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9";
-        console.log(address);
-        try {
-            const response = await EtherScanAPI.get(`?module=account&action=balance&address=${address}&tag=latest&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
-            const Balance = response.data.result
-            setEther(Balance *(Math.pow(10, -18)))
-            CoinValue()
-        } catch (error) {
-            Error(error)
-        }
+    
+    const WASaveHandler = ()=>{
+            const walletName = props.title
+            saveAddress(walletName, "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9")
     }
-    const CoinValue = async ()=>{
-        try{
-            const response = await axios.get(`https://api.upbit.com/v1/ticker?markets=USDT-ETH`,{
-                headers:{
-                    Accept: 'application/json',
-                },
-            })
-            setDollar((Ether * response.data[0].trade_price).toFixed(3))
-        }catch(error){
-            Error(error)
-        }
+    
+    const saveAddress = (walletName, Address) => {
+        dispatch({
+            type:'save_address',
+            walletname : walletName,
+            walletaddress: Address,
+        })
+        console.log("save_address", state)
     }
     return (
             <Modal
@@ -48,18 +34,16 @@ const WalletInputModal = (props) => {
                     <View style={styles.centerdView}>
                     <View style={styles.modalView}>
                         <Text style={[styles.text, {fontSize: 20, color:Colors.orange500}]}>{props.title}</Text>
-                        <Text style={styles.text}>{state.email}님의 자금</Text>
-                        <Text style={styles.text}>{Ether} : 이더리움</Text>
-                        <Text style={styles.text}>{Dollar} : 달러</Text>
+                        <Text style={styles.text}>{state.email}님</Text>
                         <TextInput
                             style={styles.inputaddress}
                             placeholder="지갑주소"
                             placeholderTextColor="#A9A9AC"
                             value={walletAddress}
                             onChangeText={(e) => setWalletAddress(e)} />
-                        <FunctionButton onPress={NowBalance}>입력</FunctionButton>
-                        <FunctionButton onPress={NowBalance}>초기화</FunctionButton>
-                        <FunctionButton onPress={props.oncancel}>닫기</FunctionButton>
+                        <FunctionButton >자금 계산</FunctionButton>
+                        <FunctionButton onPress={WASaveHandler}>지갑주소 등록</FunctionButton>
+                        <FunctionButton onPress={props.oncancel} >닫기</FunctionButton>
                     </View>
                     </View>
             </Modal>
@@ -104,4 +88,4 @@ const styles = StyleSheet.create({
     },
 
 })
-export default WalletInputModal;
+export default WalletAddress;

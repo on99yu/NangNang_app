@@ -4,26 +4,28 @@ import { Text, View, StyleSheet, TouchableOpacity, Pressable,Image } from 'react
 import Colors from '../constants/colors';
 import Logo from '../components/Logo';
 import SubmitButton from '../components/Buttons/SubmitButton';
-import { usePayinfo } from '../constants/PayinfoContext';
-import { useAuth } from '../constants/AuthContext';
-import { AuthContext } from '../constants/AuthContext';
-const Main = ({ navigation }) => {
 
+import { AuthContext } from '../context/AuthContext';
+import { usePayinfo } from '../context/PayinfoContext';
+const Main = ({ navigation }) => {
+    const [state, dispatch] = useContext(AuthContext);
     const [payinfo] = usePayinfo();
-    const [user] = useAuth();
     const logoutHandler = ()=>{
-        setUser(null)
+        dispatch({
+            type:'user_logout',
+            payload: false,
+        })
     }
+
     return (
         <View style={styles.MainView}>
             <Logo/>
             <View style={styles.ButtonView}>
                 <SubmitButton
                     onPress={()=>navigation.navigate('MyWallets')}
-                    >내 지갑 / 지갑 등록</SubmitButton>
+                    >지갑 등록 / 내 정보</SubmitButton>
                 <SubmitButton>내 결제 내역</SubmitButton>
-                <SubmitButton>내 정보</SubmitButton>
-                {user && (<SubmitButton
+                {state.isLogin && (<SubmitButton
                     onPress={logoutHandler}>로그아웃</SubmitButton>)}
                 {payinfo && ( 
                     <Pressable

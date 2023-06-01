@@ -3,14 +3,16 @@ import { Image, Text, View, StyleSheet} from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import Colors from '../constants/colors';
 import HeaderLogo from '../components/HeaderLogo';
 import InputText from '../components/InputText';
 import ScreenTitle from '../components/ScreenTitle';
 import SubmitButton from '../components/Buttons/SubmitButton';
 import GoogleButton from '../components/Buttons/GoogleButton';
-import { AuthContext } from '../constants/AuthContext';
-import { useAuth } from '../constants/AuthContext';
+
+import { AuthContext } from '../context/AuthContext';
+
 // web : 185496097106-sp0mrog1pvfhkg0kijstue30hf0ugtf6.apps.googleusercontent.com
 // IOS : 185496097106-9losums1qg0iljj25kgt1krhcsp4h5eg.apps.googleusercontent.com
 // Android : 185496097106-35agk1e07b0h6t2egjm0sdh88odo1u5k.apps.googleusercontent.com
@@ -20,17 +22,10 @@ const Login = ({ navigation }) => {
     const [loginInput, setLoginInput] = useState({
         email:"test@gmail.com",
         password:"test123",
-        // test@gmail.com
-        // test123
-        // test2@gmail.com
-        // test2123
+        // test@gmail.com test123
+        // test2@gmail.com test2123
     });
-3
-    const setuid = async (uid) =>{
-        await AsyncStorage.setItem('userId',uid)
-        const res = await AsyncStorage.getItem('userId')
-        console.log(res)
-    }
+
     const LoginInputHandler = (key, value) => {
         setLoginInput(prevState => ({
             ...prevState,
@@ -38,7 +33,7 @@ const Login = ({ navigation }) => {
         }));
     }
 
-    const [user,setUser] = useAuth();
+    const [state, dispatch] =useContext(AuthContext);
     const LoginHandler = async () => {
         axios({
             method:"POST",
@@ -51,9 +46,14 @@ const Login = ({ navigation }) => {
                 password:loginInput.password,
             }
         }).then((res)=>{
-            const uid = res.data.localId
-            setUser(res.data)
-            setuid(uid);
+
+            dispatch({
+                type:'user_login',
+                payload: true,
+
+                uid: res.data.localId,
+                email: res.data.email
+            })
         }).catch((e)=>{
             console.log(e.message);
         }).finally(()=>{

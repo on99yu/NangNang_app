@@ -9,8 +9,6 @@ import InputText from '../components/InputText';
 import ScreenTitle from '../components/ScreenTitle';
 import SubmitButton from '../components/Buttons/SubmitButton';
 import GoogleButton from '../components/Buttons/GoogleButton';
-import { useAuth } from '../constants/AuthContext';
-
 
 const Register = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +19,6 @@ const Register = ({ navigation }) => {
         passwordcheck :"",
         name: "",
     });
-    const [_, setUser] = useAuth();
 
     const RegisterInputHandler = (key, value) => {
         setRegisterInput(prevState => ({
@@ -55,8 +52,6 @@ const Register = ({ navigation }) => {
                     displayName: registerInput.name,
                 }
             }).then((r)=>{
-                // console.log(res);
-                setUser({...r.data, idToken : res.data.idToken});
             }).catch((e)=>{
                 console.log(e,'update profile error');
                 alert(e.message);

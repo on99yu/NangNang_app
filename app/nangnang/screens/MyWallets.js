@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Modal} from 'react-native';
 import { Link } from '@react-navigation/native';
 
 
 import ScreenTitle from '../components/ScreenTitle';
-import WalletInputModal from '../components/WalletInputModal';
 import HeaderLogo from '../components/HeaderLogo';
 import wallets from '../constants/wallets';
-import { useAuth } from '../constants/AuthContext';
 import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
-import {WC_connector} from '../API/WC_connector';
+import { AuthContext } from '../context/AuthContext';
+import WalletAddress from '../components/WalletAddress';
 
 const formatData = (data, numColumns) =>{
 
@@ -26,7 +25,7 @@ const formatData = (data, numColumns) =>{
 
 const MyWallets = ({navigation}) => {
     
-    const [user] = useAuth();
+    const [state, dispatch] = useContext(AuthContext)
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
 
@@ -42,11 +41,14 @@ const MyWallets = ({navigation}) => {
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
                 <Link to={{screen:'Main'}} style={styles.link}>메인으로가기</Link>
-                <Text style={{color:'red'}}>사용자 : {user.email.slice(0,9)}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>
-                <ScreenTitle title="내 지갑" />
+                <ScreenTitle title="내 지갑"/>
+            </View>
+            <View style={{flex:1, width:'50%',alignSelf:'center'}}>
+                    <SubmitButton>내 정보</SubmitButton>
             </View>
             <View style={styles.WalletBlockView}>
                 <FlatList
@@ -67,7 +69,7 @@ const MyWallets = ({navigation}) => {
                                 <TouchableOpacity 
                                     style={styles.button}
                                     onPress={()=>handleListItemPress(item)}>
-                                    <Text style={[styles.indigo500,{ fontSize: 10, alignSelf: 'center' }]}>지갑 주소 입력</Text>
+                                    <Text style={[styles.indigo500,{ fontSize: 10, alignSelf: 'center' }]}>지갑 주소 등록</Text>
                                 </TouchableOpacity>
                             </View>
                         )
@@ -75,11 +77,11 @@ const MyWallets = ({navigation}) => {
                     keyExtractor={item => item.id}
                     alwaysBounceVertical={false}
                 />
-                <WalletInputModal
+            </View>
+            <WalletAddress
                     title={selectedItem.wallet}
                     visible={modalIsVisible} 
                     oncancel={CloseModalHandler}/>
-            </View>
         </View>
     );
 };
