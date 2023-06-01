@@ -4,7 +4,7 @@ import Category from '../components/MainPage/Category/Category';
 import Footer from '../components/MainPage/Footer/Footer';
 import Main from '../components/MainPage/ContainerComponents/Main/Main';
 
-const Container1 = () => {
+const MainHomePage = () => {
   return (
     <div className={classes.container}>
       <Header />
@@ -15,4 +15,4 @@ const Container1 = () => {
   );
 };
 
-export default Container1;
+export default MainHomePage;

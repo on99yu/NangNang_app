@@ -2,14 +2,17 @@ import classes from './Container.module.css';
 import Header from '../components/MainPage/Header/Header';
 import Category from '../components/MainPage/Category/Category';
 import Footer from '../components/MainPage/Footer/Footer';
-import EmptyPage from '../components/MainPage/ContainerComponents/EmptyPage/EmptyPage';
+import PaymentRecords from '../components/MainPage/ContainerComponents/NetworkManager/PaymentRecord/PaymentRecords';
 
-const Container8 = () => {
+const MainPaymentRecordsPage = () => {
   return (
     <div className={classes.container}>
-      <EmptyPage />
+      <Header />
+      <Category />
+      <PaymentRecords />
+      <Footer />
     </div>
   );
 };
 
-export default Container8;
+export default MainPaymentRecordsPage;

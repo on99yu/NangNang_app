@@ -4,7 +4,7 @@ import Category from '../components/MainPage/Category/Category';
 import Footer from '../components/MainPage/Footer/Footer';
 import NetworkManage from '../components/MainPage/ContainerComponents/WalletManager/NetworkManage/NetworkManage';
 
-const Container3 = () => {
+const MainNetworkManagePage = () => {
   return (
     <div className={classes.container}>
       <Header />
@@ -15,4 +15,4 @@ const Container3 = () => {
   );
 };
 
-export default Container3;
+export default MainNetworkManagePage;
