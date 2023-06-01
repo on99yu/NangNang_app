@@ -7,10 +7,9 @@ import ScreenTitle from '../components/ScreenTitle';
 import WalletInputModal from '../components/WalletInputModal';
 import HeaderLogo from '../components/HeaderLogo';
 import wallets from '../constants/wallets';
-import { useAuth } from '../constants/AuthContext';
 import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
-import {WC_connector} from '../API/WC_connector';
+import {WC_connector} from '../api/WC_connector';
 
 const formatData = (data, numColumns) =>{
 

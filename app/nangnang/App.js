@@ -1,51 +1,15 @@
-import React,{useEffect,useContext} from 'react';
-import { SafeAreaView, StyleSheet, Text, View, BackHandler, Alert} from 'react-native';
+import React,{useEffect} from 'react';
+import { SafeAreaView, StyleSheet, BackHandler, Alert} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 
 import Colors from './constants/colors';
-import Login from './screens/Login';
-import Main from './screens/Main';
-import SelectWallet from './screens/SelectWallet';
-import Register from './screens/Register';
-import MyWallets from './screens/MyWallets';
-
-import QRCodeScanner from './screens/QRCodeScanner';
-import Payinfo from './screens/Payinfo'
-
-import AuthProvider from './constants/AuthContext';
-import {AuthContext } from './constants/AuthContext';
-import PayinfoProvider from './constants/PayinfoContext';
-import { useAuth } from './constants/AuthContext';
-const Stack = createNativeStackNavigator();
-
-const Navigator = () =>{
-  const [user] = useAuth();
-  if(!user){
-    return (
-        <Stack.Navigator screenOptions={{headerShown : false}}>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={Register} />
-            {/* <Stack.Screen name="GetStarted" component={GetStarted} /> */}
-          {/* <Stack.Screen name="Main" component={Main} /> */}
-        </Stack.Navigator>
-    )
-  }
-
-  return (
-      <Stack.Navigator screenOptions={{headerShown : false}}>
-        <Stack.Screen name="Main" component={Main}/>
-        <Stack.Screen name="SelectWallet" component={SelectWallet}/>
-        <Stack.Screen name="Payinfo" component={Payinfo}/>
-        <Stack.Screen name="QRCodeScanner" component={QRCodeScanner}/>
-        <Stack.Screen name="MyWallets" component={MyWallets}/>
-      </Stack.Navigator>
-  )
-}
+import Navigator from './navigator/Navigator';
+import AuthProvider from './context/AuthContext';
+import PayinfoProvider from './context/PayinfoContext';
 
 
 export default function App() {
+
   useEffect(()=>{
     const backAction = ()=>{
       Alert.alert("알림","어플을 종료하시겠습니까?",[
@@ -61,7 +25,6 @@ export default function App() {
       ]);
       return true
     }
-
     const backHandler= BackHandler.addEventListener(
       "hardwareBackPress",
       backAction
@@ -71,13 +34,11 @@ export default function App() {
   return (
     // @@@ 스크린을 필요에 따라 구분하는법 배우고 해야함
     <SafeAreaView style={styles.container}>
-        <NavigationContainer>
           <AuthProvider>
             <PayinfoProvider>
               <Navigator/>
             </PayinfoProvider>
           </AuthProvider>
-        </NavigationContainer>
     </SafeAreaView>
   );
 }

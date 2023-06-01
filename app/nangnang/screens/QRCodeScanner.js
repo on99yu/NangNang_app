@@ -5,7 +5,7 @@ import { BarCodeScanner} from 'expo-barcode-scanner';
 
 import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
-import { PayinfoContext, usePayinfo } from '../constants/PayinfoContext';
+import { PayinfoContext, usePayinfo } from '../context/PayinfoContext';
 
 const {width} = Dimensions.get('window')
 
