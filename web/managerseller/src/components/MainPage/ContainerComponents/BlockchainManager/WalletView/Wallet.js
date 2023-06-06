@@ -4,7 +4,7 @@ const Wallet = (props) => {
   return (
     <>
       {props.walletImage.map((it) => (
-        <div className={classes.component_wrap}>
+        <li key={it.id} className={classes.component_wrap}>
           <div className={classes.component_components}>
             <div className={classes.component_component_no1}>
               <div className={classes.wallet_name}>{it.name}</div>
@@ -23,7 +23,7 @@ const Wallet = (props) => {
               </button>
             </div>
           </div>
-        </div>
+        </li>
       ))}
     </>
   );
