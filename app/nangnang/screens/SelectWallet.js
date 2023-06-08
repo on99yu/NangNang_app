@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Modal} from 'react-native';
 import { Link } from '@react-navigation/native';
 
@@ -34,7 +34,8 @@ const SelectWallet = ({navigation}) => {
         shortenAddress,
       } = WC_connector();
 
-    const [user] = useAuth();
+    const [payinfo] = usePayinfo();  
+    const [state, dispatch] =useContext(AuthContext);
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
 
@@ -51,13 +52,13 @@ const SelectWallet = ({navigation}) => {
 
     // sendTx 함수에서 사용하는 값인데 이건 나중에 값 받아와서 넣어야함
     // 지금은 그냥 temp 값으로 0x0을 넣어놓음
-    const valueAmount = '0x0';
+    const valueAmount = payinfo.Price;
 
     return (
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
                 <Link to={{screen:'Main'}} style={styles.link}>메인으로가기</Link>
-                <Text style={{color:'red'}}>사용자 : {user.email.slice(0,9)}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>
@@ -72,7 +73,7 @@ const SelectWallet = ({navigation}) => {
             {/* 지갑이 연결되어있다면 아래 버튼들을 출력 */}
             {connector.connected && (
                 <>
-                <Text>address : {shortenAddress(connector.accounts[0])}</Text>
+                <Text style={{color : Colors.indigo500,alignSelf:'center'}}> 지갑주소: {shortenAddress(connector.accounts[0])}</Text>
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     <SubmitButton onPress={killSession}>세션 종료</SubmitButton>
                 </View>

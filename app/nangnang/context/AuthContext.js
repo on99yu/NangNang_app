@@ -42,9 +42,6 @@ const reducer = (state, action) =>{
 
 const AuthProvider = ({children})=>{
     const [state, dispatch] = useReducer(reducer, initialState);
-    const [userInfo, setUserInfo] = useState(
-
-    );
     return(
         <AuthContext.Provider value={[state, dispatch]}>
             {children}
