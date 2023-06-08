@@ -17,14 +17,20 @@ const WalletAddress = (props) => {
             const walletName = props.title
             saveAddress(walletName, "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9")
     }
-    
+    const Initialization = (walletName)=>{
+        dispatch({
+            type: 'initialization_address',
+            walletname : props.title,
+        })
+        setWalletAddress("");
+    }
     const saveAddress = (walletName, Address) => {
         dispatch({
             type:'save_address',
             walletname : walletName,
             walletaddress: Address,
         })
-        console.log("save_address", state)
+        console.log("save_address - ", state)
     }
     return (
             <Modal
@@ -43,6 +49,7 @@ const WalletAddress = (props) => {
                             onChangeText={(e) => setWalletAddress(e)} />
                         <FunctionButton >자금 계산</FunctionButton>
                         <FunctionButton onPress={WASaveHandler}>지갑주소 등록</FunctionButton>
+                        <FunctionButton onPress={Initialization}>지갑주소 지우기</FunctionButton>
                         <FunctionButton onPress={props.oncancel} >닫기</FunctionButton>
                     </View>
                     </View>
