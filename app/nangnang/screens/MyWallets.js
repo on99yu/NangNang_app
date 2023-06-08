@@ -77,11 +77,11 @@ const MyWallets = ({navigation}) => {
                     keyExtractor={item => item.id}
                     alwaysBounceVertical={false}
                 />
-            </View>
-            <WalletAddress
+                <WalletAddress
                     title={selectedItem.wallet}
                     visible={modalIsVisible} 
                     oncancel={CloseModalHandler}/>
+            </View>
         </View>
     );
 };
