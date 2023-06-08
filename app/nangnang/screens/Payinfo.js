@@ -8,7 +8,7 @@ import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
 import ContentsBox from '../components/ContentsBox';
 import { usePayinfo } from '../context/PayinfoContext';
-import { AuthContext } from '../context/AuthContext';
+
 const Payinfo = ({navigation}) => {
     
     const [payinfo] = usePayinfo();

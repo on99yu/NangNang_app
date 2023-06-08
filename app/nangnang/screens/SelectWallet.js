@@ -10,8 +10,7 @@ import wallets from '../constants/wallets';
 import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
 import {WC_connector} from '../api/WC_connector';
-import { AuthContext } from '../context/AuthContext';
-import { usePayinfo } from '../context/PayinfoContext';
+
 const formatData = (data, numColumns) =>{
 
     const numberOfFullRows = Math.floor(data.length/numColumns)
