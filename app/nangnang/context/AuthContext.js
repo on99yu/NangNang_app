@@ -33,7 +33,12 @@ const reducer = (state, action) =>{
         case 'save_address':
             return{
                 ...state,
-                wallet: state.wallet.map(it=>it.walletname === action.walletname ? {...it, walletaddress: action.walletaddress} : it)
+                wallet: state.wallet.map(it => (it.walletname === action.walletname ? {...it, walletaddress: action.walletaddress} : it))
+            }
+        case 'initialization_address':
+            return {
+                ...state,
+                wallet: state.wallet.map(it =>(it.walletname === action.walletname ? {...it, walletaddress: ''} : it) )
             }
         default:
             state;
