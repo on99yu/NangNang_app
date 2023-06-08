@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from  'react';
 import { View,Text,StyleSheet,ScrollView } from 'react-native';
 import { Link } from '@react-navigation/native';
 
@@ -12,13 +12,13 @@ import { usePayinfo } from '../context/PayinfoContext';
 const Payinfo = ({navigation}) => {
     
     const [payinfo] = usePayinfo();
-
-
+    
+    const [state, dispatch] = useContext(AuthContext)
     return (
         <View style={styles.PayinfoView}>
             <View style={styles.header}>
                 <Link to={{screen:'MyWallets'}}  style={styles.link}>뒤로 가기</Link>
-                <Text style={{color:'red'}}>사용자 : {user.email.slice(0,9)}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>

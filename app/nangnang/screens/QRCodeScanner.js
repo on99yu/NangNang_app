@@ -23,6 +23,7 @@ function QRCodeScanner ({navigation}){
   },[]);
 
   const handlerBarCodeScanned = ({type, data})=>{
+    const startTime = new Date();
     var arrdata = data.split(',')
 
     const Payinfo ={
@@ -43,7 +44,9 @@ function QRCodeScanner ({navigation}){
       console.log(`Type: ${type}`);
       setScanData(false)
     }
-
+    const endTime = new Date();
+    const scanTime = endTime - startTime;
+    console.log("QR 코드 스캔 시간:", scanTime, "밀리초");
   } 
   if(hasPermission===null){
     return (
@@ -58,6 +61,7 @@ function QRCodeScanner ({navigation}){
         <Button onPress={() => navigation.navigate('Main')} title="뒤로가기"/>
       </View>
       </View>
+      
     )
   }
 
