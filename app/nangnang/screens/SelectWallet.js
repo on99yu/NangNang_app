@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Modal} from 'react-native';
 import { Link } from '@react-navigation/native';
 
@@ -10,7 +10,8 @@ import wallets from '../constants/wallets';
 import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
 import {WC_connector} from '../api/WC_connector';
-
+import { usePayinfo } from '../context/PayinfoContext';
+import { AuthContext } from '../context/AuthContext';
 const formatData = (data, numColumns) =>{
 
     const numberOfFullRows = Math.floor(data.length/numColumns)
@@ -22,6 +23,7 @@ const formatData = (data, numColumns) =>{
     }
     return data;
 }
+
 
 
 const SelectWallet = ({navigation}) => {
@@ -38,21 +40,22 @@ const SelectWallet = ({navigation}) => {
     const [state, dispatch] =useContext(AuthContext);
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
-
+    const [walletAddress, setWalletAddress ] = useState('');
     const CloseModalHandler = () => {
         setModalIsVisible(false);
     }
+
+    const childComponentRef = useRef();
+
     const handleListItemPress = (item) => {
+        childComponentRef.current.takeaddress(item);
         setSelectedItem(item)
         setModalIsVisible(true)
-    }
-    const temp = () => {   
-        console.log("temp clicked");
-    }
+    }   
+    // useEffect(()=>{
+    //     childComponentRef.current.takeaddress();
+    // },[modalIsVisible])
 
-    // sendTx 함수에서 사용하는 값인데 이건 나중에 값 받아와서 넣어야함
-    // 지금은 그냥 temp 값으로 0x0을 넣어놓음
-    const valueAmount = payinfo.Price;
 
     return (
         <View style={styles.MyWalletsView}>
@@ -64,7 +67,6 @@ const SelectWallet = ({navigation}) => {
             <View style={styles.title}>
                 <ScreenTitle title="지갑 선택" />
             </View>
-            {/* 지갑 연결이 안되어있다면 아래 버튼을 출력 */}
             {!connector.connected && (
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     <SubmitButton onPress={connectWallet}>지갑 연결</SubmitButton>
@@ -79,7 +81,7 @@ const SelectWallet = ({navigation}) => {
                 </View>
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     {/* sendTx(toAccount: string, valueAmount: string) 인데 지금은 toAccount에 연결된 자기자신 지갑주소 넣은거고 valueAmount 값은 위에 만들었고(0x0으로) */}
-                    <SubmitButton onPress={() => sendTx(connector.accounts[0], valueAmount)}>거래 전송</SubmitButton>
+                    <SubmitButton onPress={() => sendTx(connector.accounts[0], payinfo.Price)}>거래 전송</SubmitButton>
                 </View>
                 </>
             )}
@@ -106,7 +108,7 @@ const SelectWallet = ({navigation}) => {
                                 <TouchableOpacity 
                                     style={styles.button}
                                     onPress={()=>handleListItemPress(item)}>
-                                    <Text style={[styles.indigo500,{ fontSize: 10, alignSelf: 'center' }]}>지갑 주소 입력</Text>
+                                    <Text style={[styles.indigo500,{ fontSize: 15, alignSelf: 'center' }]}>결제하기</Text>
                                 </TouchableOpacity>
                             </View>
                         )
@@ -114,11 +116,16 @@ const SelectWallet = ({navigation}) => {
                     keyExtractor={item => item.id}
                     alwaysBounceVertical={false}
                 />
-                <WalletInputModal
-                    title={selectedItem.wallet}
-                    visible={modalIsVisible} 
-                    oncancel={CloseModalHandler}/>
             </View>
+            <WalletInputModal
+                    ref={childComponentRef}
+                    title={selectedItem.wallet}
+                    imageURL={selectedItem.imageURL}
+                    visible={modalIsVisible}
+                    walletaddress = {walletAddress}
+                    oncancel={CloseModalHandler}
+                    connectWallet={connectWallet}
+                    connector={connector}/>
         </View>
     );
 };

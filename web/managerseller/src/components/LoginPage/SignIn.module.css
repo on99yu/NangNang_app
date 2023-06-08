@@ -57,6 +57,25 @@
   }
 }
 
+.signInInvalid {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  height:50px;
+  width: 200px;
+  gap: 10px;
+  font-size: 13px;
+  color: red;
+  justify-content: center;
+  align-items: center;
+}
+
+.signInInvalid > p{
+  display: flex;
+  flex-direction: column;
+
+}
+
 .signbuttons {
   display: flex;
   flex-direction: column;

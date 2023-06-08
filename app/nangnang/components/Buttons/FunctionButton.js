@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
         alignItems:'center',
         alignSelf: 'center',
         // margin: '10%',
-        padding: 5,
-        width: 100,
+        paddingVertical: 10,
+        width: 120,
     },
     text:{
         

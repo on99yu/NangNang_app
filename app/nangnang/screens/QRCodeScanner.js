@@ -32,6 +32,8 @@ function QRCodeScanner ({navigation}){
       Wallet:arrdata[3],
       Coin:arrdata[4],
       WalletKey:arrdata[5],
+      ExchangedValue: 0,
+      
     }
     if(data){
       setScanData(true);
@@ -90,6 +92,7 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     justifyContent:'flex-end',
   },
+
   qrcode:{
     flex: 1,
     justifyContent: 'center',
