@@ -9,7 +9,6 @@ import Register from '../screens/Register';
 import MyWallets from '../screens/MyWallets';
 import QRCodeScanner from '../screens/QRCodeScanner';
 import Payinfo from '../screens/Payinfo';
-
 import { AuthContext } from '../context/AuthContext';
 
 const Stack = createStackNavigator();
