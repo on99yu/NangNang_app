@@ -9,7 +9,7 @@ import Register from '../screens/Register';
 import MyWallets from '../screens/MyWallets';
 import QRCodeScanner from '../screens/QRCodeScanner';
 import Payinfo from '../screens/Payinfo';
-
+import PayResult from '../screens/PayResult';
 import { AuthContext } from '../context/AuthContext';
 
 const Stack = createStackNavigator();
@@ -33,6 +33,7 @@ export function Home (){
       <MainStack.Screen name="Payinfo" component={Payinfo}/>
       <MainStack.Screen name="QRCodeScanner" component={QRCodeScanner}/>
       <MainStack.Screen name="MyWallets" component={MyWallets}/>
+      <MainStack.Screen name="PayResult" component={PayResult}/>
     </MainStack.Navigator>
   )
 }

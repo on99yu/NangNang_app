@@ -18,6 +18,7 @@ const WalletInputModal = (props) => {
 
     const NowBalance = async () => {
         const address = "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9";
+        setWalletAddress(address);
         console.log(address);
         try {
             const response = await EtherScanAPI.get(`?module=account&action=balance&address=${address}&tag=latest&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
