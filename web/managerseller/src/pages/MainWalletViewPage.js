@@ -6,45 +6,7 @@ import WalletView from '../components/MainPage/ContainerComponents/BlockchainMan
 import ModalComponent from '../components/Modal/ModalComponent';
 import { useState } from 'react';
 
-const walletSourceList = [
-  {
-    id: 0,
-    name: 'RAINBOW',
-    imgUrl: require('../asset/images/Rainbow.png'),
-  },
-  {
-    id: 1,
-    name: 'METAMASK',
-    imgUrl: require('../asset/images/MetaMask.png'),
-  },
-  {
-    id: 2,
-    name: 'TRUSTWALLET',
-    imgUrl: require('../asset/images/TrustWallet.png'),
-  },
-  {
-    id: 3,
-    name: 'CRYPTO.COM',
-    imgUrl: require('../asset/images/CryptoDotCom.png'),
-  },
-  {
-    id: 4,
-    name: 'PILLER',
-    imgUrl: require('../asset/images/PillerWallet.png'),
-  },
-  {
-    id: 5,
-    name: 'MATH',
-    imgUrl: require('../asset/images/MathWallet.png'),
-  },
-  {
-    id: 6,
-    name: 'ARGENT',
-    imgUrl: require('../asset/images/ArgentWallet.png'),
-  },
-];
-
-const MainWalletViewPage = () => {
+const MainWalletViewPage = ({ walletImage }) => {
   const [modalIsShown, setModalIsShown] = useState(false);
   const [selectedWalletName, setSelectedWalletName] = useState('');
   const [selectedWalletImgUrl, setSelectedWalletImgUrl] = useState();
@@ -63,15 +25,12 @@ const MainWalletViewPage = () => {
     <div className={classes.container}>
       <Header />
       <Category />
-      <WalletView
-        onShowModal={showModalHandler}
-        walletImage={walletSourceList}
-      />
+      <WalletView onShowModal={showModalHandler} walletImage={walletImage} />
       <Footer />
       {modalIsShown && (
         <ModalComponent
           onHideModal={hideModalHandler}
-          walletImage={walletSourceList}
+          walletImage={walletImage}
           WalletName={selectedWalletName}
           WalletImageUrl={selectedWalletImgUrl}
         />
