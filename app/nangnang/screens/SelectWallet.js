@@ -12,6 +12,7 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import {WC_connector} from '../api/WC_connector';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
+
 const formatData = (data, numColumns) =>{
 
     const numberOfFullRows = Math.floor(data.length/numColumns)
@@ -23,7 +24,6 @@ const formatData = (data, numColumns) =>{
     }
     return data;
 }
-
 
 
 const SelectWallet = ({navigation}) => {
@@ -40,22 +40,26 @@ const SelectWallet = ({navigation}) => {
     const [state, dispatch] =useContext(AuthContext);
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
-    const [walletAddress, setWalletAddress ] = useState('');
+    const [walletlist, setWalletList] = useState([]);
+
+    const childComponentRef = useRef();
+
+    useEffect(()=>{
+        setWalletList(wallets);
+        return ()=>{
+
+        }
+    },[])
+
     const CloseModalHandler = () => {
         setModalIsVisible(false);
     }
 
-    const childComponentRef = useRef();
-
     const handleListItemPress = (item) => {
-        childComponentRef.current.takeaddress(item);
+        childComponentRef.current.takeaddress();
         setSelectedItem(item)
         setModalIsVisible(true)
     }   
-    // useEffect(()=>{
-    //     childComponentRef.current.takeaddress();
-    // },[modalIsVisible])
-
 
     return (
         <View style={styles.MyWalletsView}>
@@ -92,7 +96,7 @@ const SelectWallet = ({navigation}) => {
             <View style={styles.WalletBlockView}>
                 <FlatList
                     numColumns={2}
-                    data={formatData(wallets,2)}
+                    data={formatData(walletlist,2)}
                     renderItem={({ item}) => {
                         if (item.empty === true){
                             return <View style={[styles.WalletBlock, styles.WalletBlockInvisible]}/>
@@ -106,9 +110,9 @@ const SelectWallet = ({navigation}) => {
                                 </View>
                                 <Text style={styles.indigo500}>{item.wallet}</Text>
                                 <TouchableOpacity 
-                                    style={styles.button}
+                                    style={[styles.button,{backgroundColor: item.selected ? '#FF8691' : null}]}
                                     onPress={()=>handleListItemPress(item)}>
-                                    <Text style={[styles.indigo500,{ fontSize: 15, alignSelf: 'center' }]}>결제하기</Text>
+                                        <Text style={[styles.indigo500,{ fontSize: 15, alignSelf: 'center' }]}>{item.selected ? '선택됨'  : '결제하기'}</Text>
                                 </TouchableOpacity>
                             </View>
                         )
@@ -121,11 +125,10 @@ const SelectWallet = ({navigation}) => {
                     ref={childComponentRef}
                     title={selectedItem.wallet}
                     imageURL={selectedItem.imageURL}
+                    walletid = {selectedItem.id}
                     visible={modalIsVisible}
-                    walletaddress = {walletAddress}
                     oncancel={CloseModalHandler}
-                    connectWallet={connectWallet}
-                    connector={connector}/>
+                    setWalletList={setWalletList}/>
         </View>
     );
 };
