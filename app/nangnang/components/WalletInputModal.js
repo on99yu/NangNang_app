@@ -1,8 +1,10 @@
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useState } from 'react';
 import { View, Modal, StyleSheet, Text, TextInput,Image, KeyboardAvoidingView } from 'react-native';
 import axios from 'axios';
-import EtherScanAPI from '../api/EtherScanAPI';
+import {Picker} from '@react-native-picker/picker';
 
+import wallets from '../constants/wallets';
+import EtherScanAPI from '../api/EtherScanAPI';
 import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
 import SubmitButton from './Buttons/SubmitButton';
@@ -16,15 +18,15 @@ const WalletInputModal = forwardRef((props, ref) => {
 
     const [state, dispatch] = useContext(AuthContext)
     const [walletAddress, setWalletAddress] = useState("");
-    
+    const [coin, setCoin] = useState("");
     const [Value, setValue] = useState({
         CoinValue: 0,
         Price:0,
     })
-    const takeaddress = async (item)=> {
-        console.log("takeaddress 함수 호출 ", )
+
+    const takeaddress = async ()=> {
         const  walletname =  await state.wallet.find(e => e.walletname)
-        console.log(walletname);
+        console.log('from WalletInpuModal - ',walletname);
         setWalletAddress(walletname.walletaddress)
     }
     
@@ -52,6 +54,22 @@ const WalletInputModal = forwardRef((props, ref) => {
         setValue({CoinValue:0, Price:0})
     }
 
+    const walletSelect = ()=>{
+        const newArrData = wallets.map((e, index)=>{
+            if(props.walletid == e.id){
+                return{
+                    ...e,
+                    selected: true,
+                }
+            }
+            return {
+                ...e,
+                selected:false
+            }
+        })  
+        props.setWalletList(newArrData)
+        props.oncancel()
+    }
     return (
             <Modal
                 animationType='fade'
@@ -65,19 +83,39 @@ const WalletInputModal = forwardRef((props, ref) => {
                                 style={styles.image}
                                 source={props.imageURL} />
                         </View>
-                        <View>
-                            <Text style={styles.text}>{Value.CoinValue} : {""}</Text>
-                        </View>
-                        <Text style={styles.text}>{Value.Price} 원</Text>
+                            <Text style={styles.text}>코인 가치($) : {Value.CoinValue}</Text>
+                        <Text style={styles.text}>환산된 가격 : <Text style={{color:'black',fontWeight: 'bold',}}>{Value.Price}</Text> 원</Text>
                         <TextInput
                             style={styles.inputaddress}
                             placeholder="지갑주소"
                             placeholderTextColor="#A9A9AC"
                             value={walletAddress}
                             onChangeText={(e) => setWalletAddress(e)} />
+                        <View style={{borderWidth: 1,borderColor:'gray',borderRadius:10, flexDirection:'row', paddingHorizontal:10}}>
+                            <View style={{justifyContent:'center'}}>
+                                <Text style={styles.text}>티커 선택 </Text>
+                            </View>
+                            <Picker
+                                selectedValue={coin}
+                                onValueChange={(value, index) => setCoin(value)}
+                                mode="dropdown" // Android only
+                                style={styles.picker}>
+                                <Picker.Item label="BTC" value="BTC" />
+                                <Picker.Item label="ETH" value="ETH" />
+                                <Picker.Item label="USDT" value="USDT" />
+                                <Picker.Item label="BNB" value="BNB" />
+                                <Picker.Item label="USDC" value="USDC" />
+                                <Picker.Item label="STETH" value="STETH" />
+                                <Picker.Item label="ADA" value="ADA" />
+                                <Picker.Item label="DOGE" value="DOGE" />
+                                <Picker.Item label="TRX" value="TRX" />
+                                <Picker.Item label="SOL" value="SOL" />
+                            </Picker>
+                        </View>
                         <FunctionButton onPress={NowBalance}>자금 계산</FunctionButton>
-                        <FunctionButton onPress={Initialization}>초기화</FunctionButton>
+                        {/* <FunctionButton onPress={Initialization}>초기화</FunctionButton> */}
                         <FunctionButton onPress={props.oncancel}>닫기</FunctionButton>
+                        <FunctionButton onPress={walletSelect}>이 지갑 선택</FunctionButton>
                     </View>
                     
                     </KeyboardAvoidingView>
@@ -139,5 +177,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    picker: {
+        // marginVertical: 30,
+        width: 150,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: 'black',
+      },
 })
 export default WalletInputModal;
