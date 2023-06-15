@@ -83,11 +83,11 @@ export const WC_connector = () => {
     }, [connector]);
 
     useEffect(() => {
-      console.log("useEffect -> connector.accounts[0] : " + connector.accounts[0]);
+      console.log("from WC_connector - useEffect -> connector.accounts[0] : " + connector.accounts[0]);
     }, [connector.accounts[0]]);
 
     useEffect(() => {
-        console.log("useEffect -> sendTxResult : " + sendTxResult);
+        console.log("from WC_connector - useEffect -> sendTxResult : " + sendTxResult);
     }, [sendTxResult]);
 
     // WC_connector가 가진 함수들을 다른 곳에서 사용하기 위해 리턴

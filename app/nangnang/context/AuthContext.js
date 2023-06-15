@@ -9,11 +9,13 @@ const initialState = {
     name:'',
     wallet:[{
            walletname:'Metamask',
-           walletaddress:''
+           walletaddress:'',
+           seleted: true,
         },
         {
             walletname:'Trust Wallet',
-            walletaddress:''
+            walletaddress:'',
+            seleted: true,
         }]
 };
 
