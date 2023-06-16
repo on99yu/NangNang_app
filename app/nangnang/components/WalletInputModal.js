@@ -9,7 +9,7 @@ import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
 import SubmitButton from './Buttons/SubmitButton';
 import { AuthContext } from '../context/AuthContext';
-
+import { usePayinfo } from '../context/PayinfoContext';
 const WalletInputModal = forwardRef((props, ref) => {
 
     useImperativeHandle(ref, ()=>({
@@ -17,6 +17,7 @@ const WalletInputModal = forwardRef((props, ref) => {
     }))
 
     const [state, dispatch] = useContext(AuthContext)
+    const [payinfo, setPayinfo] = usePayinfo();   
     const [walletAddress, setWalletAddress] = useState("");
     const [coin, setCoin] = useState("");
     const [Value, setValue] = useState({
@@ -25,11 +26,34 @@ const WalletInputModal = forwardRef((props, ref) => {
     })
 
     const takeaddress = async ()=> {
-        const  walletname =  await state.wallet.find(e => e.walletname)
-        console.log('from WalletInpuModal - ',walletname);
-        setWalletAddress(walletname.walletaddress)
+        try {
+            const walletname =  await state.wallet.find(e => e.walletname === props.title)
+            console.log('from WalletInpuModal - ',walletname);
+            setWalletAddress(walletname.walletaddress)
+        }catch(err){
+            console.log("takeaddress error", err)
+        }
     }
-    
+    // 자금조회 테스트 함수
+    const Balance = async ()=>{
+        axios({
+            method:"POST",
+            url:"http://localhost:3000/getBalance",
+            headers:{
+                "Content-Type": 'application/json',
+            },
+            data:{
+                "walletAddress":"0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9",
+                "tokenName":"ETH"
+            }
+        }).then((res)=>{
+            console.log(res)
+
+        }).catch((e)=>{
+            console.log(e)
+            alert(e.message)
+        })
+    }
     const NowBalance = async () => {
         const address = "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9";
         setWalletAddress(address);
@@ -50,9 +74,6 @@ const WalletInputModal = forwardRef((props, ref) => {
             Error(error)
         }
     }
-    const Initialization =() =>{
-        setValue({CoinValue:0, Price:0})
-    }
 
     const walletSelect = ()=>{
         const newArrData = wallets.map((e, index)=>{
@@ -67,7 +88,15 @@ const WalletInputModal = forwardRef((props, ref) => {
                 selected:false
             }
         })  
+        setPayinfo(e => ({
+            ...e,
+            mywalletname: props.title,
+            exchangedvalue: Value.CoinValue,
+            mywalletaddress: walletAddress,
+            ticker: coin,
+        }))
         props.setWalletList(newArrData)
+        console.log("from WalletInputModal - 최종 결제정보 -", payinfo);
         props.oncancel()
     }
     return (
@@ -113,7 +142,6 @@ const WalletInputModal = forwardRef((props, ref) => {
                             </Picker>
                         </View>
                         <FunctionButton onPress={NowBalance}>자금 계산</FunctionButton>
-                        {/* <FunctionButton onPress={Initialization}>초기화</FunctionButton> */}
                         <FunctionButton onPress={props.oncancel}>닫기</FunctionButton>
                         <FunctionButton onPress={walletSelect}>이 지갑 선택</FunctionButton>
                     </View>

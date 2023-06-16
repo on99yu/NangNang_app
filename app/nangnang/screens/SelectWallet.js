@@ -25,7 +25,6 @@ const formatData = (data, numColumns) =>{
     return data;
 }
 
-
 const SelectWallet = ({navigation}) => {
     // WC_connector(WalletConnect_connector) 에서 사용할 함수들을 가져옴
     const {
