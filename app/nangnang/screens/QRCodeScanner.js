@@ -9,7 +9,7 @@ import { PayinfoContext, usePayinfo } from '../context/PayinfoContext';
 
 const {width} = Dimensions.get('window')
 
-function QRCodeScanner ({navigation}){
+function QRCodeScanner ({navigation, connector, connectWallet}){
   const [hasPermission, setHasPermission] = useState(null); 
   const [scanData, setScanData] = useState(false);
   const [_, setPayinfo] = usePayinfo();
@@ -27,17 +27,18 @@ function QRCodeScanner ({navigation}){
     var arrdata = data.split(',')
 
     const Payinfo ={
-      Name:arrdata[1],
-      Price:arrdata[2],
-      Wallet:arrdata[3],
-      Coin:arrdata[4],
-      WalletKey:arrdata[5],
-      ExchangedValue: 0,
-      
+      Name: arrdata[1],
+      Price: arrdata[2],
+      Wallet: arrdata[3],
+      WalletKey: arrdata[5],
+
+      mywalletname:"",
+      exchangedvalue: 0,
+      mywalletaddress: "",
+      ticker : "",
     }
     if(data){
       setScanData(true);
-      // setPayinfo(data);
       setPayinfo(Payinfo);
       console.log(`${data}`);
       navigation.navigate('SelectWallet');
@@ -48,7 +49,7 @@ function QRCodeScanner ({navigation}){
     }
     const endTime = new Date();
     const scanTime = endTime - startTime;
-    console.log("QR 코드 스캔 시간:", scanTime, "밀리초");
+    // console.log("from QRCodeScanner - QR 코드 스캔 시간:", scanTime, "밀리초");
   } 
   if(hasPermission===null){
     return (
