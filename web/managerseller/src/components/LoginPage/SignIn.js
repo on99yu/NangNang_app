@@ -4,7 +4,7 @@ import classes from './SignIn.module.css';
 import { useState, useEffect } from 'react';
 // import { withRouter } from 'react-router-dom';
 
-const SignIn = (props) => {
+const SignIn = ({ handleSetAccessToken }) => {
   const [signInId, setSignInId] = useState('');
   const [signInPw, setSignInPw] = useState('');
   const [signInInvalid, setSignInInvalid] = useState(false);
@@ -39,9 +39,13 @@ const SignIn = (props) => {
 
           // 로그인 성공 후 필요한 동작 수행
           // 예: 다른 페이지로 이동, UI 업데이트 등
-          alert('Login successful, 새로고침을 눌러주세요');
+          alert('Login successful');
           setSignInInvalid(false);
-          window.history.pushState('v1', '', '/');
+          const curAccessToken = localStorage.getItem('accessToken');
+          if (curAccessToken === accessToken) {
+            handleSetAccessToken(curAccessToken);
+            window.location.href = '/';
+          }
         } else {
           // 로그인 실패 처리
           // 예: 오류 메시지 표시, 입력 초기화 등

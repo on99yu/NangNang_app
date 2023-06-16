@@ -4,18 +4,8 @@ import classes from './ModalComponent.module.css';
 const asset = (
   <ul className={classes.list}>
     {[
-      { id: 'BTC', name: 'BTC', amount: 0.2, krw: 23000 },
-      { id: 'ETH', name: 'ETH', amount: 1, krw: 3000000 },
-      { id: 'BTC', name: 'BTC', amount: 0.2, krw: 23000 },
-      { id: 'ETH', name: 'ETH', amount: 1, krw: 3000000 },
-      { id: 'BTC', name: 'BTC', amount: 0.2, krw: 23000 },
-      { id: 'ETH', name: 'ETH', amount: 1, krw: 3000000 },
-      { id: 'BTC', name: 'BTC', amount: 0.2, krw: 23000 },
-      { id: 'ETH', name: 'ETH', amount: 1, krw: 3000000 },
-      { id: 'BTC', name: 'BTC', amount: 0.2, krw: 23000 },
-      { id: 'ETH', name: 'ETH', amount: 1, krw: 3000000 },
-      { id: 'BTC', name: 'BTC', amount: 0.2, krw: 23000 },
-      { id: 'ETH', name: 'ETH', amount: 1, krw: 3000000 },
+      { id: 'BTC', name: 'BTC', amount: 0.23254, krw: 23000 },
+      { id: 'ETH', name: 'ETH', amount: 1.2192, krw: 3000000 },
     ].map((coin) => (
       <>
         <li className={classes.coinname}>
