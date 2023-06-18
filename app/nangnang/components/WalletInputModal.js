@@ -1,5 +1,5 @@
-import React, { forwardRef, useContext, useEffect, useImperativeHandle, useState } from 'react';
-import { View, Modal, StyleSheet, Text, TextInput,Image, KeyboardAvoidingView } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Modal, StyleSheet, Text, TextInput,Image, KeyboardAvoidingView,Alert } from 'react-native';
 import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
 
@@ -10,26 +10,48 @@ import FunctionButton from './Buttons/FunctionButton';
 import SubmitButton from './Buttons/SubmitButton';
 import { AuthContext } from '../context/AuthContext';
 import { usePayinfo } from '../context/PayinfoContext';
-const WalletInputModal = forwardRef((props, ref) => {
+const WalletInputModal = (props) => {
 
-    useImperativeHandle(ref, ()=>({
-        takeaddress
-    }))
+    // useImperativeHandle(ref, ()=>({
+    //     takeaddress
+    // }))
 
     const [state, dispatch] = useContext(AuthContext)
     const [payinfo, setPayinfo] = usePayinfo();   
     const [walletAddress, setWalletAddress] = useState("");
     const [coin, setCoin] = useState("");
+
     const [Value, setValue] = useState({
         CoinValue: 0,
         Price:0,
     })
 
-    const takeaddress = async ()=> {
+    useEffect(()=>{
+        console.log('from WalletInpuModal - 지갑선택시 결제정보',JSON.stringify(payinfo,null,2));
+    },[payinfo])
+    
+    // useEffect(()=>{
+    //     console.log('from WalletInpuModal - 가져온 지갑주소',JSON.stringify(walletAddress,null,2));
+    // },[walletAddress])
+
+    // useEffect(()=>{
+    //     if(!props.visible){
+    //         console.log(props.visible)
+    //         if(!props.walletlist.selected){
+    //             setCoin("")
+    //             setWalletAddress("")
+    //             setValue({
+    //                 CoinValue:0,
+    //                 Price:0,
+    //             })
+    //         }
+    //     }
+    // },[props.visible]);
+
+    const takeAddress = async ()=> {
         try {
-            const walletname =  await state.wallet.find(e => e.walletname === props.title)
-            console.log('from WalletInpuModal - ',walletname);
-            setWalletAddress(walletname.walletaddress)
+            const walletaddress =  await state.wallet.find(e => e.id === props.selecteditem.id)
+            setWalletAddress(walletaddress.walletaddress)
         }catch(err){
             console.log("takeaddress error", err)
         }
@@ -76,28 +98,37 @@ const WalletInputModal = forwardRef((props, ref) => {
     }
 
     const walletSelect = ()=>{
-        const newArrData = wallets.map((e, index)=>{
-            if(props.walletid == e.id){
-                return{
-                    ...e,
-                    selected: true,
+        if( walletAddress==="" || coin ==="" ){
+            Alert.alert("알림","지갑주소와 티커를 확인해주세요",[
+                {
+                  text:"네",
+                  onPress:()=>null,
+                  style:"cancel",
+                },
+              ]);
+        }else{
+            const newArrData = wallets.map((e, index)=>{
+                if(props.selecteditem.id == e.id){
+                    return{
+                        ...e,
+                        selected: true,
+                    }
                 }
-            }
-            return {
+                return {
+                    ...e,
+                    selected:false
+                }
+            })  
+            setPayinfo(e => ({
                 ...e,
-                selected:false
-            }
-        })  
-        setPayinfo(e => ({
-            ...e,
-            mywalletname: props.title,
-            exchangedvalue: Value.CoinValue,
-            mywalletaddress: walletAddress,
-            ticker: coin,
-        }))
-        props.setWalletList(newArrData)
-        console.log("from WalletInputModal - 최종 결제정보 -", payinfo);
-        props.oncancel()
+                selectedWalletID: props.selecteditem.id,
+                exchangedvalue: Value.CoinValue,
+                mywalletaddress: walletAddress,
+                ticker: coin,
+            }))
+            props.setWalletList(newArrData)
+            props.oncancel()
+        }
     }
     return (
             <Modal
@@ -106,11 +137,11 @@ const WalletInputModal = forwardRef((props, ref) => {
                 transparent={true}>
                     <KeyboardAvoidingView  behavior='padding' style={styles.centerdView}>
                     <View style={styles.modalView}>
-                        <Text style={[styles.text, {fontSize: 20, color:Colors.orange500}]}>{props.title}</Text>
+                        <Text style={[styles.text, {fontSize: 20, color:Colors.orange500}]}>{props.selecteditem.wallet}</Text>
                         <View style={styles.iconwrapper}>
                             <Image
                                 style={styles.image}
-                                source={props.imageURL} />
+                                source={props.selecteditem.imageURL} />
                         </View>
                             <Text style={styles.text}>코인 가치($) : {Value.CoinValue}</Text>
                         <Text style={styles.text}>환산된 가격 : <Text style={{color:'black',fontWeight: 'bold',}}>{Value.Price}</Text> 원</Text>
@@ -129,6 +160,7 @@ const WalletInputModal = forwardRef((props, ref) => {
                                 onValueChange={(value, index) => setCoin(value)}
                                 mode="dropdown" // Android only
                                 style={styles.picker}>
+                                <Picker.Item label="..." value="" />
                                 <Picker.Item label="BTC" value="BTC" />
                                 <Picker.Item label="ETH" value="ETH" />
                                 <Picker.Item label="USDT" value="USDT" />
@@ -141,6 +173,7 @@ const WalletInputModal = forwardRef((props, ref) => {
                                 <Picker.Item label="SOL" value="SOL" />
                             </Picker>
                         </View>
+                        <FunctionButton onPress={takeAddress}>지갑주소 가져오기</FunctionButton>
                         <FunctionButton onPress={NowBalance}>자금 계산</FunctionButton>
                         <FunctionButton onPress={props.oncancel}>닫기</FunctionButton>
                         <FunctionButton onPress={walletSelect}>이 지갑 선택</FunctionButton>
@@ -150,7 +183,7 @@ const WalletInputModal = forwardRef((props, ref) => {
             </Modal>
 
     );
-});
+};
 const styles = StyleSheet.create({
     centerdView: {
         flex: 1,

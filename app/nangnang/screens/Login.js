@@ -18,7 +18,6 @@ import { AuthContext } from '../context/AuthContext';
 // Android : 185496097106-35agk1e07b0h6t2egjm0sdh88odo1u5k.apps.googleusercontent.com
 
 const Login = ({ navigation }) => {
-    const [isLoading, setIsloading] =useState(false);
     const [loginInput, setLoginInput] = useState({
         email:"test@gmail.com",
         password:"test123",
@@ -32,7 +31,6 @@ const Login = ({ navigation }) => {
             [key]: value,
         }));
     }
-
     const [state, dispatch] =useContext(AuthContext);
     const LoginHandler = async () => {
         axios({
@@ -46,18 +44,16 @@ const Login = ({ navigation }) => {
                 password:loginInput.password,
             }
         }).then((res)=>{
-
             dispatch({
                 type:'user_login',
                 payload: true,
-
                 uid: res.data.localId,
                 email: res.data.email
             })
         }).catch((e)=>{
             console.log(e.message);
         }).finally(()=>{
-            setIsloading(false);
+            navigation.navigate('Main')
         })
     }
 

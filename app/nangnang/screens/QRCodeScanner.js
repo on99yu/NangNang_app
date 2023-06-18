@@ -15,8 +15,7 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
   const [_, setPayinfo] = usePayinfo();
 
 
-  useEffect(()=>{
-    (async()=>{
+  useEffect(()=>{(async()=>{
       const {status} = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
@@ -27,12 +26,11 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
     var arrdata = data.split(',')
 
     const Payinfo ={
-      Name: arrdata[1],
-      Price: arrdata[2],
-      Wallet: arrdata[3],
-      WalletKey: arrdata[5],
-
-      mywalletname:"",
+      product: arrdata[1],
+      price: arrdata[2],
+      wallet: arrdata[3],
+      walletaddress: arrdata[5],
+      selectedWalletID:"",
       exchangedvalue: 0,
       mywalletaddress: "",
       ticker : "",

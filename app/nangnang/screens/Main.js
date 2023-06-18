@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext,useEffect } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Pressable,Image } from 'react-native';
 
 import Colors from '../constants/colors';
@@ -10,12 +10,16 @@ import { usePayinfo } from '../context/PayinfoContext';
 const Main = ({ navigation }) => {
     const [state, dispatch] = useContext(AuthContext);
     const [payinfo] = usePayinfo();
+
     const logoutHandler = ()=>{
         dispatch({
             type:'user_logout',
             payload: false,
         })
     }
+    useEffect(()=>{
+        console.log('Login_Screen',JSON.stringify(state,null,2));
+    },[])
 
     return (
         <View style={styles.MainView}>
