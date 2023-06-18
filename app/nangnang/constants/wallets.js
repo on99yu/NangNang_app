@@ -1,28 +1,28 @@
 const wallets = ([
     {
-        id: 1,
+        id: "metamask",
         wallet: "Metamask",
         imageURL: require(`../assets/metamask.png`)
 
     },
     {
-        id: 2,
+        id: "trustwallet",
         wallet: "Trust Wallet",
         imageURL: require(`../assets/trustwallet.png`)
     },
     {
-        id: 3,
+        id: "walletconnect",
         wallet: "WalletConnect",
         imageURL: require(`../assets/walletconnect.png`)
 
     },
     {
-        id: 4,
+        id: "blockstreamgreen",
         wallet: "Blockstream Green",
         imageURL: require(`../assets/blockstreamgreen.png`)
     },
     {
-        id: 5,
+        id: "bluewallet",
         wallet: "Blue Wallet",
         imageURL: require(`../assets/bluewallet.png`)
 

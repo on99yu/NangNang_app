@@ -41,8 +41,6 @@ const SelectWallet = ({navigation}) => {
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
 
-    const childComponentRef = useRef();
-
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
@@ -55,7 +53,6 @@ const SelectWallet = ({navigation}) => {
     }
 
     const handleListItemPress = (item) => {
-        childComponentRef.current.takeaddress();
         setSelectedItem(item)
         setModalIsVisible(true)
     }   
@@ -84,7 +81,11 @@ const SelectWallet = ({navigation}) => {
                 </View>
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     {/* sendTx(toAccount: string, valueAmount: string) 인데 지금은 toAccount에 연결된 자기자신 지갑주소 넣은거고 valueAmount 값은 위에 만들었고(0x0으로) */}
-                    <SubmitButton onPress={() => sendTx(connector.accounts[0], payinfo.Price)}>거래 전송</SubmitButton>
+                    <SubmitButton onPress={() => {
+                        console.log("from SelectWallet 돈을 보낼 지갑주소", payinfo.walletaddress)
+                        console.log("from SelectWallet 보낼 돈", payinfo.exchangedvalue)
+                        sendTx(connector.accounts[0], "0xBBB")
+                    }}>거래 전송</SubmitButton>
                 </View>
                 </>
             )}
@@ -96,7 +97,7 @@ const SelectWallet = ({navigation}) => {
                 <FlatList
                     numColumns={2}
                     data={formatData(walletlist,2)}
-                    renderItem={({ item}) => {
+                    renderItem={({item}) => {
                         if (item.empty === true){
                             return <View style={[styles.WalletBlock, styles.WalletBlockInvisible]}/>
                         }
@@ -121,12 +122,10 @@ const SelectWallet = ({navigation}) => {
                 />
             </View>
             <WalletInputModal
-                    ref={childComponentRef}
-                    title={selectedItem.wallet}
-                    imageURL={selectedItem.imageURL}
-                    walletid = {selectedItem.id}
+                    selecteditem={selectedItem}
                     visible={modalIsVisible}
                     oncancel={CloseModalHandler}
+                    walletlist={walletlist}
                     setWalletList={setWalletList}/>
         </View>
     );
