@@ -8,6 +8,7 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import { AuthContext } from '../context/AuthContext';
 import { usePayinfo } from '../context/PayinfoContext';
 const Main = ({ navigation }) => {
+    
     const [state, dispatch] = useContext(AuthContext);
     const [payinfo] = usePayinfo();
 
@@ -31,7 +32,7 @@ const Main = ({ navigation }) => {
                 <SubmitButton>내 결제 내역</SubmitButton>
                 {state.isLogin && (<SubmitButton
                     onPress={logoutHandler}>로그아웃</SubmitButton>)}
-                {payinfo && ( 
+                {payinfo && payinfo.inpayment && ( 
                     <Pressable
                     style={styles.button}
                     onPress={()=>navigation.navigate('SelectWallet')}>

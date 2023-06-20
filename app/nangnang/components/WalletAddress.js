@@ -10,7 +10,7 @@ import { AuthContext } from '../context/AuthContext';
 const WalletAddress = (props) => {
 
     const [state, dispatch] = useContext(AuthContext)
-    const [walletAddress, setWalletAddress] = useState("0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9");
+    const [walletAddress, setWalletAddress] = useState("");
 
     useEffect(()=>{
         console.log("WalletAddresModal",JSON.stringify(state,null,2))
@@ -18,7 +18,7 @@ const WalletAddress = (props) => {
     
     const WASaveHandler = ()=>{
             const id = props.selecteditem.id
-            saveAddress(id, "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9")
+            saveAddress(id, "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC")
     }
 
     const Initialization = ()=>{

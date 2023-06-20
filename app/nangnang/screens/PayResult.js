@@ -9,11 +9,26 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import ContentsBox from '../components/ContentsBox';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
+import { WC_connector } from '../api/WC_connector';
 const PayResult = ({navigation}) => {
     
-    const [payinfo] = usePayinfo();
+    const {
+        killSession,
+      } = WC_connector();
+
+    const [payinfo, setPayinfo] = usePayinfo();
     
     const [state, dispatch] = useContext(AuthContext)
+    const PaymentComplete = ()=>{
+        setPayinfo(it => ({
+            ...it,
+            inpayment:false
+        }))
+        killSession()
+        navigation.navigate('Main')
+        console.log("PaymentComplete", JSON.stringify(payinfo,null,2))
+        
+    }
     return (
         <View style={styles.PayinfoView}>
             <View style={styles.header}>
@@ -25,14 +40,15 @@ const PayResult = ({navigation}) => {
                 <ScreenTitle title="결제 완료" />
             </View>
             <ScrollView style={styles.content}>
-                <ContentsBox title="제품명" contents={payinfo.Name}/>
-                <ContentsBox title="결제 금액" contents={payinfo.Price}/>
-                <ContentsBox title="사용 지갑" contents={payinfo.Wallet}/>
-                <ContentsBox title="사용 코인" contents={payinfo.Coin}/>
-                <ContentsBox title="지갑 키" contents={payinfo.WalletKey}/>
+                <ContentsBox title="제품명" contents={payinfo.product}/>
+                <ContentsBox title="결제된 금액(원)" contents={payinfo.price}/>
+                <ContentsBox title="사용한 지갑" contents={payinfo.wallet}/>
+                <ContentsBox title="사용한 코인" contents={payinfo.ticker}/>
+                <ContentsBox title="환산된 코인 금액" contents={payinfo.exchangedvalue}/>
+                <ContentsBox title="보낸 지갑 주소" contents={payinfo.walletaddress}/>
             </ScrollView>
             <View style={styles.button}>
-                <SubmitButton onPress={() => navigation.navigate('Main')}>확인</SubmitButton>
+                <SubmitButton onPress={PaymentComplete}>확인</SubmitButton>
             </View>
         </View>
     );

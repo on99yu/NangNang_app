@@ -26,12 +26,15 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
     var arrdata = data.split(',')
 
     const Payinfo ={
+      inpayment : true,
       product: arrdata[1],
       price: arrdata[2],
       wallet: arrdata[3],
       walletaddress: arrdata[5],
       selectedWalletID:"",
+      selectedWallet:"",
       exchangedvalue: 0,
+      mywallet:"",
       mywalletaddress: "",
       ticker : "",
     }

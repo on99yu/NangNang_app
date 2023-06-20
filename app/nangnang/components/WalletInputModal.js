@@ -18,35 +18,66 @@ const WalletInputModal = (props) => {
 
     const [state, dispatch] = useContext(AuthContext)
     const [payinfo, setPayinfo] = usePayinfo();   
-    const [walletAddress, setWalletAddress] = useState("");
-    const [coin, setCoin] = useState("");
-
-    const [Value, setValue] = useState({
-        CoinValue: 0,
-        Price:0,
-    })
+    const [walletAddress, setWalletAddress] = useState("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC");
+    const [ticker, setTicker] = useState("");
 
     useEffect(()=>{
         console.log('from WalletInpuModal - 지갑선택시 결제정보',JSON.stringify(payinfo,null,2));
     },[payinfo])
-    
-    // useEffect(()=>{
-    //     console.log('from WalletInpuModal - 가져온 지갑주소',JSON.stringify(walletAddress,null,2));
-    // },[walletAddress])
 
-    // useEffect(()=>{
-    //     if(!props.visible){
-    //         console.log(props.visible)
-    //         if(!props.walletlist.selected){
-    //             setCoin("")
-    //             setWalletAddress("")
-    //             setValue({
-    //                 CoinValue:0,
-    //                 Price:0,
-    //             })
-    //         }
-    //     }
-    // },[props.visible]);
+    const [Value, setValue] = useState({
+        currentTickerValue:0,
+        exchangedProduct_Value : 0,
+        myTickerValue:0,
+    })
+
+    const Balance = async ()=>{
+        if(ticker === ""){
+            Alert.alert("티커 선택","조회할 티커를 선택해주세요",[
+                {
+                    text:"닫기",
+                    onPress:()=>null,
+                    style:"cancel",
+                }
+            ] )
+        }
+        try{
+            const currentTickerValue = await axios.get(`https://api.upbit.com/v1/ticker?markets=KRW-${ticker}`,{
+                headers:{
+                    Accept: 'application/json',
+                },
+            })
+            // const  myTickerValue= await axios.post("http://172.16.1.131:3000/getBalance",{
+            //     headers:{
+            //         Accept:'application/json',
+            //     },
+            //     data:{
+            //         "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
+            //         "tokenName": ticker
+            //     }})
+            const myTickerValue = await axios({
+                method:"POST",
+                url:"http://172.16.1.131:3000/getBalance",
+                data:{
+                    "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
+                    "tokenName": ticker,
+                }
+            })
+            console.log(`현재 지갑내 ${ticker} 가치`,myTickerValue.data.balance)
+            console.log(`현재 ${ticker} 가치`,currentTickerValue.data[0].trade_price)
+            console.log(`환산된 물건 가치`, (payinfo.price / currentTickerValue.data[0].trade_price))
+            setValue({
+                currentTickerValue: currentTickerValue.data[0].trade_price,
+                exchangedProduct_Value : (payinfo.price / currentTickerValue.data[0].trade_price).toFixed(5),
+                myTickerValue : myTickerValue.data.balance.toFixed(5),
+            })
+        }catch(error){
+            Error(error)
+        }
+        if(Value.exchangedProduct_Value >= Value.myTickerValue ){
+            console.log("가격 비교 결과 - 자금이 부족합니다. ")
+        }
+    }
 
     const takeAddress = async ()=> {
         try {
@@ -56,49 +87,30 @@ const WalletInputModal = (props) => {
             console.log("takeaddress error", err)
         }
     }
-    // 자금조회 테스트 함수
-    const Balance = async ()=>{
-        axios({
-            method:"POST",
-            url:"http://localhost:3000/getBalance",
-            headers:{
-                "Content-Type": 'application/json',
-            },
-            data:{
-                "walletAddress":"0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9",
-                "tokenName":"ETH"
-            }
-        }).then((res)=>{
-            console.log(res)
+ 
+    // const NowBalance = async () => {
+    //     const address = "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9";
+    //     setWalletAddress(address);
+    //     try {
+    //         const CrpytoValue = await EtherScanAPI.get(`?module=account&action=balance&address=${address}&tag=latest&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
+    //         const currentPrice = await axios.get(`https://api.upbit.com/v1/ticker?markets=KRW-ETH`,{
+    //             headers:{
+    //                 Accept: 'application/json',
+    //             },
+    //         })
+    //         const Balance = CrpytoValue.data.result
+    //         setValue( {
+    //             tickerValue : Balance *(Math.pow(10, -18)),
+    //             Price:   ( (Balance * (Math.pow(10, -18))) *currentPrice.data[0].trade_price ).toFixed(3)
+    //         })
 
-        }).catch((e)=>{
-            console.log(e)
-            alert(e.message)
-        })
-    }
-    const NowBalance = async () => {
-        const address = "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9";
-        setWalletAddress(address);
-        try {
-            const CrpytoValue = await EtherScanAPI.get(`?module=account&action=balance&address=${address}&tag=latest&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
-            const currentPrice = await axios.get(`https://api.upbit.com/v1/ticker?markets=KRW-ETH`,{
-                headers:{
-                    Accept: 'application/json',
-                },
-            })
-            const Balance = CrpytoValue.data.result
-            setValue( {
-                CoinValue : Balance *(Math.pow(10, -18)),
-                Price:   ( (Balance * (Math.pow(10, -18))) *currentPrice.data[0].trade_price ).toFixed(3)
-            })
-
-        } catch (error) {
-            Error(error)
-        }
-    }
+    //     } catch (error) {
+    //         Error(error)
+    //     }
+    // }
 
     const walletSelect = ()=>{
-        if( walletAddress==="" || coin ==="" ){
+        if( walletAddress==="" || ticker ==="" ){
             Alert.alert("알림","지갑주소와 티커를 확인해주세요",[
                 {
                   text:"네",
@@ -122,9 +134,10 @@ const WalletInputModal = (props) => {
             setPayinfo(e => ({
                 ...e,
                 selectedWalletID: props.selecteditem.id,
-                exchangedvalue: Value.CoinValue,
+                selectedWallet: props.selecteditem.wallet,
+                exchangedvalue: Value.exchangedProduct_Value,
                 mywalletaddress: walletAddress,
-                ticker: coin,
+                ticker: ticker,
             }))
             props.setWalletList(newArrData)
             props.oncancel()
@@ -143,8 +156,9 @@ const WalletInputModal = (props) => {
                                 style={styles.image}
                                 source={props.selecteditem.imageURL} />
                         </View>
-                            <Text style={styles.text}>코인 가치($) : {Value.CoinValue}</Text>
-                        <Text style={styles.text}>환산된 가격 : <Text style={{color:'black',fontWeight: 'bold',}}>{Value.Price}</Text> 원</Text>
+                            <Text style={styles.text}>현 코인 가격 : {Value.currentTickerValue} 원</Text>
+                        <Text style={styles.text}>환산된 가격 : <Text style={{color:'black',fontWeight: 'bold',}}>{Value.exchangedProduct_Value}</Text></Text>
+                        <Text style={styles.text}>지갑 내 코인 가치: <Text style={{color:'black',fontWeight: 'bold',}}>{Value.myTickerValue}</Text></Text>
                         <TextInput
                             style={styles.inputaddress}
                             placeholder="지갑주소"
@@ -156,25 +170,20 @@ const WalletInputModal = (props) => {
                                 <Text style={styles.text}>티커 선택 </Text>
                             </View>
                             <Picker
-                                selectedValue={coin}
-                                onValueChange={(value, index) => setCoin(value)}
+                                selectedValue={ticker}
+                                onValueChange={(value, index) => setTicker(value)}
                                 mode="dropdown" // Android only
                                 style={styles.picker}>
                                 <Picker.Item label="..." value="" />
-                                <Picker.Item label="BTC" value="BTC" />
                                 <Picker.Item label="ETH" value="ETH" />
                                 <Picker.Item label="USDT" value="USDT" />
-                                <Picker.Item label="BNB" value="BNB" />
                                 <Picker.Item label="USDC" value="USDC" />
-                                <Picker.Item label="STETH" value="STETH" />
-                                <Picker.Item label="ADA" value="ADA" />
-                                <Picker.Item label="DOGE" value="DOGE" />
-                                <Picker.Item label="TRX" value="TRX" />
-                                <Picker.Item label="SOL" value="SOL" />
+                                <Picker.Item label="UNI" value="UNI" />
+                                <Picker.Item label="WETH" value="WETH" />
                             </Picker>
                         </View>
                         <FunctionButton onPress={takeAddress}>지갑주소 가져오기</FunctionButton>
-                        <FunctionButton onPress={NowBalance}>자금 계산</FunctionButton>
+                        <FunctionButton onPress={Balance}>가격 조회</FunctionButton>
                         <FunctionButton onPress={props.oncancel}>닫기</FunctionButton>
                         <FunctionButton onPress={walletSelect}>이 지갑 선택</FunctionButton>
                     </View>
