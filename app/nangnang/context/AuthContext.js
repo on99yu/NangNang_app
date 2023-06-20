@@ -8,12 +8,34 @@ const initialState = {
     email:'',
     name:'',
     wallet:[{
+           id : "metamask",
            walletname:'Metamask',
-           walletaddress:''
+           walletaddress:'',
+           seleted: false,
         },
         {
+            id: "trustwallet",
             walletname:'Trust Wallet',
-            walletaddress:''
+            walletaddress:'',
+            seleted: false,
+        },
+        {
+            id: "walletconnect",
+            walletname:'WalletConnect',
+            walleraddress:'',
+            selected: false,
+        },
+        {
+            id: "blockstreamgreen",
+            walletname:'Blockstream Green',
+            walleraddress:'',
+            selected: false,
+        },
+        {
+            id: "bluewallet",
+            walletname:'Blue Wallet',
+            walleraddress:'',
+            selected: false,
         }]
 };
 
@@ -28,17 +50,18 @@ const reducer = (state, action) =>{
             };
         case 'user_logout':
             return{
+                ...state,
                 isLogin: action.payload,
             };
         case 'save_address':
             return{
                 ...state,
-                wallet: state.wallet.map(it => (it.walletname === action.walletname ? {...it, walletaddress: action.walletaddress} : it))
+                wallet: state.wallet.map(it => (it.id === action.id? {...it, walletaddress: action.walletaddress} : it))
             }
         case 'initialization_address':
             return {
                 ...state,
-                wallet: state.wallet.map(it =>(it.walletname === action.walletname ? {...it, walletaddress: ''} : it) )
+                wallet: state.wallet.map(it =>(it.id === action.id? {...it, walletaddress: ''} : it) )
             }
         default:
             state;

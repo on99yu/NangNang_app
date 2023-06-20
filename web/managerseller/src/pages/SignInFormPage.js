@@ -1,10 +1,10 @@
 import classes from './SignFormPage.module.css';
 import SignIn from '../components/LoginPage/SignIn';
 
-const SignInFormPage = () => {
+const SignInFormPage = ({ handleSetAccessToken }) => {
   return (
     <div className={classes.login}>
-      <SignIn />
+      <SignIn handleSetAccessToken={handleSetAccessToken} />
     </div>
   );
 };
