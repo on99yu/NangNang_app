@@ -8,6 +8,7 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import { AuthContext } from '../context/AuthContext';
 import { usePayinfo } from '../context/PayinfoContext';
 const Main = ({ navigation }) => {
+    
     const [state, dispatch] = useContext(AuthContext);
     const [payinfo] = usePayinfo();
 
