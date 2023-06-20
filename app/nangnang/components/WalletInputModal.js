@@ -47,14 +47,22 @@ const WalletInputModal = (props) => {
                     Accept: 'application/json',
                 },
             })
-            const  myTickerValue= await axios.post("http://172.16.1.131:3000/getBalance",{
-                headers:{
-                    Accept:'application/json',
-                },
+            // const  myTickerValue= await axios.post("http://172.16.1.131:3000/getBalance",{
+            //     headers:{
+            //         Accept:'application/json',
+            //     },
+            //     data:{
+            //         "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
+            //         "tokenName": ticker
+            //     }})
+            const myTickerValue = await axios({
+                method:"POST",
+                url:"http://172.16.1.131:3000/getBalance",
                 data:{
-                    "walletAddress": walletAddress,
-                    "tokenName": ticker
-                }})
+                    "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
+                    "tokenName": ticker,
+                }
+            })
             console.log(`현재 지갑내 ${ticker} 가치`,myTickerValue.data.balance)
             console.log(`현재 ${ticker} 가치`,currentTickerValue.data[0].trade_price)
             console.log(`환산된 물건 가치`, (payinfo.price / currentTickerValue.data[0].trade_price))
