@@ -122,6 +122,7 @@ const WalletInputModal = (props) => {
             setPayinfo(e => ({
                 ...e,
                 selectedWalletID: props.selecteditem.id,
+                selectedWallet: props.selecteditem.wallet,
                 exchangedvalue: Value.CoinValue,
                 mywalletaddress: walletAddress,
                 ticker: coin,

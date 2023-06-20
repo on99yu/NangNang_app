@@ -1,17 +1,36 @@
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
+import EtherScanAPI from "./EtherScanAPI";
 
 // 23.05.07 수정본
 
 // 해당 파일은 Walletconnect version 1.0을 사용한 파일.
-export const WC_connector = () => {
+export const WC_connector = (navigation: any) => {
     // 트랜잭션 전송 결과 해시값을 저장하는 상태
     const [sendTxResult, setSendTxResult] = useState('');
   
     // 월렛 커넥터를 사용하기 위해 생성하는 중간다리 객체
     const connector = useWalletConnect();
   
+    const paymentCheck = async (transactionhash: string)=>{
+      try{
+        const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
+        console.log('paymentChechk', res.data.status)
+        const status = res.data.status
+        if(status === "1" || status === 1){
+          navigation.navigate('PayResult')
+          //결제 완료 API 저장되어야함
+          console.log("결제 완료")
+        }else{
+          console.log("결제에 오류가 발생했습니다.")
+        }
+      }catch(e){
+        console.log(e)
+      }
+   
+    } 
+    
     // 주소를 짧게 표시하기 위한 함수
     const shortenAddress = (address: string) => {
         return `${address.slice(0, 6)}...${address.slice(
@@ -27,7 +46,7 @@ export const WC_connector = () => {
       try {
         await connector.connect();
         console.log("connectWallet called");
-        console.log("Func connectWallet -> connector.accounts[0] : " + connector.accounts[0]);
+        // console.log("Func connectWallet -> connector.accounts[0] : " + connector.accounts[0]);
       } catch (error) {
         console.error("Error connecting wallet: ", error);
       }
@@ -73,22 +92,14 @@ export const WC_connector = () => {
       })
       .then(transactionResult => {
         setSendTxResult(JSON.stringify(transactionResult));
-        console.log("transactionResult : " + transactionResult);
+        paymentCheck(transactionResult)
       })
       .catch(error => {
-        console.error("Error in sendTx:", error);
+        console.log("Error in sendTx:", error);
         setSendTxResult('오류가 발생했습니다.');
       });
       
     }, [connector]);
-
-    useEffect(() => {
-      console.log("from WC_connector - useEffect -> connector.accounts[0] : " + connector.accounts[0]);
-    }, [connector.accounts[0]]);
-
-    useEffect(() => {
-        console.log("from WC_connector - useEffect -> sendTxResult : " + sendTxResult);
-    }, [sendTxResult]);
 
     // WC_connector가 가진 함수들을 다른 곳에서 사용하기 위해 리턴
     return {

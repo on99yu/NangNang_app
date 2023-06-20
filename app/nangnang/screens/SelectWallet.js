@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Modal} from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert} from 'react-native';
 import { Link } from '@react-navigation/native';
 
 
@@ -32,8 +32,7 @@ const SelectWallet = ({navigation}) => {
         killSession,
         sendTx,
         connector,
-        shortenAddress,
-      } = WC_connector();
+      } = WC_connector(navigation);
 
     const [payinfo] = usePayinfo();  
     const [state, dispatch] =useContext(AuthContext);
@@ -48,6 +47,20 @@ const SelectWallet = ({navigation}) => {
         }
     },[])
 
+    const CW =()=>{
+        console.log("CW 함수 실행")
+        if(payinfo.selectedWalletID === ""){
+            Alert.alert("지갑선택", "결제에 사용할 지갑을 먼저 선택해주세요",[
+                {
+                    text:"네",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
+        }else{
+            connectWallet()
+        }
+    }
     const CloseModalHandler = () => {
         setModalIsVisible(false);
     }
@@ -69,13 +82,13 @@ const SelectWallet = ({navigation}) => {
             </View>
             {!connector.connected && (
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
-                    <SubmitButton onPress={connectWallet}>지갑 연결</SubmitButton>
+                    <SubmitButton onPress={CW}>지갑 연결</SubmitButton>
                 </View>
             )}
             {/* 지갑이 연결되어있다면 아래 버튼들을 출력 */}
             {connector.connected && (
                 <>
-                <Text style={{color : Colors.indigo500,alignSelf:'center'}}> 지갑주소: {shortenAddress(connector.accounts[0])}</Text>
+                <Text style={{color : Colors.indigo500,alignSelf:'center'}}> 연결된 지갑 : {payinfo.selectedWallet}</Text>
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     <SubmitButton onPress={killSession}>세션 종료</SubmitButton>
                 </View>

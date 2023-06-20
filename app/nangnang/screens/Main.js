@@ -31,7 +31,7 @@ const Main = ({ navigation }) => {
                 <SubmitButton>내 결제 내역</SubmitButton>
                 {state.isLogin && (<SubmitButton
                     onPress={logoutHandler}>로그아웃</SubmitButton>)}
-                {payinfo && ( 
+                {payinfo && payinfo.inpayment && ( 
                     <Pressable
                     style={styles.button}
                     onPress={()=>navigation.navigate('SelectWallet')}>
