@@ -18,7 +18,7 @@ const WalletInputModal = (props) => {
 
     const [state, dispatch] = useContext(AuthContext)
     const [payinfo, setPayinfo] = usePayinfo();   
-    const [walletAddress, setWalletAddress] = useState("");
+    const [walletAddress, setWalletAddress] = useState("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC");
     const [coin, setCoin] = useState("");
 
     const [Value, setValue] = useState({
@@ -60,17 +60,21 @@ const WalletInputModal = (props) => {
     const Balance = async ()=>{
         axios({
             method:"POST",
-            url:"http://localhost:3000/getBalance",
+            url:"http://172.16.1.131:3000/getBalance",
             headers:{
                 "Content-Type": 'application/json',
             },
             data:{
-                "walletAddress":"0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9",
-                "tokenName":"ETH"
+                "walletAddress": walletAddress,
+                "tokenName": coin
             }
         }).then((res)=>{
-            console.log(res)
-
+            // console.log(JSON.stringify(res,null,2))
+            console.log(res.data.balance)
+            setValue({
+                CoinValue: res.data.balance,
+                Price: "",
+            })
         }).catch((e)=>{
             console.log(e)
             alert(e.message)
@@ -162,20 +166,15 @@ const WalletInputModal = (props) => {
                                 mode="dropdown" // Android only
                                 style={styles.picker}>
                                 <Picker.Item label="..." value="" />
-                                <Picker.Item label="BTC" value="BTC" />
                                 <Picker.Item label="ETH" value="ETH" />
                                 <Picker.Item label="USDT" value="USDT" />
-                                <Picker.Item label="BNB" value="BNB" />
                                 <Picker.Item label="USDC" value="USDC" />
-                                <Picker.Item label="STETH" value="STETH" />
-                                <Picker.Item label="ADA" value="ADA" />
-                                <Picker.Item label="DOGE" value="DOGE" />
-                                <Picker.Item label="TRX" value="TRX" />
-                                <Picker.Item label="SOL" value="SOL" />
+                                <Picker.Item label="UNI" value="UNI" />
+                                <Picker.Item label="WETH" value="WETH" />
                             </Picker>
                         </View>
                         <FunctionButton onPress={takeAddress}>지갑주소 가져오기</FunctionButton>
-                        <FunctionButton onPress={NowBalance}>자금 계산</FunctionButton>
+                        <FunctionButton onPress={Balance}>자금 계산</FunctionButton>
                         <FunctionButton onPress={props.oncancel}>닫기</FunctionButton>
                         <FunctionButton onPress={walletSelect}>이 지갑 선택</FunctionButton>
                     </View>

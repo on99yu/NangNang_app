@@ -24,7 +24,17 @@ const formatData = (data, numColumns) =>{
     }
     return data;
 }
+// const BigNumber = require('bignumber.js');
 
+// function convertToHex(value) {
+//   if (typeof value !== 'number') {
+//     throw new Error('유효하지 않은 입력: 숫자여야 합니다.');
+//   }
+
+//   const bigNumber = new BigNumber(value);
+//   const hexString = bigNumber.toString(16);
+//   return '0x' + hexString;
+// }
 const SelectWallet = ({navigation}) => {
     // WC_connector(WalletConnect_connector) 에서 사용할 함수들을 가져옴
     const {
@@ -96,8 +106,8 @@ const SelectWallet = ({navigation}) => {
                     {/* sendTx(toAccount: string, valueAmount: string) 인데 지금은 toAccount에 연결된 자기자신 지갑주소 넣은거고 valueAmount 값은 위에 만들었고(0x0으로) */}
                     <SubmitButton onPress={() => {
                         console.log("from SelectWallet 돈을 보낼 지갑주소", payinfo.walletaddress)
-                        console.log("from SelectWallet 보낼 돈", payinfo.exchangedvalue)
-                        sendTx(connector.accounts[0], "0xBBB")
+                        console.log("from SelectWallet 보낼 돈", convertToHex(payinfo.exchangedvalue))
+                        sendTx("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC", convertToHex(payinfo.exchangedvalue))
                     }}>거래 전송</SubmitButton>
                 </View>
                 </>
