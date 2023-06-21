@@ -20,10 +20,16 @@ const WalletInputModal = (props) => {
     const [payinfo, setPayinfo] = usePayinfo();   
     const [walletAddress, setWalletAddress] = useState("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC");
     const [ticker, setTicker] = useState("");
+    const [canPay, setCanPay] = useState(false);
 
     useEffect(()=>{
         console.log('from WalletInpuModal - 지갑선택시 결제정보',JSON.stringify(payinfo,null,2));
     },[payinfo])
+    useEffect(()=>{
+        console.log(`현재 ${ticker} 가치`,Value.currentTickerValue)
+        console.log(`현재 지갑내 ${ticker} 가치`,Value.myTickerValue)
+        console.log(`환산된 물건 가치`,Value.exchangedProduct_Value)
+    },[Value])
 
     const [Value, setValue] = useState({
         currentTickerValue:0,
@@ -47,14 +53,15 @@ const WalletInputModal = (props) => {
                     Accept: 'application/json',
                 },
             })
-            // const  myTickerValue= await axios.post("http://172.16.1.131:3000/getBalance",{
-            //     headers:{
-            //         Accept:'application/json',
-            //     },
-            //     data:{
-            //         "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
-            //         "tokenName": ticker
-            //     }})
+            setValue((e)=>({
+                ...e,
+                currentTickerValue: currentTickerValue.data[0].trade_price,
+                exchangedProduct_Value : (payinfo.price / currentTickerValue.data[0].trade_price).toFixed(5),
+            }))
+        }catch(error){
+            Error(error)
+        }
+        try{
             const myTickerValue = await axios({
                 method:"POST",
                 url:"http://172.16.1.131:3000/getBalance",
@@ -63,19 +70,15 @@ const WalletInputModal = (props) => {
                     "tokenName": ticker,
                 }
             })
-            console.log(`현재 지갑내 ${ticker} 가치`,myTickerValue.data.balance)
-            console.log(`현재 ${ticker} 가치`,currentTickerValue.data[0].trade_price)
-            console.log(`환산된 물건 가치`, (payinfo.price / currentTickerValue.data[0].trade_price))
-            setValue({
-                currentTickerValue: currentTickerValue.data[0].trade_price,
-                exchangedProduct_Value : (payinfo.price / currentTickerValue.data[0].trade_price).toFixed(5),
+            setValue((e)=>({
+                ...e,
                 myTickerValue : myTickerValue.data.balance.toFixed(5),
-            })
+            }))
+            if((Value.exchangedProduct_Value - Value.myTickerValue) >=0){
+                setCanPay(true)
+            }
         }catch(error){
             Error(error)
-        }
-        if(Value.exchangedProduct_Value >= Value.myTickerValue ){
-            console.log("가격 비교 결과 - 자금이 부족합니다. ")
         }
     }
 
@@ -87,60 +90,50 @@ const WalletInputModal = (props) => {
             console.log("takeaddress error", err)
         }
     }
- 
-    // const NowBalance = async () => {
-    //     const address = "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9";
-    //     setWalletAddress(address);
-    //     try {
-    //         const CrpytoValue = await EtherScanAPI.get(`?module=account&action=balance&address=${address}&tag=latest&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
-    //         const currentPrice = await axios.get(`https://api.upbit.com/v1/ticker?markets=KRW-ETH`,{
-    //             headers:{
-    //                 Accept: 'application/json',
-    //             },
-    //         })
-    //         const Balance = CrpytoValue.data.result
-    //         setValue( {
-    //             tickerValue : Balance *(Math.pow(10, -18)),
-    //             Price:   ( (Balance * (Math.pow(10, -18))) *currentPrice.data[0].trade_price ).toFixed(3)
-    //         })
 
-    //     } catch (error) {
-    //         Error(error)
-    //     }
-    // }
 
     const walletSelect = ()=>{
         if( walletAddress==="" || ticker ==="" ){
             Alert.alert("알림","지갑주소와 티커를 확인해주세요",[
                 {
-                  text:"네",
+                  text:"확인",
                   onPress:()=>null,
                   style:"cancel",
                 },
               ]);
         }else{
-            const newArrData = wallets.map((e, index)=>{
-                if(props.selecteditem.id == e.id){
-                    return{
-                        ...e,
-                        selected: true,
+            if(canPay===false){
+                Alert.alert("잔액 부족","지갑내 해당 코인 잔액이 부족합니다.",[
+                    {
+                      text:"확인",
+                      onPress:()=>null,
+                      style:"cancel",
+                    },
+                ]);
+            }else{
+                const newArrData = wallets.map((e, index)=>{
+                    if(props.selecteditem.id == e.id){
+                        return{
+                            ...e,
+                            selected: true,
+                        }
                     }
-                }
-                return {
+                    return {
+                        ...e,
+                        selected:false
+                    }
+                })  
+                setPayinfo(e => ({
                     ...e,
-                    selected:false
-                }
-            })  
-            setPayinfo(e => ({
-                ...e,
-                selectedWalletID: props.selecteditem.id,
-                selectedWallet: props.selecteditem.wallet,
-                exchangedvalue: Value.exchangedProduct_Value,
-                mywalletaddress: walletAddress,
-                ticker: ticker,
-            }))
-            props.setWalletList(newArrData)
-            props.oncancel()
+                    selectedWalletID: props.selecteditem.id,
+                    selectedWallet: props.selecteditem.wallet,
+                    exchangedvalue: Value.exchangedProduct_Value,
+                    mywalletaddress: walletAddress,
+                    ticker: ticker,
+                }))
+                props.setWalletList(newArrData)
+                props.oncancel()  
+            }
         }
     }
     return (

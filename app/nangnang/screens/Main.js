@@ -29,7 +29,7 @@ const Main = ({ navigation }) => {
                 <SubmitButton
                     onPress={()=>navigation.navigate('MyWallets')}
                     >지갑 등록 / 내 정보</SubmitButton>
-                <SubmitButton>내 결제 내역</SubmitButton>
+                <SubmitButton onPress={()=>navigation.navigate('MyPaymentlist')}>내 결제 내역</SubmitButton>
                 {state.isLogin && (<SubmitButton
                     onPress={logoutHandler}>로그아웃</SubmitButton>)}
                 {payinfo && payinfo.inpayment && ( 
