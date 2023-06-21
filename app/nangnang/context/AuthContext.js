@@ -20,20 +20,20 @@ const initialState = {
             seleted: false,
         },
         {
-            id: "walletconnect",
-            walletname:'WalletConnect',
+            id: "bitpay",
+            walletname:'Bitpay',
             walleraddress:'',
             selected: false,
         },
         {
-            id: "blockstreamgreen",
-            walletname:'Blockstream Green',
+            id: "argent",
+            walletname:'Argent',
             walleraddress:'',
             selected: false,
         },
         {
-            id: "bluewallet",
-            walletname:'Blue Wallet',
+            id: "rainbow",
+            walletname:'Rainbow',
             walleraddress:'',
             selected: false,
         }]

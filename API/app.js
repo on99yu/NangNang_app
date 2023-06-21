@@ -85,7 +85,9 @@ async function getBalance(tokenName, walletAddress){
       console.log(error.config);
     });
     tokenDemicalNum = 10**18;
+    console.log("ETH 내의 코인");
   }else{
+    console.log("ETH 외의 코인");
     if(tokenName==='USDT'){
       contractAddress = '0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49';
     }else if(tokenName==='USDC'){

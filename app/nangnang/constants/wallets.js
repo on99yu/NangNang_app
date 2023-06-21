@@ -11,20 +11,20 @@ const wallets = ([
         imageURL: require(`../assets/trustwallet.png`)
     },
     {
-        id: "walletconnect",
-        wallet: "WalletConnect",
-        imageURL: require(`../assets/walletconnect.png`)
+        id: "bitpay",
+        wallet: "Bitpay",
+        imageURL: require(`../assets/bitpay.png`)
 
     },
     {
-        id: "blockstreamgreen",
-        wallet: "Blockstream Green",
-        imageURL: require(`../assets/blockstreamgreen.png`)
+        id: "argent",
+        wallet: "Argent",
+        imageURL: require(`../assets/argent.png`)
     },
     {
-        id: "bluewallet",
-        wallet: "Blue Wallet",
-        imageURL: require(`../assets/bluewallet.png`)
+        id: "rainbow",
+        wallet: "Rainbow",
+        imageURL: require(`../assets/rainbow.png`)
 
     },
 ])
