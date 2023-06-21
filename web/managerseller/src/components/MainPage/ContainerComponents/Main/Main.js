@@ -1,13 +1,13 @@
-import classes from "./Main.module.css";
-
+import classes from './Main.module.css';
+import React, { useContext } from 'react';
+import { UserContext } from '../../../../contexts/UserContext';
 const Main = () => {
+  const { user } = useContext(UserContext);
   return (
     <div className={classes.main_wrap}>
       <div className={classes.main}>
         <div className={classes.main_text}>Main</div>
-        <div className={classes.main_component_wrap}>
-          
-        </div>
+        <div className={classes.main_component_wrap}>{console.log(user)}</div>
       </div>
     </div>
   );

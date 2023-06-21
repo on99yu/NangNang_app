@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Modal} from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert} from 'react-native';
 import { Link } from '@react-navigation/native';
 
 
@@ -24,7 +24,17 @@ const formatData = (data, numColumns) =>{
     }
     return data;
 }
+// const BigNumber = require('bignumber.js');
 
+// function convertToHex(value) {
+//   if (typeof value !== 'number') {
+//     throw new Error('유효하지 않은 입력: 숫자여야 합니다.');
+//   }
+
+//   const bigNumber = new BigNumber(value);
+//   const hexString = bigNumber.toString(16);
+//   return '0x' + hexString;
+// }
 const SelectWallet = ({navigation}) => {
     // WC_connector(WalletConnect_connector) 에서 사용할 함수들을 가져옴
     const {
@@ -32,8 +42,7 @@ const SelectWallet = ({navigation}) => {
         killSession,
         sendTx,
         connector,
-        shortenAddress,
-      } = WC_connector();
+      } = WC_connector(navigation,paymentCheck);
 
     const [payinfo] = usePayinfo();  
     const [state, dispatch] =useContext(AuthContext);
@@ -41,13 +50,44 @@ const SelectWallet = ({navigation}) => {
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
 
+    const paymentCheck = async (transactionhash)=>{
+        try{
+          const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
+          console.log('paymentCheck - 거래 결과 ', res.data.status)
+          console.log('transactionhash 값 ',transactionhash )
+          const status = res.data.status
+          if(status === "1" || status === 1){
+            navigation.navigate('PayResult')
+            //결제 완료 API 저장되어야함
+            console.log("결제 완료")
+          }else{
+            console.log("결제에 오류가 발생했습니다.")
+          }
+        }catch(e){
+          console.log(e)
+        }
+     
+      } 
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
 
         }
     },[])
-
+    const CW =()=>{
+        console.log("CW 함수 실행")
+        if(payinfo.selectedWalletID === ""){
+            Alert.alert("지갑선택", "결제에 사용할 지갑을 먼저 선택해주세요",[
+                {
+                    text:"네",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
+        }else{
+            connectWallet()
+        }
+    }
     const CloseModalHandler = () => {
         setModalIsVisible(false);
     }
@@ -56,7 +96,9 @@ const SelectWallet = ({navigation}) => {
         setSelectedItem(item)
         setModalIsVisible(true)
     }   
-
+    // var weiAmount = payinfo.exchangedvalue*10**18
+    // var hexData = weiAmount.toString(16)
+    // sendTx(connector.accounts[0], "0x"+hexData)
     return (
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
@@ -69,13 +111,13 @@ const SelectWallet = ({navigation}) => {
             </View>
             {!connector.connected && (
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
-                    <SubmitButton onPress={connectWallet}>지갑 연결</SubmitButton>
+                    <SubmitButton onPress={CW}>지갑 연결</SubmitButton>
                 </View>
             )}
             {/* 지갑이 연결되어있다면 아래 버튼들을 출력 */}
             {connector.connected && (
                 <>
-                <Text style={{color : Colors.indigo500,alignSelf:'center'}}> 지갑주소: {shortenAddress(connector.accounts[0])}</Text>
+                <Text style={{color : Colors.indigo500,alignSelf:'center'}}> 연결된 지갑 : {payinfo.selectedWallet}</Text>
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     <SubmitButton onPress={killSession}>세션 종료</SubmitButton>
                 </View>
@@ -83,8 +125,8 @@ const SelectWallet = ({navigation}) => {
                     {/* sendTx(toAccount: string, valueAmount: string) 인데 지금은 toAccount에 연결된 자기자신 지갑주소 넣은거고 valueAmount 값은 위에 만들었고(0x0으로) */}
                     <SubmitButton onPress={() => {
                         console.log("from SelectWallet 돈을 보낼 지갑주소", payinfo.walletaddress)
-                        console.log("from SelectWallet 보낼 돈", payinfo.exchangedvalue)
-                        sendTx(connector.accounts[0], "0xBBB")
+                        console.log("from SelectWallet 보낼 돈", (payinfo.exchangedvalue*10**18).toString(16))
+                        sendTx("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC", (payinfo.exchangedvalue*10**18).toString(16))
                     }}>거래 전송</SubmitButton>
                 </View>
                 </>

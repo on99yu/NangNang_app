@@ -11,7 +11,8 @@ import QRCodeScanner from '../screens/QRCodeScanner';
 import Payinfo from '../screens/Payinfo';
 import PayResult from '../screens/PayResult';
 import { AuthContext } from '../context/AuthContext';
-
+import MyPaymentlist from '../screens/MyPaymentlist';
+import Paymentdetail from '../screens/Paymentdetail';
 const Stack = createStackNavigator();
 const AuthStack = createStackNavigator();
 const MainStack = createStackNavigator();
@@ -33,6 +34,9 @@ export function Home (){
       <MainStack.Screen name="Payinfo" component={Payinfo}/>
       <MainStack.Screen name="QRCodeScanner" component={QRCodeScanner}/>
       <MainStack.Screen name="MyWallets" component={MyWallets}/>
+      <MainStack.Screen name="PayResult" component={PayResult}/>
+      <MainStack.Screen name="MyPaymentlist" component={MyPaymentlist}/>
+      <MainStack.Screen name="Paymentdetail" component={Paymentdetail}/>
     </MainStack.Navigator>
   )
 }

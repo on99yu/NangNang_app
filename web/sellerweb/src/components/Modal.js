@@ -1,7 +1,6 @@
-import classes from "./Modal.module.css";
-import ReactDOM from "react-dom";
-import QrGenerator from "./QrGenerator";
-
+import classes from './Modal.module.css';
+import ReactDOM from 'react-dom';
+import { useEffect, useState } from 'react';
 const Backdrop = (props) => {
   return <div className={classes.backdrop} onClick={props.onClose} />;
 };
@@ -37,18 +36,30 @@ const svgFile = (
 );
 
 const ModalOverlay = (props) => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          'http://localhost:8080/qrpage?id=aa&price=bb'
+        );
+        const data = await response.json();
+        setData(data);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className={classes.modal}>
       <div className={classes.modal_content}>
         <header className={classes.modal_header}>{svgFile}</header>
-        <div className={classes.modal_main}>
-          <QrGenerator
-            number="0001"
-            name="abc"
-            price="30000"
-            platformname="nangnang"
-          />
-        </div>
+        <div className={classes.modal_main}>{data}</div>
         <footer className={classes.modal_footer}>
           <button
             className={classes.modal_footer_button}
@@ -62,7 +73,7 @@ const ModalOverlay = (props) => {
   );
 };
 
-const portalElement = document.getElementById("overlays");
+const portalElement = document.getElementById('overlays');
 
 const Modal = (props) => {
   return (

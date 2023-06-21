@@ -23,15 +23,21 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
 
   const handlerBarCodeScanned = ({type, data})=>{
     const startTime = new Date();
+    const start = ["NANGNANG,Kimchi,10000,metamask(id),0x2a535b423542c23a211cd3124a1121b33a,1(영수증번호),sellerid"]
     var arrdata = data.split(',')
-
+    
     const Payinfo ={
+      inpayment : true,
       product: arrdata[1],
       price: arrdata[2],
       wallet: arrdata[3],
-      walletaddress: arrdata[5],
+      walletaddress: arrdata[4],
+      receiptid : arrdata[5],
+      sellerid: arrdata[6],
       selectedWalletID:"",
+      selectedWallet:"",
       exchangedvalue: 0,
+      mywallet:"",
       mywalletaddress: "",
       ticker : "",
     }
