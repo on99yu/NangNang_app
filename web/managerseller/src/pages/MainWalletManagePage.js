@@ -4,7 +4,7 @@ import Category from '../components/MainPage/Category/Category';
 import Footer from '../components/MainPage/Footer/Footer';
 import WalletManage from '../components/MainPage/ContainerComponents/WalletManager/WalletManage/WalletManage';
 
-const MainWalletManagePage = () => {
+const MainWalletManagePage = ({ walletImage }) => {
   return (
     <div className={classes.container}>
       <Header />

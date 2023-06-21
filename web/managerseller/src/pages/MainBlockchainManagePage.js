@@ -3,7 +3,6 @@ import Header from '../components/MainPage/Header/Header';
 import Category from '../components/MainPage/Category/Category';
 import Footer from '../components/MainPage/Footer/Footer';
 import BlockchainManage from '../components/MainPage/ContainerComponents/WalletManager/BlockchainManage/BlockchainManage';
-
 const MainBlockchainManagePage = () => {
   return (
     <div className={classes.container}>
