@@ -42,7 +42,7 @@ const SelectWallet = ({navigation}) => {
         killSession,
         sendTx,
         connector,
-      } = WC_connector(navigation);
+      } = WC_connector(navigation,paymentCheck);
 
     const [payinfo] = usePayinfo();  
     const [state, dispatch] =useContext(AuthContext);
@@ -50,13 +50,30 @@ const SelectWallet = ({navigation}) => {
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
 
+    const paymentCheck = async (transactionhash)=>{
+        try{
+          const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
+          console.log('paymentCheck - 거래 결과 ', res.data.status)
+          console.log('transactionhash 값 ',transactionhash )
+          const status = res.data.status
+          if(status === "1" || status === 1){
+            navigation.navigate('PayResult')
+            //결제 완료 API 저장되어야함
+            console.log("결제 완료")
+          }else{
+            console.log("결제에 오류가 발생했습니다.")
+          }
+        }catch(e){
+          console.log(e)
+        }
+     
+      } 
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
 
         }
     },[])
-
     const CW =()=>{
         console.log("CW 함수 실행")
         if(payinfo.selectedWalletID === ""){
