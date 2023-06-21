@@ -72,7 +72,7 @@ const WalletInputModal = (props) => {
             })
             setValue((e)=>({
                 ...e,
-                myTickerValue : myTickerValue.data.balance.toFixed(5),
+                myTickerValue : (myTickerValue.data.balance).toFixed(5),
             }))
             if((Value.exchangedProduct_Value - Value.myTickerValue) >=0){
                 setCanPay(true)

@@ -23,8 +23,9 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
 
   const handlerBarCodeScanned = ({type, data})=>{
     const startTime = new Date();
+  
     var arrdata = data.split(',')
-
+    
     const Payinfo ={
       inpayment : true,
       product: arrdata[1],

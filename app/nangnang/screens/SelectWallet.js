@@ -79,7 +79,9 @@ const SelectWallet = ({navigation}) => {
         setSelectedItem(item)
         setModalIsVisible(true)
     }   
-
+    // var weiAmount = payinfo.exchangedvalue*10**18
+    // var hexData = weiAmount.toString(16)
+    // sendTx(connector.accounts[0], "0x"+hexData)
     return (
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
@@ -106,8 +108,8 @@ const SelectWallet = ({navigation}) => {
                     {/* sendTx(toAccount: string, valueAmount: string) 인데 지금은 toAccount에 연결된 자기자신 지갑주소 넣은거고 valueAmount 값은 위에 만들었고(0x0으로) */}
                     <SubmitButton onPress={() => {
                         console.log("from SelectWallet 돈을 보낼 지갑주소", payinfo.walletaddress)
-                        console.log("from SelectWallet 보낼 돈", convertToHex(payinfo.exchangedvalue))
-                        sendTx("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC", convertToHex(payinfo.exchangedvalue))
+                        console.log("from SelectWallet 보낼 돈", (payinfo.exchangedvalue*10**18).toString(16))
+                        sendTx("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC", (payinfo.exchangedvalue*10**18).toString(16))
                     }}>거래 전송</SubmitButton>
                 </View>
                 </>
