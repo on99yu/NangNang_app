@@ -2,21 +2,54 @@ import { useWalletConnect } from "@walletconnect/react-native-dapp";
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import EtherScanAPI from "./EtherScanAPI";
-
+import { usePayinfo } from "../context/PayinfoContext";
 // 23.05.07 수정본
 
 // 해당 파일은 Walletconnect version 1.0을 사용한 파일.
 export const WC_connector = (navigation: any) => {
     // 트랜잭션 전송 결과 해시값을 저장하는 상태
     const [sendTxResult, setSendTxResult] = useState('');
-  
     // 월렛 커넥터를 사용하기 위해 생성하는 중간다리 객체
     const connector = useWalletConnect();
-  
+    const paymentdata={
+      payment_receipt_multiple_products_info:{
+        payment_receipt_idx: 1,
+        product_info_idx:"",
+        quantity:"",
+      },
+      payment_receipt_network_info:{
+        payment_receipt_idx: 1,
+        detailed_network_name:"",
+        detailed_network_real_id_num:"",
+        main_blockchain_name:"",
+        payment_wallet_name:"",
+      },
+      payment_receipt_participants:{
+        payment_receipt_idx: 1,
+        consumer_id:"",
+        seller_id:"",
+      },
+      payment_receipt_price_address_info:{
+        payment_receipt_idx:1,
+        receiver_seller_id:"",
+        receiver_wallet_address:"",
+        sender_consumer_id:"",
+        sender_wallet_address:"",
+        total_coin_price:"",
+        total_won_price:"",
+      },
+      payment_receipt_status_info:{
+        payment_receipt_idx:1,
+        payment_end_time:"",
+        payment_start_time:"",
+        payment_status:"",
+      }
+    }
     const paymentCheck = async (transactionhash: string)=>{
       try{
         const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
-        console.log('paymentChechk', res.data.status)
+        console.log('paymentCheck - 거래 결과 ', res.data.status)
+        console.log('transactionhash 값 ',transactionhash )
         const status = res.data.status
         if(status === "1" || status === 1){
           navigation.navigate('PayResult')
@@ -92,7 +125,9 @@ export const WC_connector = (navigation: any) => {
       })
       .then(transactionResult => {
         setSendTxResult(JSON.stringify(transactionResult));
-        paymentCheck(transactionResult)
+        if(transactionResult){
+          paymentCheck(transactionResult)
+        }
       })
       .catch(error => {
         console.log("Error in sendTx:", error);
