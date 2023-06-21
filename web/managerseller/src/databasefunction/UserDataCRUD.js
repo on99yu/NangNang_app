@@ -23,7 +23,7 @@
 //    // 함수에서 받는 인자들 설명 : 인자1, 인자2, ...
 // 함수 형식 설명 끝
 
-import { db } from '../config/firebaseAPI';
+import { db } from '../config/FirebaseAPI';
 
 const userDataDB = {
   // user_data 데이터 생성하는 함수

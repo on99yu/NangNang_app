@@ -7,7 +7,7 @@ import { LoginReturnData } from '../../databasefunction/LoginReturnDataFunc';
 import { UserContext } from '../../contexts/UserContext';
 
 const SignIn = () => {
-  const { user, updateUser } = useContext(UserContext);
+  const { updateUser } = useContext(UserContext);
   const [signInId, setSignInId] = useState('');
   const [signInPw, setSignInPw] = useState('');
   const [signInInvalid, setSignInInvalid] = useState(false);
