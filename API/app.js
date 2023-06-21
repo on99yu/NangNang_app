@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 8080;
 const axios = require('axios');
 
 require('dotenv').config();// .env파일 사용
