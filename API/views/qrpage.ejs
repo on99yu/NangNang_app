@@ -72,7 +72,14 @@ button > div {
     var qrcode = new QRCode(document.getElementById("qrcode"), {
       width: 200,
       height: 200,
-      text: '<%=data.id%>,<%=data.price%>'
+      text: '<%=data.sellerFlatform%>,<%=data.productName%>,<%=data.productPrice%>,<%=data.walletName%>,<%=data.walletContractAddress%>,<%=data.recieptNo%>,<%=data.sellerId%>'
+	// sellerFlatform : req.query.sellerFlatform,
+    // productName : req.query.productName,
+    // productPrice : req.query.productPrice,
+    // walletName : req.query.walletName,
+    // walletContractAddress : req.query.walletContractAddress,
+    // recieptNo : req.query.recieptNo,
+    // sellerId : req.query.sellerId
     });
 
     function makeCode() {
