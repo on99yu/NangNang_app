@@ -7,32 +7,11 @@ import MainMyInfoPage from './pages/MainMyInfoPage';
 import MainWalletViewPage from './pages/MainWalletViewPage';
 import MainEmptyPage from './pages/MainEmptyPage';
 import SignInFormPage from './pages/SignInFormPage';
-import { useState } from 'react';
+import SignUpFormPage from './pages/SignUpFormPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { UserProvider } from './contexts/UserContext';
 
 export default function App() {
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem('accessToken') || ''
-  );
-
-  const handleSetAccessToken = (newToken) => {
-    setAccessToken(newToken);
-    localStorage.setItem('accessToken', newToken);
-  };
-
-  const isValidToken = (curAccessToken) => {
-    console.log('accessToken:', accessToken);
-    console.log('curAccessToken:', curAccessToken);
-
-    if (accessToken === curAccessToken) {
-      alert('유효한 접근입니다.');
-      console.log(accessToken, curAccessToken);
-    } else {
-      alert('유효하지 않은 접근입니다.', accessToken);
-      window.location.href = '/login';
-    }
-  };
-
   const walletSourceList = [
     {
       id: 0,
@@ -74,34 +53,29 @@ export default function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Routes>
-          <Route
-            path="login"
-            element={
-              <SignInFormPage handleSetAccessToken={handleSetAccessToken} />
-            }
-          />
-          <Route
-            path="/"
-            element={<MainHomePage isValidLogin={isValidToken} />}
-          />
-          <Route
-            path="/WalletManage"
-            element={<MainWalletManagePage alletImage={walletSourceList} />}
-          />
-          <Route path="/NetworkManage" element={<MainNetworkManagePage />} />
-          <Route
-            path="/BlockchainManage"
-            element={<MainBlockchainManagePage />}
-          />
-          <Route path="/PaymentRecord" element={<MainPaymentRecordsPage />} />
-          <Route
-            path="/WalletView"
-            element={<MainWalletViewPage walletImage={walletSourceList} />}
-          />
-          <Route path="/MyInfo" element={<MainMyInfoPage />} />
-          <Route path="*" element={<MainEmptyPage />} />
-        </Routes>
+        <UserProvider>
+          <Routes>
+            <Route path="/" element={<SignInFormPage />} />
+            <Route path="/signup" element={<SignUpFormPage />} />
+            <Route path="/main" element={<MainHomePage />} />
+            <Route
+              path="/WalletManage"
+              element={<MainWalletManagePage walletImage={walletSourceList} />}
+            />
+            <Route path="/NetworkManage" element={<MainNetworkManagePage />} />
+            <Route
+              path="/BlockchainManage"
+              element={<MainBlockchainManagePage />}
+            />
+            <Route path="/PaymentRecord" element={<MainPaymentRecordsPage />} />
+            <Route
+              path="/WalletView"
+              element={<MainWalletViewPage walletImage={walletSourceList} />}
+            />
+            <Route path="/MyInfo" element={<MainMyInfoPage />} />
+            <Route path="*" element={<MainEmptyPage />} />
+          </Routes>
+        </UserProvider>
       </BrowserRouter>
     </div>
   );
