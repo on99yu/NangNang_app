@@ -26,11 +26,10 @@ const Payinfo = ({navigation}) => {
                 <ScreenTitle title="결제 정보" />
             </View>
             <ScrollView style={styles.content}>
-                <ContentsBox title="제품명" contents={payinfo.Name}/>
-                <ContentsBox title="결제 금액" contents={payinfo.Price}/>
-                <ContentsBox title="사용 지갑" contents={payinfo.Wallet}/>
-                <ContentsBox title="사용 코인" contents={payinfo.Coin}/>
-                <ContentsBox title="지갑 키" contents={payinfo.WalletKey}/>
+                <ContentsBox title="제품명" contents={payinfo.product}/>
+                <ContentsBox title="결제 금액" contents={payinfo.price}/>
+                <ContentsBox title="사용 지갑" contents={payinfo.wallet}/>
+                <ContentsBox title="보낼 지갑주소" contents={payinfo.walletaddress}/>
             </ScrollView>
             <View style={styles.button}>
                 <SubmitButton onPress={() => navigation.navigate('SelectWallet')}>지갑 선택으로</SubmitButton>

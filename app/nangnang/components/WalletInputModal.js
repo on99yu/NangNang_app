@@ -1,57 +1,141 @@
-import React, { forwardRef, useContext, useEffect, useImperativeHandle, useState } from 'react';
-import { View, Modal, StyleSheet, Text, TextInput,Image, KeyboardAvoidingView } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Modal, StyleSheet, Text, TextInput,Image, KeyboardAvoidingView,Alert } from 'react-native';
 import axios from 'axios';
-import EtherScanAPI from '../api/EtherScanAPI';
+import {Picker} from '@react-native-picker/picker';
 
+import wallets from '../constants/wallets';
+import EtherScanAPI from '../API/EtherScanAPI';
 import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
 import SubmitButton from './Buttons/SubmitButton';
 import { AuthContext } from '../context/AuthContext';
+import { usePayinfo } from '../context/PayinfoContext';
+const WalletInputModal = (props) => {
 
-const WalletInputModal = forwardRef((props, ref) => {
-
-    useImperativeHandle(ref, ()=>({
-        takeaddress
-    }))
+    // useImperativeHandle(ref, ()=>({
+    //     takeaddress
+    // }))
 
     const [state, dispatch] = useContext(AuthContext)
-    const [walletAddress, setWalletAddress] = useState("");
-    
+    const [payinfo, setPayinfo] = usePayinfo();   
+    const [walletAddress, setWalletAddress] = useState("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC");
+    const [ticker, setTicker] = useState("");
+    const [canPay, setCanPay] = useState(false);
+
+    useEffect(()=>{
+        console.log('from WalletInpuModal - 지갑선택시 결제정보',JSON.stringify(payinfo,null,2));
+    },[payinfo])
+    useEffect(()=>{
+        console.log(`현재 ${ticker} 가치`,Value.currentTickerValue)
+        console.log(`현재 지갑내 ${ticker} 가치`,Value.myTickerValue)
+        console.log(`환산된 물건 가치`,Value.exchangedProduct_Value)
+    },[Value])
+
     const [Value, setValue] = useState({
-        CoinValue: 0,
-        Price:0,
+        currentTickerValue:0,
+        exchangedProduct_Value : 0,
+        myTickerValue:0,
     })
-    const takeaddress = async (item)=> {
-        console.log("takeaddress 함수 호출 ", )
-        const  walletname =  await state.wallet.find(e => e.walletname)
-        console.log(walletname);
-        setWalletAddress(walletname.walletaddress)
-    }
-    
-    const NowBalance = async () => {
-        const address = "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9";
-        setWalletAddress(address);
-        try {
-            const CrpytoValue = await EtherScanAPI.get(`?module=account&action=balance&address=${address}&tag=latest&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
-            const currentPrice = await axios.get(`https://api.upbit.com/v1/ticker?markets=KRW-ETH`,{
+
+    const Balance = async ()=>{
+        if(ticker === ""){
+            Alert.alert("티커 선택","조회할 티커를 선택해주세요",[
+                {
+                    text:"닫기",
+                    onPress:()=>null,
+                    style:"cancel",
+                }
+            ] )
+        }
+        try{
+            const currentTickerValue = await axios.get(`https://api.upbit.com/v1/ticker?markets=KRW-${ticker}`,{
                 headers:{
                     Accept: 'application/json',
                 },
             })
-            const Balance = CrpytoValue.data.result
-            setValue( {
-                CoinValue : Balance *(Math.pow(10, -18)),
-                Price:   ( (Balance * (Math.pow(10, -18))) *currentPrice.data[0].trade_price ).toFixed(3)
+            setValue((e)=>({
+                ...e,
+                currentTickerValue: currentTickerValue.data[0].trade_price,
+                exchangedProduct_Value : (payinfo.price / currentTickerValue.data[0].trade_price).toFixed(5),
+            }))
+        }catch(error){
+            Error(error)
+        }
+        try{
+            const myTickerValue = await axios({
+                method:"POST",
+                url:"http://172.16.1.131:3000/getBalance",
+                data:{
+                    "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
+                    "tokenName": ticker,
+                }
             })
-
-        } catch (error) {
+            setValue((e)=>({
+                ...e,
+                myTickerValue : (myTickerValue.data.balance).toFixed(5),
+            }))
+            if((Value.exchangedProduct_Value - Value.myTickerValue) >=0){
+                setCanPay(true)
+            }
+        }catch(error){
             Error(error)
         }
     }
-    const Initialization =() =>{
-        setValue({CoinValue:0, Price:0})
+
+    const takeAddress = async ()=> {
+        try {
+            const walletaddress =  await state.wallet.find(e => e.id === props.selecteditem.id)
+            setWalletAddress(walletaddress.walletaddress)
+        }catch(err){
+            console.log("takeaddress error", err)
+        }
     }
 
+
+    const walletSelect = ()=>{
+        if( walletAddress==="" || ticker ==="" ){
+            Alert.alert("알림","지갑주소와 티커를 확인해주세요",[
+                {
+                  text:"확인",
+                  onPress:()=>null,
+                  style:"cancel",
+                },
+              ]);
+        }else{
+            if(canPay===false){
+                Alert.alert("잔액 부족","지갑내 해당 코인 잔액이 부족합니다.",[
+                    {
+                      text:"확인",
+                      onPress:()=>null,
+                      style:"cancel",
+                    },
+                ]);
+            }else{
+                const newArrData = wallets.map((e, index)=>{
+                    if(props.selecteditem.id == e.id){
+                        return{
+                            ...e,
+                            selected: true,
+                        }
+                    }
+                    return {
+                        ...e,
+                        selected:false
+                    }
+                })  
+                setPayinfo(e => ({
+                    ...e,
+                    selectedWalletID: props.selecteditem.id,
+                    selectedWallet: props.selecteditem.wallet,
+                    exchangedvalue: Value.exchangedProduct_Value,
+                    mywalletaddress: walletAddress,
+                    ticker: ticker,
+                }))
+                props.setWalletList(newArrData)
+                props.oncancel()  
+            }
+        }
+    }
     return (
             <Modal
                 animationType='fade'
@@ -59,32 +143,49 @@ const WalletInputModal = forwardRef((props, ref) => {
                 transparent={true}>
                     <KeyboardAvoidingView  behavior='padding' style={styles.centerdView}>
                     <View style={styles.modalView}>
-                        <Text style={[styles.text, {fontSize: 20, color:Colors.orange500}]}>{props.title}</Text>
+                        <Text style={[styles.text, {fontSize: 20, color:Colors.orange500}]}>{props.selecteditem.wallet}</Text>
                         <View style={styles.iconwrapper}>
                             <Image
                                 style={styles.image}
-                                source={props.imageURL} />
+                                source={props.selecteditem.imageURL} />
                         </View>
-                        <View>
-                            <Text style={styles.text}>{Value.CoinValue} : {""}</Text>
-                        </View>
-                        <Text style={styles.text}>{Value.Price} 원</Text>
+                            <Text style={styles.text}>현 코인 가격 : {Value.currentTickerValue} 원</Text>
+                        <Text style={styles.text}>환산된 가격 : <Text style={{color:'black',fontWeight: 'bold',}}>{Value.exchangedProduct_Value}</Text></Text>
+                        <Text style={styles.text}>지갑 내 코인 가치: <Text style={{color:'black',fontWeight: 'bold',}}>{Value.myTickerValue}</Text></Text>
                         <TextInput
                             style={styles.inputaddress}
                             placeholder="지갑주소"
                             placeholderTextColor="#A9A9AC"
                             value={walletAddress}
                             onChangeText={(e) => setWalletAddress(e)} />
-                        <FunctionButton onPress={NowBalance}>자금 계산</FunctionButton>
-                        <FunctionButton onPress={Initialization}>초기화</FunctionButton>
+                        <View style={{borderWidth: 1,borderColor:'gray',borderRadius:10, flexDirection:'row', paddingHorizontal:10}}>
+                            <View style={{justifyContent:'center'}}>
+                                <Text style={styles.text}>티커 선택 </Text>
+                            </View>
+                            <Picker
+                                selectedValue={ticker}
+                                onValueChange={(value, index) => setTicker(value)}
+                                mode="dropdown" // Android only
+                                style={styles.picker}>
+                                <Picker.Item label="..." value="" />
+                                <Picker.Item label="ETH" value="ETH" />
+                                <Picker.Item label="USDT" value="USDT" />
+                                <Picker.Item label="USDC" value="USDC" />
+                                <Picker.Item label="UNI" value="UNI" />
+                                <Picker.Item label="WETH" value="WETH" />
+                            </Picker>
+                        </View>
+                        <FunctionButton onPress={takeAddress}>지갑주소 가져오기</FunctionButton>
+                        <FunctionButton onPress={Balance}>가격 조회</FunctionButton>
                         <FunctionButton onPress={props.oncancel}>닫기</FunctionButton>
+                        <FunctionButton onPress={walletSelect}>이 지갑 선택</FunctionButton>
                     </View>
                     
                     </KeyboardAvoidingView>
             </Modal>
 
     );
-});
+};
 const styles = StyleSheet.create({
     centerdView: {
         flex: 1,
@@ -139,5 +240,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    picker: {
+        // marginVertical: 30,
+        width: 150,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: 'black',
+      },
 })
 export default WalletInputModal;

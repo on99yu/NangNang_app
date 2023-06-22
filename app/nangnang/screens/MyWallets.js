@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState,useEffect } from 'react';
 import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Modal} from 'react-native';
 import { Link } from '@react-navigation/native';
 
@@ -78,7 +78,7 @@ const MyWallets = ({navigation}) => {
                     alwaysBounceVertical={false}
                 />
                 <WalletAddress
-                    title={selectedItem.wallet}
+                    selecteditem={selectedItem}
                     visible={modalIsVisible} 
                     oncancel={CloseModalHandler}/>
             </View>

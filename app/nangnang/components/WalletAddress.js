@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Modal, StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native';
 import axios from 'axios';
-import EtherScanAPI from '../api/EtherScanAPI';
+import EtherScanAPI from '../API/EtherScanAPI';
 
 import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
@@ -10,27 +10,32 @@ import { AuthContext } from '../context/AuthContext';
 const WalletAddress = (props) => {
 
     const [state, dispatch] = useContext(AuthContext)
-    const [walletAddress, setWalletAddress] = useState("0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9");
-    const [Ether, setEther] = useState(0);
+    const [walletAddress, setWalletAddress] = useState("");
+
+    useEffect(()=>{
+        console.log("WalletAddresModal",JSON.stringify(state,null,2))
+    },[state])
     
     const WASaveHandler = ()=>{
-            const walletName = props.title
-            saveAddress(walletName, "0x91C15316d4bfaaAF130cc80215a16Aa1A23D98A9")
+            const id = props.selecteditem.id
+            saveAddress(id, "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC")
     }
-    const Initialization = (walletName)=>{
+
+    const Initialization = ()=>{
         dispatch({
             type: 'initialization_address',
-            walletname : props.title,
+            id : props.selecteditem.id,
         })
         setWalletAddress("");
     }
-    const saveAddress = (walletName, Address) => {
+
+    const saveAddress = (id, Address) => {
         dispatch({
             type:'save_address',
-            walletname : walletName,
+            id: id,
             walletaddress: Address,
         })
-        console.log("save_address - ", state)
+        setWalletAddress(Address);
     }
     return (
             <Modal
@@ -39,7 +44,7 @@ const WalletAddress = (props) => {
                 transparent={true}>
                     <View style={styles.centerdView}>
                     <View style={styles.modalView}>
-                        <Text style={[styles.text, {fontSize: 20, color:Colors.orange500}]}>{props.title}</Text>
+                        <Text style={[styles.text, {fontSize: 20, color:Colors.orange500}]}>{props.selecteditem.wallet}</Text>
                         <Text style={styles.text}>{state.email}님</Text>
                         <TextInput
                             style={styles.inputaddress}
@@ -47,7 +52,7 @@ const WalletAddress = (props) => {
                             placeholderTextColor="#A9A9AC"
                             value={walletAddress}
                             onChangeText={(e) => setWalletAddress(e)} />
-                        <FunctionButton >자금 계산</FunctionButton>
+                        <FunctionButton >지갑주소 검증</FunctionButton>
                         <FunctionButton onPress={WASaveHandler}>지갑주소 등록</FunctionButton>
                         <FunctionButton onPress={Initialization}>지갑주소 지우기</FunctionButton>
                         <FunctionButton onPress={props.oncancel} >닫기</FunctionButton>
