@@ -22,7 +22,7 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
   },[]);
 
   const handlerBarCodeScanned = ({type, data})=>{
-    const startTime = new Date();
+    console.log("QR 코드 데이터 확인1",data)
     const start = ["NANGNANG,Kimchi,10000,metamask(id),0x2a535b423542c23a211cd3124a1121b33a,1(영수증번호),sellerid"]
     var arrdata = data.split(',')
     
@@ -44,15 +44,13 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
     if(data){
       setScanData(true);
       setPayinfo(Payinfo);
-      console.log(`${data}`);
+      console.log(`QR코드 데이터 확인2 ${data}`);
       navigation.navigate('SelectWallet');
     }
     else{
       console.log(`Type: ${type}`);
       setScanData(false)
     }
-    const endTime = new Date();
-    const scanTime = endTime - startTime;
     // console.log("from QRCodeScanner - QR 코드 스캔 시간:", scanTime, "밀리초");
   } 
   if(hasPermission===null){

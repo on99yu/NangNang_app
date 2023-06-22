@@ -57,6 +57,50 @@ const SelectWallet = ({navigation}) => {
           console.log('transactionhash 값 ',transactionhash )
           const status = res.data.status
           if(status === "1" || status === 1){
+            try{
+                const savepayment = await axios({
+                    method:"POST",
+                    url:"http://127.0.0.1:5001/nangnang-b59c0/asia-northeast3/api/paymentreceipt/demo",
+                    data:{
+                        "multipleProductsInfo":
+                            {
+                                "payment_receipt_idx": "10",
+                                "product_info_idx":"9",
+                                "quantity":"1"
+                            },
+                          "networkInfo":{
+                            "payment_receipt_idx": "10",
+                            "detailed_network_name":"a",
+                            "detailed_network_real_id_num":"a",
+                            "main_blockchain_name":"a",
+                            "payment_wallet_name":"a"
+                          },
+                          "participants":{
+                            "payment_receipt_idx": "10",
+                            "consumer_id":"1",
+                            "seller_id":"1"
+                          },
+                          "priceAddressInfo":{
+                            "payment_receipt_idx":"10",
+                            "receiver_seller_id":"1",
+                            "receiver_wallet_address":"1",
+                            "sender_consumer_id":"1",
+                            "sender_wallet_address":"1",
+                            "total_coin_price":"1",
+                            "total_won_price":"1"
+                          },
+                          "statusInfo":{
+                            "payment_receipt_idx":"10",
+                            "payment_end_time":"1",
+                            "payment_start_time":"1",
+                            "payment_status":"1"
+                          }
+                        }
+                })
+                console.log("paymentcheck 결과", savepayment)
+            }catch(e){
+                Error(e)
+            }
             navigation.navigate('PayResult')
             //결제 완료 API 저장되어야함
             console.log("결제 완료")
@@ -66,7 +110,6 @@ const SelectWallet = ({navigation}) => {
         }catch(e){
           console.log(e)
         }
-     
       } 
     useEffect(()=>{
         setWalletList(wallets);
