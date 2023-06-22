@@ -32,10 +32,10 @@ app.get('/qrpage',(req,res) =>{
   res.render('qrpage', { data: data });
 });
 app.get('/tokenBalanceTrans',async (req,res)=>{
-  var data = req.body;
-  var dollarBalance = await wonToDollar(req.body.wonBalance);
-  var tokenBalance = await dollarToToken(dollarBalance,'USDC');
+  var dollarBalance = await wonToDollar(req.query.wonBalance);
+  var tokenBalance = await dollarToToken(dollarBalance,req.query.tokenName);
   
+  res.send({"tokenBalance":tokenBalance});
 });
 app.post('/checkTransaction', async (req,res)=>{
     const data =  await getTransaction(req.body.transactionHash,process.env.ETH_SCAN_APIKEY);
@@ -172,7 +172,7 @@ return transData;
 
 async function dollarToToken(dollarBalance,tokenName){
   var tokenIds='ethereum,tether,usd-coin,uniswap,weth';
-  var tokenBalance;
+  var tokenBalance, transBalance;
   data = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${tokenIds}&vs_currencies=usd`).catch(error => {
       if (error.response) {
         // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
@@ -195,7 +195,12 @@ async function dollarToToken(dollarBalance,tokenName){
   }else if(tokenName==='USDT'){
     tokenBalance=data.data.tether.usd;
   }else if(tokenName==='USDC'){
-    tokenBalance=data.data.usd-coin.usd;
+    tokenBalance=data.data['usd-coin'].usd;
+  }else if(tokenName==='UNI'){
+    tokenBalance=data.data.uniswap.usd;
+  }else if(tokenName==='WETH'){
+    tokenBalance=data.data.weth.usd;
   }
-  console.log(tokenBalance);
+  transBalance=dollarBalance/tokenBalance
+  return transBalance;
 }
