@@ -7,7 +7,7 @@ import { LoginReturnData } from '../../databasefunction/LoginReturnDataFunc';
 import { UserContext } from '../../contexts/UserContext';
 
 const SignIn = () => {
-  const { updateUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
   const [signInId, setSignInId] = useState('');
   const [signInPw, setSignInPw] = useState('');
   const [signInInvalid, setSignInInvalid] = useState(false);
@@ -29,29 +29,54 @@ const SignIn = () => {
 
     try {
       setLoading(true);
-      const data = await LoginReturnData(id, pw);
-      setSignInData(data);
-      alert('Login successful');
-      updateUser({
-        id: signInData.id,
-        pw: signInData.password,
-        email: signInData.email,
-        name: signInData.real_name,
-        inumber: signInData.resident_registration_number,
-        phone: signInData.phone_number,
-      });
-      window.location.href = '/main';
+      let data = await LoginReturnData(id, pw);
+      console.log(data);
+      if (data === -1) {
+        setSignInInvalid(true);
+      } else {
+        setSignInData(data);
+        console.log(`signInData: ${signInData}`);
+        alert('Login Successful');
+        await updateUser({
+          id: data.id, // 수정: data를 사용하여 값을 가져옴
+          pw: data.password,
+          email: data.email,
+          name: data.real_name,
+          inumber: data.resident_registration_number,
+          phone: data.phone_number,
+        });
+      }
+      if (user.id === '') {
+        alert('데이터가 적용되지 않았습니다.');
+      } else {
+        window.location.href = '/main';
+      }
     } catch (error) {
       console.log(error);
       alert('Login failed');
       setSignInInvalid(true);
     } finally {
       setLoading(false);
+      console.log(`handleSubmit이 끝난 signInData : ${signInData}`);
     }
   };
 
   useEffect(() => {
     setSignInInvalid(false); // 컴포넌트가 마운트될 때 count 상태를 0으로 설정
+
+    // if (signInData) {
+    //   const updatedUserData = {
+    //     id: signInData.id,
+    //     pw: signInData.password,
+    //     email: signInData.email,
+    //     name: signInData.real_name,
+    //     inumber: signInData.resident_registration_number,
+    //     phone: signInData.phone_number,
+    //   };
+    //   updateUser(updatedUserData);
+    //   setSignInData(updatedUserData);
+    // }
+    // console.log(signInData);
   }, []);
 
   return (
@@ -112,9 +137,9 @@ const SignIn = () => {
           <p>로그인 중입니다...</p>
         ) : (
           <div>
-            {signInData !== null ? (
+            {user !== null ? (
               <ul>
-                {Object.entries(signInData).map(([key, value]) => (
+                {Object.entries(user).map(([key, value]) => (
                   <li key={key}>
                     <strong>{key}: </strong> {value}
                   </li>
