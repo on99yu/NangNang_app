@@ -54,6 +54,7 @@ const MyInfo = () => {
     );
     if (result) {
       alert('사용자 데이터가 성공적으로 수정되었습니다.');
+      setAbleToUpdate(false);
     } else {
       alert('사용자 데이터 수정에 실패했습니다.');
     }
