@@ -26,7 +26,7 @@ const SignUp = () => {
     if (result === 1) {
       const data = handleRead();
       alert(`user data creation accepted ${data}`);
-      // window.location.href = '/';
+      window.location.href = '/';
     } else {
       console.log('user data creation failed');
     }
