@@ -73,7 +73,7 @@
   justify-content: center;
 }
 
-.button2, .button3 {
+.button2 {
   width: 75px;
   height: 30px;
   background-color: #f7a701;
@@ -84,10 +84,26 @@
   padding: 0px;
 }
 
+.button3 {
+  width: 75px;
+  height: 30px;
+  background-color: white;
+  border-radius: 7px;
+  color: #f7a701;
+  font-weight: 600;
+  border: 2px solid #f7a701;
+  padding: 0px;
+}
 
 
-.button1:hover, .button2:hover, .button3:hover { 
+.button1:hover, .button2:hover { 
   border: 2px solid #ccc;
   background-color: white;
   color: #f7a701;
+}
+
+.button3:hover {
+  border: 2px solid #ccc;
+  background-color: #ff775e;
+  color: white;
 }
