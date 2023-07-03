@@ -119,8 +119,14 @@ const userDataDB = {
         });
 
         // 수정된 데이터 가져오기
-        const updatedDoc = await docRef.get();
-        return updatedDoc.data();
+        // const updatedDoc = await docRef.get();
+        // return updatedDoc.data();
+        return {
+          password: password,
+          email: email,
+          real_name: real_name,
+          phone_number: phone_number,
+        };
       } else {
         console.log('문서가 존재하지 않습니다.');
         return null;
