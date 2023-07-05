@@ -4,7 +4,7 @@
   display: flex;
   width: 100%;
   max-width: 881px;
-  height: 192px;
+  height: 72px;
   margin: 0 auto;
   flex-direction: column;
   overflow: hidden;
@@ -55,19 +55,23 @@ a {
   align-content: center;
   flex-direction: row;
   width: 100%;
-  height: 110px;
+  height: 70px;
 }
 
-.FlexContainer2 div {
-  width: 100px;
-  height: 95px;
-  margin: 0px 50px 00px 50px;
-  padding-top: 15px;
+.FlexContainer2_components {
+  width: 100%;
+  height: 30px;
+  margin: 0px 50px;
+  padding-top: 5px;
   /* background-color: lightblue; */
   font-size: 20px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
+}
+
+.linkhover {
+  margin: 0px 25px;
 }
 
 button {

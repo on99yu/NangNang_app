@@ -1,6 +1,6 @@
 import classes from './MyInfo.module.css';
 import { useState, useEffect } from 'react';
-import { userDataDB } from '../../../../../databasefunction/UserDataCRUD';
+import { userDataDB } from '../../../../databasefunction/UserDataCRUD';
 
 const MyInfo = () => {
   const [inputDisable, setInputDisable] = useState(false);
@@ -34,6 +34,7 @@ const MyInfo = () => {
         return data;
       });
       setInputDisable(true);
+      console.log(userData);
     } else {
       alert('사용자 데이터를 읽어오는데 실패했습니다.');
     }
@@ -61,8 +62,8 @@ const MyInfo = () => {
   };
 
   const handleUpdateCancel = () => {
-    setInputDisable(true);
     setAbleToUpdate(false);
+    setInputDisable(true);
   };
 
   const handleDelete = async () => {
@@ -129,7 +130,6 @@ const MyInfo = () => {
                         consumer_or_not: Number(e.target.value),
                       }))
                     }
-                    // onChange={(e) => setConsumerOrNot(Number(e.target.value))}
                   >
                     <option value={0}>판매자</option>
                     <option value={1}>소비자</option>
@@ -149,7 +149,6 @@ const MyInfo = () => {
                         email: e.target.value,
                       }))
                     }
-                    // onChange={(e) => setEmail(e.target.value)}
                   />
                 </label>
                 <br />
@@ -166,7 +165,6 @@ const MyInfo = () => {
                         real_name: e.target.value,
                       }))
                     }
-                    // onChange={(e) => setRealName(e.target.value)}
                   />
                 </label>
                 <br />
@@ -182,8 +180,6 @@ const MyInfo = () => {
                         phone_number: e.target.value,
                       }))
                     }
-
-                    // onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </label>
                 <br />
@@ -202,21 +198,12 @@ const MyInfo = () => {
                         resident_registration_number: e.target.value,
                       }))
                     }
-
-                    // onChange={(e) => setRRNumber(e.target.value)}
                   />
                 </label>
               </div>
             )}
             <br />
             <div className={classes.form_button_div}>
-              {/* <button
-                type="button"
-                onClick={handleRead}
-                className={classes.button1}
-              >
-                확인
-              </button> */}
               {userData.password ? (
                 <div className={classes.button2and3wrap}>
                   {ableToUpdate ? (
