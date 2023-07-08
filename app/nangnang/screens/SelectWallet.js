@@ -49,7 +49,7 @@ const SelectWallet = ({navigation}) => {
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
-
+      
     const paymentCheck = async (transactionhash)=>{
         try{
           const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
@@ -57,45 +57,37 @@ const SelectWallet = ({navigation}) => {
           console.log('transactionhash 값 ',transactionhash )
           const status = res.data.status
           if(status === "1" || status === 1){
+            const walletname =  await state.wallet.find(e => e.selected)
+            console.log("결제정보 저장 시에 walletname 확인", walletname, walletname.walletname)
             try{
                 const savepayment = await axios({
                     method:"POST",
-                    url:"http://127.0.0.1:5001/nangnang-b59c0/asia-northeast3/api/paymentreceipt/demo",
+                    url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/storepaymentdata",
                     data:{
-                        "multipleProductsInfo":
-                            {
-                                "payment_receipt_idx": "10",
-                                "product_info_idx":"9",
-                                "quantity":"1"
-                            },
-                          "networkInfo":{
-                            "payment_receipt_idx": "10",
-                            "detailed_network_name":"a",
-                            "detailed_network_real_id_num":"a",
-                            "main_blockchain_name":"a",
-                            "payment_wallet_name":"a"
-                          },
-                          "participants":{
-                            "payment_receipt_idx": "10",
-                            "consumer_id":"1",
-                            "seller_id":"1"
-                          },
-                          "priceAddressInfo":{
-                            "payment_receipt_idx":"10",
-                            "receiver_seller_id":"1",
-                            "receiver_wallet_address":"1",
-                            "sender_consumer_id":"1",
-                            "sender_wallet_address":"1",
-                            "total_coin_price":"1",
-                            "total_won_price":"1"
-                          },
-                          "statusInfo":{
-                            "payment_receipt_idx":"10",
-                            "payment_end_time":"1",
-                            "payment_start_time":"1",
-                            "payment_status":"1"
-                          }
-                        }
+                        priceAddressInfo_object : {
+                            payment_receipt_idx : payinfo.receiptid,
+                            seller_id : payinfo.sellerid,
+                            consumer_id : state.uid,
+                            sender_wallet_address : connector.accounts[0],
+                            receiver_wallet_address : payinfo.walletaddress,
+                            total_won_price : payinfo.price,
+                            total_coin_price : payinfo.exchangedvalue
+                        },
+                      products: [
+                        {
+                          product_name: payinfo.product,
+                          product_won_price_per: payinfo.price,
+                          quantity: 1
+                        },
+                      ],
+                      networkInfo_obejct : {
+                        payment_receipt_idx : payinfo.receiptid,
+                        main_blockchain_name : "Ethereum",
+                        detailed_network_name : "Ethereum Mainnet",
+                        detailed_network_real_id_num : 1,
+                        payment_wallet_name : walletname
+                      }
+                    }
                 })
                 console.log("paymentcheck 결과", savepayment)
             }catch(e){

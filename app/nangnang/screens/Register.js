@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet,ActivityIndicator } from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
 
@@ -14,10 +14,10 @@ const Register = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] =useState("");
     const [registerInput, setRegisterInput] = useState({
-        email: "",
-        password: "",
-        passwordcheck :"",
-        name: "",
+        id:"test",
+        password: "test123",
+        email: "test@gmail.com",
+        name: "최동규",
     });
 
     const RegisterInputHandler = (key, value) => {
@@ -26,49 +26,71 @@ const Register = ({ navigation }) => {
             [key]: value,
         }));
     }
-
-    const RegisterHandler = () => {
-        setIsLoading(true);
-        axios({
-            method:"Post",
-            url:"https://identitytoolkit.googleapis.com/v1/accounts:signUp",
-            params:{
-                key:'AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI',
-            },
-            data:{
-                email: registerInput.email,
-                password: registerInput.password,
-
-            }
-        }).then((res)=>{
-            axios({
+    const RegisterHandler = async () =>{
+        setIsLoading(true)
+        try {
+            const res = await axios({
                 method:'POST',
-                url: "https://identitytoolkit.googleapis.com/v1/accounts:update",
-                param:{
-                    key:"AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI",
-                },
+                url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/user/",
                 data:{
-                    idToken: res.data.idToken,
-                    displayName: registerInput.name,
+                    id:registerInput.id,
+                    password:registerInput.password,
+                    email:registerInput.email,
+                    name:registerInput.name,
+                    consumer_or_not:1,
+                    real_name:"",
+                    phone_number:"",
+                    resident_registration_number:"",
                 }
-            }).then((r)=>{
-            }).catch((e)=>{
-                console.log(e,'update profile error');
-                alert(e.message);
-            }).finally(()=>{
-               setIsLoading(false); 
             })
-
-            console.log(res.data);
-
-        }).catch((e)=>{
-            console.log(warn(e));
-            alert(e.message);
-        }).finally(()=>{
-            setIsLoading(false); 
-         })
-        
+            console.log(JSON.stringify(res,null,2))
+            navigation.navigate("Login")
+        }catch(e){
+            console.log(e.message)
+        }
+        setIsLoading(false)
     }
+    // const RegisterHandler = () => {
+    //     setIsLoading(true);
+    //     axios({
+    //         method:"Post",
+    //         url:"https://identitytoolkit.googleapis.com/v1/accounts:signUp",
+    //         params:{
+    //             key:'AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI',
+    //         },
+    //         data:{
+    //             email: registerInput.email,
+    //             password: registerInput.password,
+
+    //         }
+    //     }).then((res)=>{
+    //         axios({
+    //             method:'POST',
+    //             url: "https://identitytoolkit.googleapis.com/v1/accounts:update",
+    //             param:{
+    //                 key:"AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI",
+    //             },
+    //             data:{
+    //                 idToken: res.data.idToken,
+    //                 displayName: registerInput.name,
+    //             }
+    //         }).then((r)=>{
+    //         }).catch((e)=>{
+    //             console.log(e,'update profile error');
+    //             alert(e.message);
+    //         }).finally(()=>{
+    //            setIsLoading(false); 
+    //         })
+
+    //         console.log(res.data);
+
+    //     }).catch((e)=>{
+    //         console.log(warn(e));
+    //         alert(e.message);
+    //     }).finally(()=>{
+    //         setIsLoading(false); 
+    //      })
+        
     return (
         <View style={styles.RegisterView}>
             <HeaderLogo />
@@ -77,11 +99,11 @@ const Register = ({ navigation }) => {
             </View>
             <View style={styles.inputtext}>
                 <InputText
-                    name="이메일"
-                    placeholder="이메일"
-                    onChangeText={text => {
-                        RegisterInputHandler('email', text)
-                    }} />
+                        name="아이디"
+                        placeholder="아이디"
+                        onChangeText={text => {
+                            RegisterInputHandler('id', text)
+                        }} />
                 <InputText
                     name="비밀번호"
                     placeholder="******"
@@ -90,11 +112,10 @@ const Register = ({ navigation }) => {
                         RegisterInputHandler('password', text)
                     }} />
                 <InputText
-                    name="비밀번호 확인"
-                    placeholder="******"
-                    secureTextEntry={true}
+                    name="이메일"
+                    placeholder="이메일"
                     onChangeText={text => {
-                        RegisterInputHandler('passwordcheck', text)
+                        RegisterInputHandler('email', text)
                     }} />
                 <InputText
                     name="이름"
@@ -104,7 +125,7 @@ const Register = ({ navigation }) => {
                     }} />
             </View>
             <View style={styles.ButtonView}>
-                <SubmitButton onPress={RegisterHandler} loading={isLoading}>회원가입</SubmitButton>
+                <SubmitButton onPress={RegisterHandler}>{isLoading ? <ActivityIndicator/> : "회원가입"}</SubmitButton>
                 <GoogleButton>구글로 회원가입</GoogleButton>
                 <View style={styles.GotoLogin}>
                     <Text>계정이 이미 있나요?</Text>

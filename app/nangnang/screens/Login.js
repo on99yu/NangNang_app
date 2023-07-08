@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { Image, Text, View, StyleSheet} from 'react-native';
+import { Image, Text, View, StyleSheet, ActivityIndicator} from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,49 +13,71 @@ import GoogleButton from '../components/Buttons/GoogleButton';
 
 import { AuthContext } from '../context/AuthContext';
 
-// web : 185496097106-sp0mrog1pvfhkg0kijstue30hf0ugtf6.apps.googleusercontent.com
-// IOS : 185496097106-9losums1qg0iljj25kgt1krhcsp4h5eg.apps.googleusercontent.com
-// Android : 185496097106-35agk1e07b0h6t2egjm0sdh88odo1u5k.apps.googleusercontent.com
-
 const Login = ({ navigation }) => {
     const [loginInput, setLoginInput] = useState({
-        email:"test@gmail.com",
+        id:"test",
         password:"test123",
-        // test@gmail.com test123
-        // test2@gmail.com test2123
     });
-
+    const [state, dispatch] =useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(false);
     const LoginInputHandler = (key, value) => {
         setLoginInput(prevState => ({
             ...prevState,
             [key]: value,
         }));
     }
-    const [state, dispatch] =useContext(AuthContext);
-    const LoginHandler = async () => {
-        axios({
-            method:"POST",
-            url:"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
-            params:{
-                key:'AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI',
-            },
-            data:{
-                email:loginInput.email,
-                password:loginInput.password,
-            }
-        }).then((res)=>{
-            dispatch({
-                type:'user_login',
-                payload: true,
-                uid: res.data.localId,
-                email: res.data.email
+
+    const LoginHandler =async()=>{
+        setIsLoading(true);
+        try{
+            const res = await axios({
+                method:"POST",
+                url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/login/loginreturndata",
+                headers:{
+                    "Content-Type" :"application/json"
+                },
+                data:{
+                    "input_user_id":loginInput.id,
+                    "input_user_pwd":loginInput.password,
+                }
             })
-        }).catch((e)=>{
-            console.log(e.message);
-        }).finally(()=>{
-            navigation.navigate('Main')
-        })
+            // console.log(JSON.stringify(res, null, 2))
+            console.log(JSON.stringify(res.data, null, 2))
+                dispatch({
+                    type:'user_login',
+                    payload: true,
+                    uid : loginInput.id,
+                    name: res.data.result.name,
+            })
+        }catch(e){
+            console.log(e)
+        }
+        setLoginInput(false)
     }
+    // const LoginHandler = async () => {
+    //     axios({
+    //         method:"POST",
+    //         url:"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
+    //         params:{
+    //             key:'AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI',
+    //         },
+    //         data:{
+    //             email:loginInput.email,
+    //             password:loginInput.password,
+    //         }
+    //     }).then((res)=>{
+    //         dispatch({
+    //             type:'user_login',
+    //             payload: true,
+    //             uid: res.data.localId,
+    //             email: res.data.email
+    //         })
+    //     }).catch((e)=>{
+    //         console.log(e.message);
+    //     }).finally(()=>{
+    //         navigation.navigate('Main')
+    //     })
+    // }
 
     return (
         <View style={styles.LoginView}>
@@ -67,9 +89,9 @@ const Login = ({ navigation }) => {
                 <InputText
                     name="이메일"
                     placeholder="이메일"
-                    value={loginInput.email}
+                    value={loginInput.id}
                     onChangeText={text => {
-                        LoginInputHandler('email', text)
+                        LoginInputHandler('id', text)
                     }} />
                 <InputText 
                     name="비밀번호" 
@@ -84,7 +106,7 @@ const Login = ({ navigation }) => {
                 </View>
             </View>
             <View style={styles.ButtonView}>
-                <SubmitButton onPress={LoginHandler}>로그인</SubmitButton>
+                <SubmitButton onPress={LoginHandler}>{isLoading ?  <ActivityIndicator/> : "로그인"}</SubmitButton>
                 <GoogleButton>구글로 로그인</GoogleButton>
                 <View style={styles.GotoRegister}>
                     <Text>계정이 없으신가요?</Text>

@@ -81,7 +81,7 @@ const WalletInputModal = (props) => {
             Error(error)
         }
     }
-
+    //지갑주소가져오는 함수
     const takeAddress = async ()=> {
         try {
             const walletaddress =  await state.wallet.find(e => e.id === props.selecteditem.id)
