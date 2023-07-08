@@ -2,7 +2,7 @@ import classes from './Container.module.css';
 import Header from '../components/MainPage/Header/Header';
 import Category from '../components/MainPage/Category/Category';
 import Footer from '../components/MainPage/Footer/Footer';
-import WalletManage from '../components/MainPage/ContainerComponents/WalletManager/WalletManage/WalletManage';
+import WalletManage from '../components/MainPage/ContainerComponents/WalletManage/WalletManage';
 
 const MainWalletManagePage = ({ walletImage }) => {
   return (

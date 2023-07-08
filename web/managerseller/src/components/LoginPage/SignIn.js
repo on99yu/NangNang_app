@@ -4,14 +4,15 @@ import classes from './SignIn.module.css';
 import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { LoginReturnData } from '../../databasefunction/LoginReturnDataFunc';
-import { UserContext } from '../../contexts/UserContext';
+import UserContext from '../../contexts/user-context';
 
 const SignIn = () => {
-  const { updateUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
+
+  // const { user, updateUser } = useContext('');
   const [signInId, setSignInId] = useState('');
   const [signInPw, setSignInPw] = useState('');
   const [signInInvalid, setSignInInvalid] = useState(false);
-  const [signInData, setSignInData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleUsernameChange = (event) => {
@@ -29,18 +30,30 @@ const SignIn = () => {
 
     try {
       setLoading(true);
-      const data = await LoginReturnData(id, pw);
-      setSignInData(data);
-      alert('Login successful');
-      updateUser({
-        id: signInData.id,
-        pw: signInData.password,
-        email: signInData.email,
-        name: signInData.real_name,
-        inumber: signInData.resident_registration_number,
-        phone: signInData.phone_number,
-      });
-      window.location.href = '/main';
+      let data = await LoginReturnData(id, pw);
+      console.log('data');
+      if (data === -1) {
+        setSignInInvalid(true);
+      } else {
+        const newUser = {
+          ...user,
+          consumer_or_not: data.consumer_or_not,
+          password: data.password,
+          id: data.id,
+          email: data.email,
+          real_name: data.real_name,
+          resident_registration_number: data.resident_registration_number,
+          phone_number: data.phone_number,
+        };
+
+        updateUser(newUser);
+        alert('Login Successful');
+      }
+      if (user.id === '') {
+        alert('데이터가 적용되지 않았습니다.');
+      } else {
+        window.location.href = '/main';
+      }
     } catch (error) {
       console.log(error);
       alert('Login failed');
@@ -52,6 +65,20 @@ const SignIn = () => {
 
   useEffect(() => {
     setSignInInvalid(false); // 컴포넌트가 마운트될 때 count 상태를 0으로 설정
+
+    // if (signInData) {
+    //   const updatedUserData = {
+    //     id: signInData.id,
+    //     pw: signInData.password,
+    //     email: signInData.email,
+    //     name: signInData.real_name,
+    //     inumber: signInData.resident_registration_number,
+    //     phone: signInData.phone_number,
+    //   };
+    //   updateUser(updatedUserData);
+    //   setSignInData(updatedUserData);
+    // }
+    // console.log(signInData);
   }, []);
 
   return (
@@ -112,9 +139,9 @@ const SignIn = () => {
           <p>로그인 중입니다...</p>
         ) : (
           <div>
-            {signInData !== null ? (
+            {/* {user !== null ? (
               <ul>
-                {Object.entries(signInData).map(([key, value]) => (
+                {Object.entries(user).map(([key, value]) => (
                   <li key={key}>
                     <strong>{key}: </strong> {value}
                   </li>
@@ -122,7 +149,7 @@ const SignIn = () => {
               </ul>
             ) : (
               <p>로그인 데이터가 없습니다.</p>
-            )}
+            )} */}
           </div>
         )}
       </div>
