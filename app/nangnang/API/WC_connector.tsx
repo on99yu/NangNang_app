@@ -3,6 +3,7 @@ import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import EtherScanAPI from "./EtherScanAPI";
 import { usePayinfo } from "../context/PayinfoContext";
+import axios from "axios";
 // 23.05.07 수정본
 
 // 해당 파일은 Walletconnect version 1.0을 사용한 파일.
@@ -45,26 +46,69 @@ export const WC_connector = (navigation: any) => {
         payment_status:"",
       }
     }
-    const paymentCheck = async (transactionhash: string)=>{
+    const paymentCheck = async (transactionhash: any)=>{
+      console.log("paymentCheck 함수 실행")
       try{
         const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
-        console.log('paymentCheck - 거래 결과 ', res.data.status)
-        console.log('transactionhash 값 ',transactionhash )
         const status = res.data.status
+        console.log('paymentCheck - 거래 결과 ', status)
+        console.log('transactionhash 값 ',transactionhash )
         if(status === "1" || status === 1){
-          navigation.navigate('PayResult')
-          //결제 완료 API 저장되어야함
-          console.log("결제 완료")
+          console.log()
+          try{
+              const savepayment= await axios.post('http://127.0.0.1:5001/nangnang-b59c0/asia-northeast3/api/paymentreceipt/demo',{
+                header:{
+                  Accept: 'application/json',
+                },
+                data:{
+                  "multipleProductsInfo":
+                          {
+                              "payment_receipt_idx": "10",
+                              "product_info_idx":"9",
+                              "quantity":"1"
+                          },
+                        "networkInfo":{
+                          "payment_receipt_idx": "10",
+                          "detailed_network_name":"a",
+                          "detailed_network_real_id_num":"a",
+                          "main_blockchain_name":"a",
+                          "payment_wallet_name":"a"
+                        },
+                        "participants":{
+                          "payment_receipt_idx": "10",
+                          "consumer_id":"1",
+                          "seller_id":"1"
+                        },
+                        "priceAddressInfo":{
+                          "payment_receipt_idx":"10",
+                          "receiver_seller_id":"1",
+                          "receiver_wallet_address":"1",
+                          "sender_consumer_id":"1",
+                          "sender_wallet_address":"1",
+                          "total_coin_price":"1",
+                          "total_won_price":"1"
+                        },
+                        "statusInfo":{
+                          "payment_receipt_idx":"10",
+                          "payment_end_time":"1",
+                          "payment_start_time":"1",
+                          "payment_status":"1"
+                        }
+                }
+              })
+              console.log("paymentcheck 결과", savepayment)
+              navigation.navigate('PayResult')
+              console.log("결제 완료")
+          }catch(e){
+              Error(e)
+          }
         }else{
           console.log("결제에 오류가 발생했습니다.")
         }
       }catch(e){
         console.log(e)
       }
-   
     } 
-    
-    // 주소를 짧게 표시하기 위한 함수
     const shortenAddress = (address: string) => {
         return `${address.slice(0, 6)}...${address.slice(
           address.length - 4,
@@ -125,9 +169,8 @@ export const WC_connector = (navigation: any) => {
       })
       .then(transactionResult => {
         setSendTxResult(JSON.stringify(transactionResult));
-        if(transactionResult){
-          paymentCheck(transactionResult)
-        }
+        paymentCheck(transactionResult)
+
       })
       .catch(error => {
         console.log("Error in sendTx:", error);

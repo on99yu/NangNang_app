@@ -41,7 +41,7 @@ const MyWallets = ({navigation}) => {
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
                 <Link to={{screen:'Main'}} style={styles.link}>메인으로가기</Link>
-                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.name}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>
