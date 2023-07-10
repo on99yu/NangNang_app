@@ -1,6 +1,5 @@
 import MainHomePage from './pages/MainHomePage';
 import MainWalletManagePage from './pages/MainWalletManagePage';
-import MainNetworkManagePage from './pages/MainNetworkManagePage';
 import MainBlockchainManagePage from './pages/MainBlockchainManagePage';
 import MainPaymentRecordsPage from './pages/MainPaymentRecordsPage';
 import MainMyInfoPage from './pages/MainMyInfoPage';
@@ -9,9 +8,24 @@ import MainEmptyPage from './pages/MainEmptyPage';
 import SignInFormPage from './pages/SignInFormPage';
 import SignUpFormPage from './pages/SignUpFormPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { UserProvider } from './contexts/UserContext';
+import UserContext from './contexts/user-context';
+import React, { useState } from 'react';
 
 export default function App() {
+  const [user, setUser] = useState({
+    consumer_or_not: undefined,
+    email: '',
+    id: '',
+    phone_number: '',
+    real_name: '',
+    resident_registration_number: '',
+  });
+  const [count, setCount] = useState('');
+
+  const updateUser = (newUser) => {
+    setUser(newUser);
+  };
+
   const walletSourceList = [
     {
       id: 0,
@@ -53,7 +67,7 @@ export default function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <UserProvider>
+        <UserContext.Provider value={{ user, updateUser, count, setCount }}>
           <Routes>
             <Route path="/" element={<SignInFormPage />} />
             <Route path="/signup" element={<SignUpFormPage />} />
@@ -62,7 +76,6 @@ export default function App() {
               path="/WalletManage"
               element={<MainWalletManagePage walletImage={walletSourceList} />}
             />
-            <Route path="/NetworkManage" element={<MainNetworkManagePage />} />
             <Route
               path="/BlockchainManage"
               element={<MainBlockchainManagePage />}
@@ -75,7 +88,7 @@ export default function App() {
             <Route path="/MyInfo" element={<MainMyInfoPage />} />
             <Route path="*" element={<MainEmptyPage />} />
           </Routes>
-        </UserProvider>
+        </UserContext.Provider>
       </BrowserRouter>
     </div>
   );

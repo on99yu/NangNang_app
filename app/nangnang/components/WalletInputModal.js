@@ -4,7 +4,7 @@ import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
 
 import wallets from '../constants/wallets';
-import EtherScanAPI from '../API/EtherScanAPI';
+import EtherScanAPI from '../api/EtherScanAPI';
 import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
 import SubmitButton from './Buttons/SubmitButton';
@@ -64,7 +64,7 @@ const WalletInputModal = (props) => {
         try{
             const myTickerValue = await axios({
                 method:"POST",
-                url:"http://172.16.1.131:3000/getBalance",
+                url:"http://172.16.1.131:8080/getBalance",
                 data:{
                     "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
                     "tokenName": ticker,
@@ -72,7 +72,7 @@ const WalletInputModal = (props) => {
             })
             setValue((e)=>({
                 ...e,
-                myTickerValue : (myTickerValue.data.balance).toFixed(5),
+                myTickerValue : (myTickerValue.data.balance),
             }))
             if((Value.exchangedProduct_Value - Value.myTickerValue) >=0){
                 setCanPay(true)
@@ -81,7 +81,7 @@ const WalletInputModal = (props) => {
             Error(error)
         }
     }
-
+    //지갑주소가져오는 함수
     const takeAddress = async ()=> {
         try {
             const walletaddress =  await state.wallet.find(e => e.id === props.selecteditem.id)
