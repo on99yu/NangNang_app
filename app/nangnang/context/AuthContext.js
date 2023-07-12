@@ -11,7 +11,7 @@ const initialState = {
            id : "metamask",
            walletname:'Metamask',
            walletaddress:'',
-           seleted: false,
+           selected: false,
         },
         {
             id: "trustwallet",
@@ -62,6 +62,11 @@ const reducer = (state, action) =>{
             return {
                 ...state,
                 wallet: state.wallet.map(it =>(it.id === action.id? {...it, walletaddress: ''} : it) )
+            }
+        case 'wallect_select':
+            return{
+                ...state,
+                wallet: state.wallet.map(it =>(it.id === action.id ? {...it, selected: true} :it ))
             }
         default:
             state;
