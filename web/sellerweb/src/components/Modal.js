@@ -42,7 +42,7 @@ const ModalOverlay = (props) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          'http://localhost:8080/qrpage?id=aa&price=bb'
+          'http://localhost:8080/qrpage?sellerFlatform=NANGNANG&productName=Kimchi&productPrice=10000&walletName=metamask&walletContractAddress=0x2a535b423542c23a211cd3124a1121b33a&recieptNo=1&sellerId=sellerid'
         );
         const data = await response.json();
         setData(data);

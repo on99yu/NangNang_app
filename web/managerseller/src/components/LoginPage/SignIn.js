@@ -4,14 +4,15 @@ import classes from './SignIn.module.css';
 import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { LoginReturnData } from '../../databasefunction/LoginReturnDataFunc';
-import { UserContext } from '../../contexts/UserContext';
+import UserContext from '../../contexts/user-context';
 
 const SignIn = () => {
   const { user, updateUser } = useContext(UserContext);
+
+  // const { user, updateUser } = useContext('');
   const [signInId, setSignInId] = useState('');
   const [signInPw, setSignInPw] = useState('');
   const [signInInvalid, setSignInInvalid] = useState(false);
-  const [signInData, setSignInData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleUsernameChange = (event) => {
@@ -30,21 +31,23 @@ const SignIn = () => {
     try {
       setLoading(true);
       let data = await LoginReturnData(id, pw);
-      console.log(data);
+      console.log('data');
       if (data === -1) {
         setSignInInvalid(true);
       } else {
-        setSignInData(data);
-        console.log(`signInData: ${signInData}`);
-        alert('Login Successful');
-        await updateUser({
-          id: data.id, // 수정: data를 사용하여 값을 가져옴
-          pw: data.password,
+        const newUser = {
+          ...user,
+          consumer_or_not: data.consumer_or_not,
+          password: data.password,
+          id: data.id,
           email: data.email,
-          name: data.real_name,
-          inumber: data.resident_registration_number,
-          phone: data.phone_number,
-        });
+          real_name: data.real_name,
+          resident_registration_number: data.resident_registration_number,
+          phone_number: data.phone_number,
+        };
+
+        updateUser(newUser);
+        alert('Login Successful');
       }
       if (user.id === '') {
         alert('데이터가 적용되지 않았습니다.');
@@ -57,7 +60,6 @@ const SignIn = () => {
       setSignInInvalid(true);
     } finally {
       setLoading(false);
-      console.log(`handleSubmit이 끝난 signInData : ${signInData}`);
     }
   };
 
@@ -137,7 +139,7 @@ const SignIn = () => {
           <p>로그인 중입니다...</p>
         ) : (
           <div>
-            {user !== null ? (
+            {/* {user !== null ? (
               <ul>
                 {Object.entries(user).map(([key, value]) => (
                   <li key={key}>
@@ -147,7 +149,7 @@ const SignIn = () => {
               </ul>
             ) : (
               <p>로그인 데이터가 없습니다.</p>
-            )}
+            )} */}
           </div>
         )}
       </div>

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Modal, StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native';
 import axios from 'axios';
-import EtherScanAPI from '../API/EtherScanAPI';
+import EtherScanAPI from '../api/EtherScanAPI';
 
 import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
@@ -37,6 +37,9 @@ const WalletAddress = (props) => {
         })
         setWalletAddress(Address);
     }
+    const addressVerification = async()=>{
+        
+    }
     return (
             <Modal
                 animationType='fade'
@@ -45,14 +48,14 @@ const WalletAddress = (props) => {
                     <View style={styles.centerdView}>
                     <View style={styles.modalView}>
                         <Text style={[styles.text, {fontSize: 20, color:Colors.orange500}]}>{props.selecteditem.wallet}</Text>
-                        <Text style={styles.text}>{state.email}님</Text>
+                        <Text style={styles.text}>{state.name}님</Text>
                         <TextInput
                             style={styles.inputaddress}
                             placeholder="지갑주소"
                             placeholderTextColor="#A9A9AC"
                             value={walletAddress}
                             onChangeText={(e) => setWalletAddress(e)} />
-                        <FunctionButton >지갑주소 검증</FunctionButton>
+                        <FunctionButton onPress={addressVerification}>지갑주소 검증</FunctionButton>
                         <FunctionButton onPress={WASaveHandler}>지갑주소 등록</FunctionButton>
                         <FunctionButton onPress={Initialization}>지갑주소 지우기</FunctionButton>
                         <FunctionButton onPress={props.oncancel} >닫기</FunctionButton>

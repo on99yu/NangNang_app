@@ -46,7 +46,7 @@ const reducer = (state, action) =>{
                 ...state,
                 isLogin: action.payload,
                 uid:action.uid,
-                email:action.email,
+                name:action.name,
             };
         case 'user_logout':
             return{
