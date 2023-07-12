@@ -7,18 +7,34 @@ import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
 
 import { AuthContext } from '../context/AuthContext';
+import wallets from '../constants/wallets';
 const WalletAddress = (props) => {
 
     const [state, dispatch] = useContext(AuthContext)
-    const [walletAddress, setWalletAddress] = useState("");
+    const [walletAddress, setWalletAddress] = useState("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC");
 
     useEffect(()=>{
         console.log("WalletAddresModal",JSON.stringify(state,null,2))
     },[state])
     
-    const WASaveHandler = ()=>{
-            const id = props.selecteditem.id
-            saveAddress(id, "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC")
+    const WASaveHandler = async () =>{
+        const wallet_id_num = wallets.find(e => e.id_num ===  props.selecteditem.id_num).id_num
+        console.log(wallet_id_num);
+        try{
+            const res = await axios({
+                method:"POST",
+                url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/consumerschosenwallet",
+                data:{  
+                    consumer_id: state.uid,
+                    crypto_wallet_idx : wallet_id_num,
+                    wallet_address: walletAddress,
+                }
+            })
+            console.log(JSON.stringify(res,null,2))
+            saveAddress(props.selecteditem.id, walletAddress)
+        }catch(e){
+            console.log(e)
+        }
     }
 
     const Initialization = ()=>{
@@ -35,7 +51,6 @@ const WalletAddress = (props) => {
             id: id,
             walletaddress: Address,
         })
-        setWalletAddress(Address);
     }
     const addressVerification = async()=>{
         

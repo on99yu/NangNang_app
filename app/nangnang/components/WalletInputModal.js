@@ -64,7 +64,7 @@ const WalletInputModal = (props) => {
         try{
             const myTickerValue = await axios({
                 method:"POST",
-                url:"http://172.16.1.131:8080/getBalance",
+                url:"http://172.16.1.83:8080/getBalance",
                 data:{
                     "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
                     "tokenName": ticker,
@@ -131,6 +131,10 @@ const WalletInputModal = (props) => {
                     mywalletaddress: walletAddress,
                     ticker: ticker,
                 }))
+                dispatch({
+                    type:'wallect_select',
+                    id: props.selecteditem.id
+                })
                 props.setWalletList(newArrData)
                 props.oncancel()  
             }
