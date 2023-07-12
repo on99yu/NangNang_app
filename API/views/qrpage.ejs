@@ -72,7 +72,7 @@ button > div {
     var qrcode = new QRCode(document.getElementById("qrcode"), {
       width: 200,
       height: 200,
-      text: '<%=data.sellerFlatform%>,<%=data.productName%>,<%=data.productPrice%>,<%=data.walletName%>,<%=data.walletContractAddress%>,<%=data.recieptNo%>,<%=data.sellerId%>'
+      text: '<%=data.sellerFlatform%>,<%=data.productName%>,<%=data.productPrice%>,<%=data.productValue%>,<%=data.walletName%>,<%=data.walletContractAddress%>,<%=data.recieptNo%>,<%=data.sellerId%>'
 	// sellerFlatform : req.query.sellerFlatform,
     // productName : req.query.productName,
     // productPrice : req.query.productPrice,
@@ -86,7 +86,6 @@ button > div {
       var elText = document.getElementById("text");
       qrcode.makeCode(elText.value);
     }
-
     makeCode();
   </script>
 </script>

@@ -14,10 +14,11 @@ const BuyerWrap2 = () => {
   const showModalHandler = () => {
     // setShowQRCode(true);
     window.open(
-      'http://localhost:8080/qrpage?id=aa&price=bb',
+      'http://localhost:8080/qrpage?sellerFlatform=NANGNANG&productName=Kimchi&productPrice=10000&productValue=1&walletName=metamask&walletContractAddress=0x2a535b423542c23a211cd3124a1121b33a&sellerId=sellerid',
       'PopupWin',
       'top=140, left=400, width=330, height=410, menubar=no, toolbar=no, location=no, directories=no, status=no, scrollbars=no, copyhistory=no, resizable=no'
     );
+
   };
 
   return (
