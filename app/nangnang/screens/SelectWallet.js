@@ -12,7 +12,7 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import {WC_connector} from '../api/WC_connector';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
-
+import axios from 'axios';
 const formatData = (data, numColumns) =>{
 
     const numberOfFullRows = Math.floor(data.length/numColumns)
@@ -42,23 +42,32 @@ const SelectWallet = ({navigation}) => {
         killSession,
         sendTx,
         connector,
-      } = WC_connector(navigation,paymentCheck);
+    } = WC_connector(navigation,paymentCheck);
 
     const [payinfo] = usePayinfo();  
     const [state, dispatch] =useContext(AuthContext);
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
-      
+    // const test = ()=>{
+    //     console.log(state.wallet.find(e=>e.selected))
+    // }
     const paymentCheck = async (transactionhash)=>{
         try{
-          const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
-          console.log('paymentCheck - 거래 결과 ', res.data.status)
-          console.log('transactionhash 값 ',transactionhash )
-          const status = res.data.status
+          const receiptid = await axios({
+            method:"POST",
+            url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/startsetting",
+
+          })
+          console.log("영수증 번호 생성 - ",JSON.stringify(receiptid,null, 2))
+        //   const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
+        //   console.log('paymentCheck - 거래 결과 ', res.data.status)
+        //   console.log('transactionhash 값 ',transactionhash )
+        //   const status = res.data.status
+          const status = 1
           if(status === "1" || status === 1){
             const walletname =  await state.wallet.find(e => e.selected)
-            console.log("결제정보 저장 시에 walletname 확인", walletname, walletname.walletname)
+            console.log("결제정보 저장 시에 walletname 확인", walletname)
             try{
                 const savepayment = await axios({
                     method:"POST",
@@ -89,9 +98,9 @@ const SelectWallet = ({navigation}) => {
                       }
                     }
                 })
-                console.log("paymentcheck 결과", savepayment)
+                console.log("paymentcheck 결과", JSON.stringify(savepayment,null, 2))
             }catch(e){
-                Error(e)
+                console.log(e)
             }
             navigation.navigate('PayResult')
             //결제 완료 API 저장되어야함
@@ -143,6 +152,9 @@ const SelectWallet = ({navigation}) => {
             </View>
             <View style={styles.title}>
                 <ScreenTitle title="지갑 선택" />
+            </View>
+            <View>
+                <SubmitButton onPress={paymentCheck}>결제정보 저장 테스트</SubmitButton>
             </View>
             {!connector.connected && (
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>

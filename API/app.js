@@ -3,6 +3,9 @@ const cors = require('cors');
 const app = express();
 const port = 8080;
 const axios = require('axios');
+const { render } = require('ejs');
+
+const server = require('http').createServer(app);
 
 require('dotenv').config(); // .env파일 사용
 app.use(cors());
@@ -18,18 +21,29 @@ app.set('views', __dirname + '/views'); // view 폴더 세팅
 
 app.engine('ejs', require('ejs').__express);
 
-app.get('/qrpage',(req,res) =>{
+app.get('/processdone',(req,res)=>{
+  res.render('processdone');
+});
+
+app.get('/qrpage', async (req,res) =>{
+  const recieptNum = await makeReciept();
   var data = {
-    sellerFlatform : req.query.sellerFlatform,
-    productName : req.query.productName,
-    productPrice : req.query.productPrice,
-    walletName : req.query.walletName,
-    walletContractAddress : req.query.walletContractAddress,
-    recieptNo : req.query.recieptNo,
-    sellerId : req.query.sellerId
+    sellerFlatform : req.query.sellerFlatform, //판매자명
+    productName : req.query.productName, // 물건 이름
+    productPrice : req.query.productPrice, // 물건 가격
+    productValue : req.query.productValue, // 수량
+    walletName : req.query.walletName, // 지갑 이름
+    walletContractAddress : req.query.walletContractAddress, //지갑 주소
+    recieptNo : recieptNum, // 영수증 번호
+    sellerId : req.query.sellerId //판매자 아이디
   };
-  //db에 영수증 데이터 row 만들기
+  console.log('영수증 번호 : ',recieptNum);
+  console.log('받은 데이터 ', await checkReciept(recieptNum));
+  if(await checkReciept(recieptNum)==="결제완료"){
+      res.redirect('/processdone');
+  }
   res.render('qrpage', { data: data });
+
 });
 app.get('/tokenBalanceTrans',async (req,res)=>{
   var dollarBalance = await wonToDollar(req.query.wonBalance);
@@ -52,6 +66,53 @@ app.post('/getBalance', async (req, res) => {
   console.log('가격은', tokenBalance);
   res.send({ balance: tokenBalance });
 });
+
+async function checkReciept(recieptNum){
+  async function timer(){
+    if(await checkApi()===1){
+      //결제 완료 신호
+      console.log("결제 완료되었습니다.");
+      clearInterval(timerInterval);
+      return "결제완료";
+    }
+  } 
+  let timerInterval = setInterval(timer, 1000);
+
+  console.log("timerinterval 출력 : ", timerInterval);
+  setTimeout(()=>{
+    clearInterval(timerInterval);
+    console.log("타이머 중지");
+  },3000000); //5분 타이머
+
+  async function checkApi(){
+    data = await axios
+        .get(
+          `https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentreceipt/statusinfo?payment_receipt_idx=${recieptNum}`
+        )
+        .catch((error) => {
+          if (error.response) {
+            // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // 요청이 이루어 졌으나 응답을 받지 못했습니다.
+            // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
+            // Node.js의 http.ClientRequest 인스턴스입니다.
+            console.log(error.request);
+          } else {
+            // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+        });
+    return data.data.data.payment_status;
+  }
+  clearTimeout();
+  return timer();
+  
+
+}
 
 async function getTransaction(txhash, apiKey) {
   const response = await axios
@@ -77,6 +138,17 @@ async function getTransaction(txhash, apiKey) {
     });
   return response.data.result.isError;
 }
+
+async function makeReciept(){
+  var response;
+  try {
+    response = await axios.post('https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/startsetting', {});
+  } catch (error) {
+    console.error('오류 발생:', error);
+  }
+  return response.data.data;
+}
+
 
 async function getBalance(tokenName, walletAddress) {
   var contractAddress, data, balanceData, tokenDemicalNum;
