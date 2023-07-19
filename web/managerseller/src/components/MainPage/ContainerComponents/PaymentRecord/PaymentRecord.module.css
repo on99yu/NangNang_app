@@ -1,0 +1,14 @@
+.table_wrap {
+    border: 1px solid black;
+    
+}
+.table_th {
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 0px 10px;
+}
+
+.table_td {
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}

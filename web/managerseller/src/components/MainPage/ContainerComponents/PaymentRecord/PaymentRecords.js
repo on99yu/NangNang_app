@@ -1,9 +1,9 @@
-import classes from './PaymentRecords.module.css';
-import { useState, useEffect, useCallback } from 'react';
-import PaymentRecordList from './PaymentRecordList';
+import classes from "./PaymentRecords.module.css";
+import { useState, useEffect, useCallback } from "react";
+import PaymentRecordList from "./PaymentRecordList";
 
 const PaymentRecords = () => {
-  const [records, setPaymentRecords] = useState([]);
+  const [records, setRecords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -12,22 +12,15 @@ const PaymentRecords = () => {
     setError(null);
     try {
       const response = await fetch(
-        'https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/getpaymentreceiptdata/getallpaymentreceiptdatabyuserid?user_id=seller1002'
+        "https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/getpaymentreceiptdata/getallpaymentreceiptdatabyuserid?user_id=seller1002"
       );
       if (!response.ok) {
-        throw new Error('Something went wrong!');
+        throw new Error("Something went wrong!");
       }
-
       const data = await response.json();
-      // console.log(JSON.stringify(data));
-      const paymentRecords = [];
       // console.log(data);
-      console.log(data.length);
-      for (let i = 0; i < data.length; i++) {
-        console.log(`data[${i}]`, data[i]);
-      }
-
-      setPaymentRecords(paymentRecords);
+      setRecords(data.data);
+      // console.log(records);
     } catch (error) {
       setError(error.message);
     }
@@ -57,18 +50,16 @@ const PaymentRecords = () => {
   return (
     <div className={classes.paymentrecords_wrap}>
       <div className={classes.paymentrecords}>
-        <div className={classes.paymentrecords_text}>결제내역</div>
-        <div className={classes.paymentrecords_table_wrap}>
-          <div className={classes.check_table}>
-            <button
-              className={classes.check_table_button}
-              onClick={fetchRecordsHandler}
-            >
-              조회
-            </button>
-          </div>
-          {content}
+        <div className={classes.text_button_wrap}>
+          <div className={classes.paymentrecords_text}>결제내역</div>
+          <button
+            className={classes.check_table_button}
+            onClick={fetchRecordsHandler}
+          >
+            조회
+          </button>
         </div>
+        <div className={classes.paymentrecords_table_wrap}>{content}</div>
       </div>
     </div>
   );

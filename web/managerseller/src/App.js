@@ -1,4 +1,4 @@
-import MainHomePage from './pages/MainHomePage';
+import MainHomePage from './pages/MainLandingPage';
 import MainBlockchainManagePage from './pages/MainBlockchainManagePage';
 import MainPaymentRecordsPage from './pages/MainPaymentRecordsPage';
 import MainMyInfoPage from './pages/MainMyInfoPage';
