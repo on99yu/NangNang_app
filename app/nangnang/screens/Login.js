@@ -41,13 +41,24 @@ const Login = ({ navigation }) => {
                     "input_user_pwd":loginInput.password,
                 }
             })
-            // console.log(JSON.stringify(res, null, 2))
-            console.log(JSON.stringify(res.data, null, 2))
-                dispatch({
-                    type:'user_login',
-                    payload: true,
-                    uid : loginInput.id,
-                    name: res.data.result.name,
+            const walletaddress = await axios({
+                method:"GET",
+                url:`https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/consumerschosenwallet?consumer_id=${loginInput.id}`,
+            })
+            // console.log(JSON.stringify(walletaddress.data, null, 2))
+            const wallet = state.wallet
+            wallet.forEach((item)=>{
+                const {wallet_num} = item;
+                if(walletaddress.data.data[wallet_num]){
+                    item.walletaddress = walletaddress.data.data[wallet_num];
+                }
+            })
+            dispatch({
+                type:'user_login',
+                payload: true,
+                uid : loginInput.id,
+                name: res.data.result.name,
+                wallet : wallet
             })
         }catch(e){
             console.log(e)
