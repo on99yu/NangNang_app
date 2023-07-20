@@ -1,10 +1,9 @@
-import classes from './Main.module.css';
-import React, { useContext } from 'react';
-import UserContext from '../../../../contexts/user-context';
-import nangnang from '../../../../asset/images/nangnang.png';
+import classes from "./Main.module.css";
+import React, { useContext } from "react";
+import UserContext from "../../../../contexts/AuthContext";
+import nangnang from "../../../../asset/images/nangnang.png";
 const Main = () => {
-  const { user } = useContext(UserContext);
-
+  // const { user } = useContext(UserContext);
 
   return (
     <div className={classes.main_wrap}>
@@ -12,8 +11,12 @@ const Main = () => {
         {/* <div className={classes.main_text}>Main</div> */}
         <div className={classes.main_component_wrap}>
           <div className={classes.main_image_wrap}>
-            <img className={classes.main_image} src={nangnang} alt="낭낭 메인 페이지 이미지"/>
-            <p>환영합니다! User: {user ? JSON.stringify(user) : 'No user'}</p>
+            <img
+              className={classes.main_image}
+              src={nangnang}
+              alt="낭낭 메인 페이지 이미지"
+            />
+            {/* <p>환영합니다! User: {user ? JSON.stringify(user) : "No user"}</p> */}
           </div>
         </div>
       </div>
