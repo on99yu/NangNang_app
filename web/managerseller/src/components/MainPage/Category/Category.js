@@ -7,9 +7,6 @@ const Category = () => {
       {/* <div className={classes.FlexContainer}></div> */}
       <div className={classes.FlexContainer2}>
         <div className={classes.FlexContainer2_components}>
-          <Link to="/WalletManage" className={classes.linkhover}>
-            <button>지갑관리</button>
-          </Link>
           <Link to="/BlockchainManage" className={classes.linkhover}>
             <button>블록체인관리</button>
           </Link>
