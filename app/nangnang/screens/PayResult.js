@@ -9,7 +9,7 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import ContentsBox from '../components/ContentsBox';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
-import { WC_connector } from '../api/WC_connector';
+import { WC_connector } from '../API/WC_connector';
 const PayResult = ({navigation}) => {
     
     const {

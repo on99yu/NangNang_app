@@ -4,7 +4,6 @@ import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
 
 import wallets from '../constants/wallets';
-import EtherScanAPI from '../api/EtherScanAPI';
 import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
 import SubmitButton from './Buttons/SubmitButton';

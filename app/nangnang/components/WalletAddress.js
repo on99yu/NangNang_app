@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Modal, StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native';
 import axios from 'axios';
-import EtherScanAPI from '../api/EtherScanAPI';
 
 import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';

@@ -9,7 +9,7 @@ import HeaderLogo from '../components/HeaderLogo';
 import wallets from '../constants/wallets';
 import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
-import {WC_connector} from '../api/WC_connector';
+import {WC_connector} from '../API/WC_connector';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
@@ -149,15 +149,15 @@ const SelectWallet = ({navigation}) => {
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
                 <Link to={{screen:'Main'}} style={styles.link}>메인으로가기</Link>
-                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.name}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>
                 <ScreenTitle title="지갑 선택" />
             </View>
-            <View>
+            {/* <View>
                 <SubmitButton onPress={paymentCheck}>결제정보 저장 테스트</SubmitButton>
-            </View>
+            </View> */}
             {!connector.connected && (
                 <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     <SubmitButton onPress={CW}>지갑 연결</SubmitButton>
