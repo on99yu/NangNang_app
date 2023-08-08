@@ -9,13 +9,9 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import ContentsBox from '../components/ContentsBox';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
-import { WC_connector } from '../API/WC_connector';
+
 const PayResult = ({navigation}) => {
     
-    const {
-        killSession,
-      } = WC_connector();
-
     const [payinfo, setPayinfo] = usePayinfo();
     
     const [state, dispatch] = useContext(AuthContext)
