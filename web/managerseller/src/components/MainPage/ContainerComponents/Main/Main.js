@@ -1,25 +1,22 @@
-import classes from './Main.module.css';
-import React, { useContext } from 'react';
-import UserContext from '../../../../contexts/user-context';
+import classes from "./Main.module.css";
+import React, { useContext } from "react";
+import UserContext from "../../../../contexts/AuthContext";
+import nangnang from "../../../../asset/images/nangnang.png";
 const Main = () => {
-  const { user, count, setCount } = useContext(UserContext);
-  let i = 0;
-  const countHandle = () => {
-    i++;
-    setCount(i);
-    console.log(count);
-  };
+  // const { user } = useContext(UserContext);
 
   return (
     <div className={classes.main_wrap}>
       <div className={classes.main}>
-        <div className={classes.main_text}>Main</div>
+        {/* <div className={classes.main_text}>Main</div> */}
         <div className={classes.main_component_wrap}>
-          <button>user 정보</button>
-          <div>
-            <h1>Home Page</h1>
-            <p>User: {user ? JSON.stringify(user) : 'No user'}</p>
-            <button onClick={countHandle}>count</button>
+          <div className={classes.main_image_wrap}>
+            <img
+              className={classes.main_image}
+              src={nangnang}
+              alt="낭낭 메인 페이지 이미지"
+            />
+            {/* <p>환영합니다! User: {user ? JSON.stringify(user) : "No user"}</p> */}
           </div>
         </div>
       </div>

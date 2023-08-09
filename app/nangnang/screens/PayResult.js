@@ -9,13 +9,9 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import ContentsBox from '../components/ContentsBox';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
-import { WC_connector } from '../api/WC_connector';
+
 const PayResult = ({navigation}) => {
     
-    const {
-        killSession,
-      } = WC_connector();
-
     const [payinfo, setPayinfo] = usePayinfo();
     
     const [state, dispatch] = useContext(AuthContext)
@@ -33,7 +29,7 @@ const PayResult = ({navigation}) => {
         <View style={styles.PayinfoView}>
             <View style={styles.header}>
                 <Link to={{screen:'MyWallets'}}  style={styles.link}>뒤로 가기</Link>
-                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.name}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>

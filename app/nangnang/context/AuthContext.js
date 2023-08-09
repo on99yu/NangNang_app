@@ -8,33 +8,38 @@ const initialState = {
     email:'',
     name:'',
     wallet:[{
+           wallet_num: "1",
            id : "metamask",
            walletname:'Metamask',
            walletaddress:'',
            selected: false,
         },
         {
+            wallet_num: "2",
             id: "trustwallet",
             walletname:'Trust Wallet',
             walletaddress:'',
             seleted: false,
         },
         {
+            wallet_num: "3",
             id: "bitpay",
             walletname:'Bitpay',
-            walleraddress:'',
+            walletaddress:'',
             selected: false,
         },
         {
+            wallet_num: "4",
             id: "argent",
             walletname:'Argent',
-            walleraddress:'',
+            walletaddress:'',
             selected: false,
         },
         {
+            wallet_num: "5",
             id: "rainbow",
             walletname:'Rainbow',
-            walleraddress:'',
+            walletaddress:'',
             selected: false,
         }]
 };
@@ -47,6 +52,7 @@ const reducer = (state, action) =>{
                 isLogin: action.payload,
                 uid:action.uid,
                 name:action.name,
+                wallet : action.wallet
             };
         case 'user_logout':
             return{
@@ -56,7 +62,7 @@ const reducer = (state, action) =>{
         case 'save_address':
             return{
                 ...state,
-                wallet: state.wallet.map(it => (it.id === action.id? {...it, walletaddress: action.walletaddress} : it))
+                wallet: state.wallet.map(it => (it.id === action.id ? {...it, walletaddress: action.walletaddress} : it))
             }
         case 'initialization_address':
             return {
@@ -82,5 +88,5 @@ const AuthProvider = ({children})=>{
     );
 
 };
-
+ 
 export default AuthProvider;

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert} from 'react-native';
 import { Link } from '@react-navigation/native';
-
+import { WalletConnectModal, useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 import ScreenTitle from '../components/ScreenTitle';
 import WalletInputModal from '../components/WalletInputModal';
@@ -9,7 +9,6 @@ import HeaderLogo from '../components/HeaderLogo';
 import wallets from '../constants/wallets';
 import Colors from '../constants/colors';
 import SubmitButton from '../components/Buttons/SubmitButton';
-import {WC_connector} from '../api/WC_connector';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
@@ -24,94 +23,30 @@ const formatData = (data, numColumns) =>{
     }
     return data;
 }
-// const BigNumber = require('bignumber.js');
 
-// function convertToHex(value) {
-//   if (typeof value !== 'number') {
-//     throw new Error('유효하지 않은 입력: 숫자여야 합니다.');
-//   }
+const projectId = 'e68a43fe8e9a0534d9f14f37689857ef';
 
-//   const bigNumber = new BigNumber(value);
-//   const hexString = bigNumber.toString(16);
-//   return '0x' + hexString;
-// }
+const providerMetadata = {
+  name: 'NangNang',
+  description: 'NangNang',
+  url: '',
+  icons: "",
+  redirect: {
+    native: '',
+    universal: ''
+  }
+};
+
 const SelectWallet = ({navigation}) => {
     // WC_connector(WalletConnect_connector) 에서 사용할 함수들을 가져옴
-    const {
-        connectWallet,
-        killSession,
-        sendTx,
-        connector,
-    } = WC_connector(navigation,paymentCheck);
+    const {open, isConnected} = useWalletConnectModal()
 
     const [payinfo] = usePayinfo();  
     const [state, dispatch] =useContext(AuthContext);
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
-    // const test = ()=>{
-    //     console.log(state.wallet.find(e=>e.selected))
-    // }
-    const paymentCheck = async (transactionhash)=>{
-        try{
-          const receiptid = await axios({
-            method:"POST",
-            url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/startsetting",
 
-          })
-          console.log("영수증 번호 생성 - ",JSON.stringify(receiptid,null, 2))
-        //   const res = await EtherScanAPI.get(`?module=transaction&action=gettxreceiptstatus&txhash=${transactionhash}&apikey=CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD`)
-        //   console.log('paymentCheck - 거래 결과 ', res.data.status)
-        //   console.log('transactionhash 값 ',transactionhash )
-        //   const status = res.data.status
-          const status = 1
-          if(status === "1" || status === 1){
-            const walletname =  await state.wallet.find(e => e.selected)
-            console.log("결제정보 저장 시에 walletname 확인", walletname)
-            try{
-                const savepayment = await axios({
-                    method:"POST",
-                    url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/storepaymentdata",
-                    data:{
-                        priceAddressInfo_object : {
-                            payment_receipt_idx : payinfo.receiptid,
-                            seller_id : payinfo.sellerid,
-                            consumer_id : state.uid,
-                            sender_wallet_address : connector.accounts[0],
-                            receiver_wallet_address : payinfo.walletaddress,
-                            total_won_price : payinfo.price,
-                            total_coin_price : payinfo.exchangedvalue
-                        },
-                      products: [
-                        {
-                          product_name: payinfo.product,
-                          product_won_price_per: payinfo.price,
-                          quantity: 1
-                        },
-                      ],
-                      networkInfo_obejct : {
-                        payment_receipt_idx : payinfo.receiptid,
-                        main_blockchain_name : "Ethereum",
-                        detailed_network_name : "Ethereum Mainnet",
-                        detailed_network_real_id_num : 1,
-                        payment_wallet_name : walletname
-                      }
-                    }
-                })
-                console.log("paymentcheck 결과", JSON.stringify(savepayment,null, 2))
-            }catch(e){
-                console.log(e)
-            }
-            navigation.navigate('PayResult')
-            //결제 완료 API 저장되어야함
-            console.log("결제 완료")
-          }else{
-            console.log("결제에 오류가 발생했습니다.")
-          }
-        }catch(e){
-          console.log(e)
-        }
-      } 
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
@@ -140,45 +75,22 @@ const SelectWallet = ({navigation}) => {
         setSelectedItem(item)
         setModalIsVisible(true)
     }   
-    // var weiAmount = payinfo.exchangedvalue*10**18
-    // var hexData = weiAmount.toString(16)
-    // sendTx(connector.accounts[0], "0x"+hexData)
+
     return (
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
                 <Link to={{screen:'Main'}} style={styles.link}>메인으로가기</Link>
-                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.name}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>
                 <ScreenTitle title="지갑 선택" />
             </View>
             <View>
-                <SubmitButton onPress={paymentCheck}>결제정보 저장 테스트</SubmitButton>
+                <SubmitButton onPress={open}>{isConnected ? 'View Account' : 'Connect'}</SubmitButton>
             </View>
-            {!connector.connected && (
-                <View style={{flex:1, width:'50%',alignSelf:'center'}}>
-                    <SubmitButton onPress={CW}>지갑 연결</SubmitButton>
-                </View>
-            )}
-            {/* 지갑이 연결되어있다면 아래 버튼들을 출력 */}
-            {connector.connected && (
-                <>
-                <Text style={{color : Colors.indigo500,alignSelf:'center'}}> 연결된 지갑 : {payinfo.selectedWallet}</Text>
-                <View style={{flex:1, width:'50%',alignSelf:'center'}}>
-                    <SubmitButton onPress={killSession}>세션 종료</SubmitButton>
-                </View>
-                <View style={{flex:1, width:'50%',alignSelf:'center'}}>
-                    {/* sendTx(toAccount: string, valueAmount: string) 인데 지금은 toAccount에 연결된 자기자신 지갑주소 넣은거고 valueAmount 값은 위에 만들었고(0x0으로) */}
-                    <SubmitButton onPress={() => {
-                        console.log("from SelectWallet 돈을 보낼 지갑주소", payinfo.walletaddress)
-                        console.log("from SelectWallet 보낼 돈", (payinfo.exchangedvalue*10**18).toString(16))
-                        sendTx("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC", (payinfo.exchangedvalue*10**18).toString(16))
-                    }}>거래 전송</SubmitButton>
-                </View>
-                </>
-            )}
-            
+
+            <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />
             <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     <SubmitButton onPress={() => navigation.navigate('Payinfo')}>결제 정보 확인</SubmitButton>
             </View>
