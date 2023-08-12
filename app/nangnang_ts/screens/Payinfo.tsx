@@ -10,45 +10,34 @@ import ContentsBox from '../components/ContentsBox';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
 
-const PayResult = ({navigation}) => {
+const Payinfo = ({navigation}) => {
     
-    const [payinfo, setPayinfo] = usePayinfo();
-    
-    const [state, dispatch] = useContext(AuthContext)
-    const PaymentComplete = ()=>{
-        setPayinfo(it => ({
-            ...it,
-            inpayment:false
-        }))
-        killSession()
-        navigation.navigate('Main')
-        console.log("PaymentComplete", JSON.stringify(payinfo,null,2))
-        
-    }
+    const [payinfo] = usePayinfo();
+    const [state, dispatch] = useContext(AuthContext);
+
     return (
         <View style={styles.PayinfoView}>
             <View style={styles.header}>
                 <Link to={{screen:'MyWallets'}}  style={styles.link}>뒤로 가기</Link>
-                <Text style={{color:'red'}}>사용자 : {state.name}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>
-                <ScreenTitle title="결제 완료" />
+                <ScreenTitle title="결제 정보" />
             </View>
             <ScrollView style={styles.content}>
                 <ContentsBox title="제품명" contents={payinfo.product}/>
-                <ContentsBox title="결제된 금액(원)" contents={payinfo.price}/>
-                <ContentsBox title="사용한 지갑" contents={payinfo.wallet}/>
-                <ContentsBox title="사용한 코인" contents={payinfo.ticker}/>
-                <ContentsBox title="환산된 코인 금액" contents={payinfo.exchangedvalue}/>
-                <ContentsBox title="보낸 지갑 주소" contents={payinfo.walletaddress}/>
+                <ContentsBox title="결제 금액" contents={payinfo.price}/>
+                <ContentsBox title="사용 지갑" contents={payinfo.wallet}/>
+                <ContentsBox title="보낼 지갑주소" contents={payinfo.walletaddress}/>
             </ScrollView>
             <View style={styles.button}>
-                <SubmitButton onPress={PaymentComplete}>확인</SubmitButton>
+                <SubmitButton onPress={() => navigation.navigate('SelectWallet')}>지갑 선택으로</SubmitButton>
             </View>
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     PayinfoView: {
         flex: 1,
@@ -82,4 +71,4 @@ const styles = StyleSheet.create({
         // alignItems:'center'
     }
 })
-export default PayResult;
+export default Payinfo;
