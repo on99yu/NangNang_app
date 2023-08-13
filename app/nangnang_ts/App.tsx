@@ -46,6 +46,31 @@ export default function App() {
   //   return ()=>backHandler.remove();
   // },[]);
 
+const closefunc = async () => {
+  if(isOpen) {
+    await close();
+    console.log("close")
+  }
+  console.log("nothing happen")
+}
+
+const providerTest1 = () => {
+  const expiry = provider?.session?.expiry
+  console.log("expiry = ", expiry);
+  const uri = provider?.uri
+  console.log("uri = ", uri);
+  const namespaces = provider?.namespaces
+  console.log("namespaces = ", namespaces);
+
+}
+
+const killSession =  () => {
+  provider?.disconnect();
+  if(isConnected){
+    console.log("아직 세션 살아있음");
+  }
+}
+
 
   return (
     // <SafeAreaView style={styles.container}>
@@ -55,11 +80,33 @@ export default function App() {
     //         </PayinfoProvider>
     //       </AuthProvider>
     // </SafeAreaView>
+
     <View style={styles.container}>
       <Text>WC test</Text>
       <Pressable onPress={()=>open()} style={{marginTop:16}}>
-        <Text>{isConnected ? 'View Account' : 'Connect'}</Text>
+        <Text>{isConnected ? 'View Account\n'+ address : 'Connect'}</Text>
       </Pressable>
+      <Pressable onPress={()=>provider?.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            data: "0x1111",
+            from: address,
+            to: address,
+          }]
+        })
+      } style={{marginTop:16}}>
+        <Text>{isConnected ? 'sendTx' : 'Connected yet'}</Text>
+      </Pressable>
+
+      <Pressable onPress={()=>providerTest1()} style={{marginTop:16}}>
+        <Text>{isConnected ? 'printData' : 'Connect'}</Text>
+      </Pressable>
+
+      <Pressable onPress={()=>killSession()} style={{marginTop:16}}>
+        <Text>{isConnected ? 'killSession' : 'kill'}</Text>
+      </Pressable>
+
+
       <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />
     </View>
   );
