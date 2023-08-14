@@ -46,13 +46,6 @@ export default function App() {
   //   return ()=>backHandler.remove();
   // },[]);
 
-const closefunc = async () => {
-  if(isOpen) {
-    await close();
-    console.log("close")
-  }
-  console.log("nothing happen")
-}
 
 const providerTest1 = () => {
   const expiry = provider?.session?.expiry
@@ -61,6 +54,23 @@ const providerTest1 = () => {
   console.log("uri = ", uri);
   const namespaces = provider?.namespaces
   console.log("namespaces = ", namespaces);
+  // const session = provider?.session
+  // console.log("\n\nsession = ", session);
+
+  const peer = provider?.session?.peer
+  console.log("peer = ", peer);
+  const pairingTopic = provider?.session?.pairingTopic
+  console.log("pairingTopic = ", pairingTopic);
+  const topic = provider?.session?.topic
+  console.log("topic = ", topic);
+  const url = provider?.session?.peer.metadata.url
+  console.log("url = ", url);
+
+  // 이게 지갑 이름 알아내는 코드
+  const name = provider?.session?.peer.metadata.name
+  console.log("name = ", name);
+
+
 
 }
 
