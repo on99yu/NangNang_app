@@ -41,6 +41,7 @@ export function Home (){
   )
 }
 
+
 function Navigator(navigation) {
   const [state] = useContext(AuthContext);
 

@@ -47,6 +47,39 @@ export default function App() {
   // },[]);
 
 
+const providerTest1 = () => {
+  const expiry = provider?.session?.expiry
+  console.log("expiry = ", expiry);
+  const uri = provider?.uri
+  console.log("uri = ", uri);
+  const namespaces = provider?.namespaces
+  console.log("namespaces = ", namespaces);
+  // const session = provider?.session
+  // console.log("\n\nsession = ", session);
+
+  const peer = provider?.session?.peer
+  console.log("peer = ", peer);
+  const pairingTopic = provider?.session?.pairingTopic
+  console.log("pairingTopic = ", pairingTopic);
+  const topic = provider?.session?.topic
+  console.log("topic = ", topic);
+  const url = provider?.session?.peer.metadata.url
+  console.log("url = ", url);
+
+  // 이게 지갑 이름 알아내는 코드
+  const name = provider?.session?.peer.metadata.name
+  console.log("name = ", name);
+
+
+
+}
+
+const killSession =  () => {
+  provider?.disconnect();
+  if(isConnected){
+    console.log("아직 세션 살아있음");
+  }
+}
   return (
     // <SafeAreaView style={styles.container}>
     //       <AuthProvider>
@@ -55,11 +88,33 @@ export default function App() {
     //         </PayinfoProvider>
     //       </AuthProvider>
     // </SafeAreaView>
+
     <View style={styles.container}>
       <Text>WC test</Text>
       <Pressable onPress={()=>open()} style={{marginTop:16}}>
-        <Text>{isConnected ? 'View Account' : 'Connect'}</Text>
+        <Text>{isConnected ? 'View Account\n'+ address : 'Connect'}</Text>
       </Pressable>
+      <Pressable onPress={()=>provider?.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            data: "0x1111",
+            from: address,
+            to: address,
+          }]
+        })
+      } style={{marginTop:16}}>
+        <Text>{isConnected ? 'sendTx' : 'Connected yet'}</Text>
+      </Pressable>
+
+      <Pressable onPress={()=>providerTest1()} style={{marginTop:16}}>
+        <Text>{isConnected ? 'printData' : 'Connect'}</Text>
+      </Pressable>
+
+      <Pressable onPress={()=>killSession()} style={{marginTop:16}}>
+        <Text>{isConnected ? 'killSession' : 'kill'}</Text>
+      </Pressable>
+
+
       <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />
     </View>
   );
