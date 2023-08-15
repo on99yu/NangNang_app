@@ -21,6 +21,7 @@ const PaymentRecordList = ({ records }) => {
         {records.map((record) => (
           <>
             <PaymentRecord
+              key={``}
               networkInfoData={record.networkInfoData}
               participantsData={record.participantsData}
               productsAllData={record.productsAllData}

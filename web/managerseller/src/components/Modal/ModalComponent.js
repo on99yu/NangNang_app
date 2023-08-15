@@ -58,7 +58,7 @@ const ModalComponent = (props) => {
 
     // Web3 인스턴스 생성
     const web3 = new Web3(
-      new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/caced887d4ea44629f838c23511ebc8f')
+      new Web3.providers.HttpProvider(process.env.REACT_APP_INFURA_PROVIDER)
     );
     // 주소 조회하기
     web3.eth
@@ -84,14 +84,7 @@ const ModalComponent = (props) => {
     <Modal>
       <div className={classes.wrap}>
         <h1 className={classes.title}>지갑 등록</h1>
-        <div className={classes.wallet}>
-          <img
-            className={classes.walletimg}
-            src={propsImageUrl}
-            alt="이미지 파일"
-          />
-          <h2 className={classes.walletname}>{propsname}</h2>
-        </div>
+
         <div className={classes.address}>
           <input
             id={'walletAddress'}

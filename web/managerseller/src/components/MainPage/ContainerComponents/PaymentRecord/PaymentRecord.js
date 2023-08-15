@@ -1,5 +1,4 @@
 import classes from "./PaymentRecord.module.css";
-import { useEffect, useRef } from "react";
 
 const PaymentRecord = (props) => {
   // const ref = useRef(networkInfoData)
