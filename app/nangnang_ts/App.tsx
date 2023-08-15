@@ -80,8 +80,6 @@ const killSession =  () => {
     console.log("아직 세션 살아있음");
   }
 }
-
-
   return (
     // <SafeAreaView style={styles.container}>
     //       <AuthProvider>
