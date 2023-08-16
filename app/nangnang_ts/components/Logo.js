@@ -6,7 +6,7 @@ const Logo = () => {
     return (
         <View style={styles.LogoView}>
             <Image
-                style={[styles.logo, {width:100, height:100}]}                                    
+                style={{width:100, height:100}}                                    
                 source={require('../assets/nangnang144.png')}/>
             <Text style={styles.logo}>NANG NANG</Text>
         </View>
@@ -20,7 +20,7 @@ const styles= StyleSheet.create({
         alignItems:'center'
     },
     logo:{
-        color:Colors.orange500,
+        color:"#FF6E31",
         fontSize:30,
     },
 

@@ -12,6 +12,7 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import WalletButton from '../components/Buttons/WalletButton';
 const formatData = (data, numColumns) =>{
 
     const numberOfFullRows = Math.floor(data.length/numColumns)
@@ -38,7 +39,7 @@ const SelectWallet = ({navigation}) => {
         universal: 'YOUR_APP_UNIVERSAL_LINK.com'
     }
     }
-    const providerTest1 = () => {
+    const ConnectData = () => {
         const expiry = provider?.session?.expiry
         console.log("expiry = ", expiry);
         const uri = provider?.uri
@@ -65,7 +66,7 @@ const SelectWallet = ({navigation}) => {
       
       }
       
-      const killSession =  () => {
+    const killSession =  () => {
         provider?.disconnect();
         if(isConnected){
           console.log("아직 세션 살아있음");
@@ -88,13 +89,13 @@ const SelectWallet = ({navigation}) => {
         if(payinfo.selectedWalletID === ""){
             Alert.alert("지갑선택", "결제에 사용할 지갑을 먼저 선택해주세요",[
                 {
-                    text:"네",
+                    text:"확인",
                     onPress:()=>null,
                     style:"cancel"
                 }
             ])
         }else{
-            connectWallet()
+            open()
         }
     }
     const CloseModalHandler = () => {
@@ -116,30 +117,46 @@ const SelectWallet = ({navigation}) => {
             <View style={styles.title}>
                 <ScreenTitle title="지갑 선택" />
             </View>
-            <Pressable onPress={()=>open()} style={{marginTop:16}}>
-                <Text>{isConnected ? 'View Account\n'+ address : 'Connect'}</Text>
-            </Pressable>
-            <Pressable onPress={()=>provider?.request({
-                method: 'eth_sendTransaction',
-                params: [{
-                    data: "0x1111",
-                    from: address,
-                    to: address,
-                }]
-                })
-            } style={{marginTop:16}}>
-                <Text>{isConnected ? 'sendTx' : 'Connected yet'}</Text>
-            </Pressable>
-
-            <Pressable onPress={()=>providerTest1()} style={{marginTop:16}}>
-                <Text>{isConnected ? 'printData' : 'Connect'}</Text>
-            </Pressable>
-
-            <Pressable onPress={()=>killSession()} style={{marginTop:16}}>
-                <Text>{isConnected ? 'killSession' : 'kill'}</Text>
-            </Pressable>
-            <View style={{flex:1, width:'50%',alignSelf:'center'}}>
-                    <SubmitButton onPress={() => navigation.navigate('Payinfo')}>결제 정보 확인</SubmitButton>
+            <View style={styles.submitbutton}>
+                {isConnected ?
+                    <View>
+                        <Text style={{color:Colors.indigo400, fontWeight:'bold'}}>
+                            연결된 지갑 : {provider?.session?.peer.metadata.name}
+                        </Text>
+                        <WalletButton 
+                            onPress={()=>provider?.request({
+                            method: 'eth_sendTransaction',
+                            params: [{
+                                data: "0x1111",
+                                from: payinfo.mywalletaddress,
+                                to: payinfo.walletaddress,
+                            }]
+                            })
+                            } style={{backgroundColor: Colors.orange500}}>
+                            <Text style={styles.text}>{"결제 하기"}</Text>
+                        </WalletButton>
+                        <WalletButton onPress={()=>ConnectData()} style={{marginTop:16}}>
+                            <Text style={styles.text}>{'지갑 연결 데이터 확인'}</Text>
+                        </WalletButton>
+                        <WalletButton onPress={()=>killSession()} style={{marginTop:16}}>
+                            <Text style={styles.text}>{'지갑 연결 세션 종료'}</Text>
+                        </WalletButton>
+                    </View>
+                    : <SubmitButton 
+                        onPress={()=>CW()} >{'지갑 연결하기'}</SubmitButton>
+                   
+                }
+            </View>
+            <View style={{alignSelf:'flex-end',paddingHorizontal:16}}>
+                    <Pressable style={{        
+                        borderRadius: 10,
+                        borderWidth: 2,
+                        borderColor: Colors.orange500,
+                        padding:5,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        }}onPress={() => navigation.navigate('Payinfo')}><Text style={{fontWeight:'bold', color: Colors.orange400}}>결제 정보 확인</Text></Pressable>
             </View>
             <View style={styles.WalletBlockView}>
                 <FlatList
@@ -158,7 +175,7 @@ const SelectWallet = ({navigation}) => {
                                 </View>
                                 <Text style={styles.indigo500}>{item.wallet}</Text>
                                 <TouchableOpacity 
-                                    style={[styles.button,{backgroundColor: item.selected ? '#FF8691' : null}]}
+                                    style={[styles.button,{backgroundColor: item.selected ? Colors.orange400 : null}]}
                                     onPress={()=>handleListItemPress(item)}>
                                         <Text style={[styles.indigo500,{ fontSize: 15, alignSelf: 'center' }]}>{item.selected ? '선택됨'  : '결제하기'}</Text>
                                 </TouchableOpacity>
@@ -238,6 +255,10 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         paddingHorizontal: 10,
         // width: '100%',
+    },
+    submitbutton:{
+        width:'40%',alignSelf:'center',
+        marginBottom:16,
     },
     text:{
         colors: Colors.indigo500,
