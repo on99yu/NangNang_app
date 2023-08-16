@@ -30,7 +30,7 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
       product: arrdata[1],
       price: arrdata[2],
       wallet: arrdata[3],
-      walletaddress: arrdata[4],
+      walletaddress: "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
       receiptid : arrdata[5],
       sellerid: arrdata[6],
       selectedWalletID:"",
@@ -73,8 +73,7 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
       <BarCodeScanner
         style={[StyleSheet.absoluteFill, styles.qrcode]}
         onBarCodeScanned={scanData ? undefined : handlerBarCodeScanned}>
-        <Text style={styles.description}>Scan your QR code</Text>
-             
+          <Text style={styles.description}>Scan your QR code</Text>
       </BarCodeScanner>
       {scanData && 
         <Button style={{margin:200}} title="Scan Again?" onPress={()=> setScanData(false)}/>}
