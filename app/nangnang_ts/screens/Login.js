@@ -9,7 +9,7 @@ import HeaderLogo from '../components/HeaderLogo';
 import InputText from '../components/InputText';
 import ScreenTitle from '../components/ScreenTitle';
 import SubmitButton from '../components/Buttons/SubmitButton';
-import GoogleButton from '../components/Buttons/GoogleButton';
+
 
 import { AuthContext } from '../context/AuthContext';
 
@@ -118,7 +118,6 @@ const Login = ({ navigation }) => {
             </View>
             <View style={styles.ButtonView}>
                 <SubmitButton onPress={LoginHandler}>{isLoading ?  <ActivityIndicator/> : "로그인"}</SubmitButton>
-                <GoogleButton>구글로 로그인</GoogleButton>
                 <View style={styles.GotoRegister}>
                     <Text>계정이 없으신가요?</Text>
                     <Link to={{screen:'Register'}} style={styles.link}>회원가입</Link>

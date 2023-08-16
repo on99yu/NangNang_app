@@ -8,8 +8,6 @@ import HeaderLogo from '../components/HeaderLogo';
 import InputText from '../components/InputText';
 import ScreenTitle from '../components/ScreenTitle';
 import SubmitButton from '../components/Buttons/SubmitButton';
-import GoogleButton from '../components/Buttons/GoogleButton';
-
 const Register = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] =useState("");
@@ -126,7 +124,6 @@ const Register = ({ navigation }) => {
             </View>
             <View style={styles.ButtonView}>
                 <SubmitButton onPress={RegisterHandler}>{isLoading ? <ActivityIndicator/> : "회원가입"}</SubmitButton>
-                <GoogleButton>구글로 회원가입</GoogleButton>
                 <View style={styles.GotoLogin}>
                     <Text>계정이 이미 있나요?</Text>
                     <Link to={{ screen: 'Login' }} style={styles.link}>로그인</Link>

@@ -1,11 +1,8 @@
-if (typeof BigInt === 'undefined') global.BigInt = require('big-integer')
-
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert} from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert,Pressable} from 'react-native';
 import { Link } from '@react-navigation/native';
 import { WalletConnectModal, useWalletConnectModal } from '@walletconnect/modal-react-native';
-import {Core} from '@walletconnect/core'
-import {Web3Wallet, IWeb3Wallet} from '@walletconnect/web3wallet'
+
 import ScreenTitle from '../components/ScreenTitle';
 import WalletInputModal from '../components/WalletInputModal';
 import HeaderLogo from '../components/HeaderLogo';
@@ -27,55 +24,59 @@ const formatData = (data, numColumns) =>{
     return data;
 }
 
-const projectId = 'e68a43fe8e9a0534d9f14f37689857ef';
-
-const core = new Core({
-    projectId: process.env.PROJECT_ID
-})
-export async function createWeb3Wallet() {
-    const web3wallet = await Web3Wallet.init({
-      core, // <- pass the shared `core` instance
-      metadata: {
-        name: 'Demo React Native Wallet',
-        description: 'Demo RN Wallet to interface with Dapps',
-        url: 'www.walletconnect.com',
-        icons: []
-      }
-    })
-  }
-
-export async function pair(params) {
-    return await core.pairing.pair({ uri: params.uri })
-}
-const providerMetadata = {
-  name: 'NangNang',
-  description: 'NangNang',
-  url: '',
-  icons: "",
-  redirect: {
-    native: '',
-    universal: ''
-  }
-};
-
 const SelectWallet = ({navigation}) => {
-    console.log(process.env.PROJECT_ID)
-    // WC_connector(WalletConnect_connector) 에서 사용할 함수들을 가져옴
+
     const{ isOpen, open, close, provider, isConnected, address } = useWalletConnectModal()
-    
+    const projectId = '3e3f9e4ec7896dafb000678ff1af2442'
+    const providerMetadata = {
+    name: 'YOUR_PROJECT_NAME',
+    description: 'YOUR_PROJECT_DESCRIPTION',
+    url: 'https://your-project-website.com/',
+    icons: ['https://your-project-logo.com/'],
+    redirect: {
+        native: 'YOUR_APP_SCHEME://',
+        universal: 'YOUR_APP_UNIVERSAL_LINK.com'
+    }
+    }
+    const providerTest1 = () => {
+        const expiry = provider?.session?.expiry
+        console.log("expiry = ", expiry);
+        const uri = provider?.uri
+        console.log("uri = ", uri);
+        const namespaces = provider?.namespaces
+        console.log("namespaces = ", namespaces);
+        // const session = provider?.session
+        // console.log("\n\nsession = ", session);
+      
+        const peer = provider?.session?.peer
+        console.log("peer = ", peer);
+        const pairingTopic = provider?.session?.pairingTopic
+        console.log("pairingTopic = ", pairingTopic);
+        const topic = provider?.session?.topic
+        console.log("topic = ", topic);
+        const url = provider?.session?.peer.metadata.url
+        console.log("url = ", url);
+      
+        // 이게 지갑 이름 알아내는 코드
+        const name = provider?.session?.peer.metadata.name
+        console.log("name = ", name);
+      
+      
+      
+      }
+      
+      const killSession =  () => {
+        provider?.disconnect();
+        if(isConnected){
+          console.log("아직 세션 살아있음");
+        }
+      }
     const [payinfo] = usePayinfo();  
     const [state, dispatch] =useContext(AuthContext);
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
-    const WCButtonHandler = async () =>{
-        isOpen;
-        await open();
-        close();
-        provider;
-        isConnected;
-        address
-    }
+
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
@@ -115,11 +116,28 @@ const SelectWallet = ({navigation}) => {
             <View style={styles.title}>
                 <ScreenTitle title="지갑 선택" />
             </View>
-            <View>
-                <SubmitButton onPress={open}>{isConnected ? 'View Account' : 'Connect'}</SubmitButton>
-            </View>
+            <Pressable onPress={()=>open()} style={{marginTop:16}}>
+                <Text>{isConnected ? 'View Account\n'+ address : 'Connect'}</Text>
+            </Pressable>
+            <Pressable onPress={()=>provider?.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                    data: "0x1111",
+                    from: address,
+                    to: address,
+                }]
+                })
+            } style={{marginTop:16}}>
+                <Text>{isConnected ? 'sendTx' : 'Connected yet'}</Text>
+            </Pressable>
 
-            <WalletConnectModal projectId={process.env.PROJECT_ID} providerMetadata={providerMetadata} />
+            <Pressable onPress={()=>providerTest1()} style={{marginTop:16}}>
+                <Text>{isConnected ? 'printData' : 'Connect'}</Text>
+            </Pressable>
+
+            <Pressable onPress={()=>killSession()} style={{marginTop:16}}>
+                <Text>{isConnected ? 'killSession' : 'kill'}</Text>
+            </Pressable>
             <View style={{flex:1, width:'50%',alignSelf:'center'}}>
                     <SubmitButton onPress={() => navigation.navigate('Payinfo')}>결제 정보 확인</SubmitButton>
             </View>
@@ -151,6 +169,8 @@ const SelectWallet = ({navigation}) => {
                     alwaysBounceVertical={false}
                 />
             </View>
+            <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />
+
             <WalletInputModal
                     selecteditem={selectedItem}
                     visible={modalIsVisible}
