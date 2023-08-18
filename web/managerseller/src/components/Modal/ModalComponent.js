@@ -2,6 +2,7 @@ import Modal from './Modal';
 import classes from './ModalComponent.module.css';
 import Web3 from 'web3';
 import { useState } from 'react';
+import { useQuery } from 'react-query';
 
 const ModalComponent = (props) => {
   const [balanceResult, setBalanceResult] = useState('');
@@ -9,9 +10,11 @@ const ModalComponent = (props) => {
   const [walletAddress, setWalletAddress] = useState('');
   const [isAddressValid, setAddressValid] = useState(false);
 
-  const propsname = props.WalletName;
-  const propsImageUrl = props.WalletImageUrl;
   const eth = 'ether';
+
+  const handleAddressChange = (e) => {
+    setWalletAddress(e.target.value);
+  };
 
   const requestData = {
     walletAddress,
@@ -21,32 +24,41 @@ const ModalComponent = (props) => {
   const url =
     'https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/brofucntions/sangyunbro/WalletOne/createSellerChosenWalletFunc';
 
-  const handleAddressChange = (e) => {
-    setWalletAddress(e.target.value);
-  };
 
-  /* 아직 미완성 */
-  const handleRegistration = () => {
-    if (isAddressValid) {
-      console.log(`지갑 주소 등록: `, walletAddress);
+  const { isLoading, isError, data, refetch, isSuccess } = useQuery(
+    'createSellerChosenWallet',
+    () =>
       fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('응답 데이터:', data);
+      }).then((response) => response.json()),
+    {
+      enabled: false, // 초기에는 요청 비활성화
+      // 여기에 필요한 다른 옵션들 추가 가능
+    }
+  );
 
-          // 데이터 처리 및 UI 업데이트 등 필요한 작업을 수행합니다.
-        })
-        .catch((error) => {
-          console.error('요청 에러:', error);
+  let content = <p>Found no Acount.</p>;
 
-          // 에러 처리 등 필요한 작업을 수행합니다.
-        });
+  if (isLoading) {
+    content = <p>Loading...</p>;
+  }
+  if (isError)
+    return (
+      <>
+        <h3>Oops, something went wrong</h3>
+        <p>{error.toString()}</p>
+      </>
+    );
+
+  /* 아직 미완성 */
+  const handleRegistration = () => {
+    if (isAddressValid) {
+      console.log(`지갑 주소 등록: `, walletAddress);
+      refetch();
     } else {
       console.log(`조회되지 않은 주소입니다. 등록할 수 없습니다.`);
     }
@@ -69,14 +81,12 @@ const ModalComponent = (props) => {
         console.log('조회 결과 (Ether):', etherBalanceFixed);
         setAddressValid(true);
         setBalanceResult(etherBalanceFixed.toString());
-        setError(null); // 에러 상태 초기화
-        // 조회된 결과를 처리하고 UI에 표시하는 로직을 추가하세요
+        setError(null);
       })
       .catch((error) => {
         console.error('조회 에러:', error);
         setError('조회 실패');
-        setBalanceResult(null); // 조회 결과 초기화
-        // 조회가 실패한 경우 에러 메시지를 UI에 표시하는 로직을 추가하세요
+        setBalanceResult(null);
       });
   };
 
@@ -106,6 +116,7 @@ const ModalComponent = (props) => {
             <h3 className={classes.currentasset}>자금 현황</h3>
             <ul className={classes.list}>
               <li className={classes.coinname}>
+                {content}
                 {balanceResult && (
                   <p>
                     {eth}: {balanceResult}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import classes from './WalletView.module.css';
 import Wallet from './Wallet';
@@ -18,11 +18,14 @@ async function getWalletData() {
 const WalletView = (props) => {
   const { data: walletData, isLoading, isError, error } = useQuery(
     'sellerWallet', () => getWalletData(), {
-    staleTime: 2000,
+    staleTime: 300000,
   }
   );
 
-  console.log(walletData);
+
+  useEffect(() => {
+    console.log(walletData);
+  }, [walletData]); // 빈 배열을 전달하여 컴포넌트가 마운트될 때 한 번만 실행
 
 
   let content = <p>Found no Wallet.</p>;
