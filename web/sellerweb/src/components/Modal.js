@@ -1,6 +1,9 @@
 import classes from './Modal.module.css';
 import ReactDOM from 'react-dom';
 import { useEffect, useState } from 'react';
+import { randomItem } from '../mocks/mockData';
+
+
 const Backdrop = (props) => {
   return <div className={classes.backdrop} onClick={props.onClose} />;
 };
@@ -38,11 +41,13 @@ const svgFile = (
 const ModalOverlay = (props) => {
   const [data, setData] = useState(null);
 
+  console.log(randomItem);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          'http://localhost:8080/qrpage?sellerFlatform=NANGNANG&productName=Kimchi&productPrice=10000&walletName=metamask&walletContractAddress=0x2a535b423542c23a211cd3124a1121b33a&recieptNo=1&sellerId=sellerid'
+          `http://localhost:8080/qrpage?sellerFlatform=${randomItem.sellerPlatform}&productName=${randomItem.productName}&productPrice=${randomItem.productPrice}&walletName=${randomItem.walletName}&walletContractAddress=${randomItem.walletContractAddress}&recieptNo=${randomItem.receiptNo}&sellerId=${randomItem.sellerId}`
         );
         const data = await response.json();
         setData(data);
