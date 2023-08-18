@@ -40,6 +40,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .component_component_no2_button {
@@ -52,3 +53,8 @@
   font-weight: 600;
 }
 
+.component_component_no2_button:hover { 
+  border: 2px solid #ccc;
+  background-color: white;
+  color: #f7a701;
+}
