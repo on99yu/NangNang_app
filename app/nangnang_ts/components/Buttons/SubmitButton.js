@@ -3,11 +3,12 @@ import {  Text,  StyleSheet, Pressable, ActivityIndicator,  } from 'react-native
 
 import Colors from '../../constants/colors';
 
-const SubmitButton = ({children, onPress, loading}) => {
+const SubmitButton = ({children, onPress, loading,style}) => {
     return (
     <Pressable
-        style={styles.button}
-        onPress={onPress}>
+        style={({pressed})=>[ {backgroundColor: pressed ? '#434656' : Colors.indigo500 },styles.button]}
+        onPress={onPress}
+        >
         {loading && <ActivityIndicator size="small" color={Colors.Incarnadine500}/>}
         <Text style={styles.text}>{children}</Text>
     </Pressable>

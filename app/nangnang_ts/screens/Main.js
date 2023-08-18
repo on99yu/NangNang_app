@@ -45,7 +45,7 @@ const Main = ({ navigation }) => {
                 </Pressable> */}
                 <TouchableOpacity onPress={()=>navigation.navigate('QRCodeScanner')}>
                     <Image
-                        style={styles.QRcode} 
+                        style={styles.QRcode}
                         source={require('../assets/qrcode.png')}/>
                 </TouchableOpacity>
             </View>
@@ -83,10 +83,8 @@ const styles = StyleSheet.create({
         color: Colors.Incarnadine500
     },
     QRcode:{
-        color: Colors.orange400,
         width: 100,
         height:100,
-
         alignSelf:'center'
     }
 })

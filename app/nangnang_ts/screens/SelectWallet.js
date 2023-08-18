@@ -1,11 +1,8 @@
-if (typeof BigInt === 'undefined') global.BigInt = require('big-integer')
-
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert} from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert,Pressable} from 'react-native';
 import { Link } from '@react-navigation/native';
 import { WalletConnectModal, useWalletConnectModal } from '@walletconnect/modal-react-native';
-import {Core} from '@walletconnect/core'
-import {Web3Wallet, IWeb3Wallet} from '@walletconnect/web3wallet'
+
 import ScreenTitle from '../components/ScreenTitle';
 import WalletInputModal from '../components/WalletInputModal';
 import HeaderLogo from '../components/HeaderLogo';
@@ -15,6 +12,7 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import WalletButton from '../components/Buttons/WalletButton';
 const formatData = (data, numColumns) =>{
 
     const numberOfFullRows = Math.floor(data.length/numColumns)
@@ -27,55 +25,59 @@ const formatData = (data, numColumns) =>{
     return data;
 }
 
-const projectId = 'e68a43fe8e9a0534d9f14f37689857ef';
-
-const core = new Core({
-    projectId: process.env.PROJECT_ID
-})
-export async function createWeb3Wallet() {
-    const web3wallet = await Web3Wallet.init({
-      core, // <- pass the shared `core` instance
-      metadata: {
-        name: 'Demo React Native Wallet',
-        description: 'Demo RN Wallet to interface with Dapps',
-        url: 'www.walletconnect.com',
-        icons: []
-      }
-    })
-  }
-
-export async function pair(params) {
-    return await core.pairing.pair({ uri: params.uri })
-}
-const providerMetadata = {
-  name: 'NangNang',
-  description: 'NangNang',
-  url: '',
-  icons: "",
-  redirect: {
-    native: '',
-    universal: ''
-  }
-};
-
 const SelectWallet = ({navigation}) => {
-    console.log(process.env.PROJECT_ID)
-    // WC_connector(WalletConnect_connector) 에서 사용할 함수들을 가져옴
+
     const{ isOpen, open, close, provider, isConnected, address } = useWalletConnectModal()
-    
+    const projectId = '3e3f9e4ec7896dafb000678ff1af2442'
+    const providerMetadata = {
+    name: 'YOUR_PROJECT_NAME',
+    description: 'YOUR_PROJECT_DESCRIPTION',
+    url: 'https://your-project-website.com/',
+    icons: ['https://your-project-logo.com/'],
+    redirect: {
+        native: 'YOUR_APP_SCHEME://',
+        universal: 'YOUR_APP_UNIVERSAL_LINK.com'
+    }
+    }
+    const ConnectData = () => {
+        const expiry = provider?.session?.expiry
+        console.log("expiry = ", expiry);
+        const uri = provider?.uri
+        console.log("uri = ", uri);
+        const namespaces = provider?.namespaces
+        console.log("namespaces = ", namespaces);
+        // const session = provider?.session
+        // console.log("\n\nsession = ", session);
+      
+        const peer = provider?.session?.peer
+        console.log("peer = ", peer);
+        const pairingTopic = provider?.session?.pairingTopic
+        console.log("pairingTopic = ", pairingTopic);
+        const topic = provider?.session?.topic
+        console.log("topic = ", topic);
+        const url = provider?.session?.peer.metadata.url
+        console.log("url = ", url);
+      
+        // 이게 지갑 이름 알아내는 코드
+        const name = provider?.session?.peer.metadata.name
+        console.log("name = ", name);
+      
+      
+      
+      }
+      
+    const killSession =  () => {
+        provider?.disconnect();
+        if(isConnected){
+          console.log("아직 세션 살아있음");
+        }
+      }
     const [payinfo] = usePayinfo();  
     const [state, dispatch] =useContext(AuthContext);
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
-    const WCButtonHandler = async () =>{
-        isOpen;
-        await open();
-        close();
-        provider;
-        isConnected;
-        address
-    }
+
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
@@ -87,13 +89,13 @@ const SelectWallet = ({navigation}) => {
         if(payinfo.selectedWalletID === ""){
             Alert.alert("지갑선택", "결제에 사용할 지갑을 먼저 선택해주세요",[
                 {
-                    text:"네",
+                    text:"확인",
                     onPress:()=>null,
                     style:"cancel"
                 }
             ])
         }else{
-            connectWallet()
+            open()
         }
     }
     const CloseModalHandler = () => {
@@ -115,13 +117,46 @@ const SelectWallet = ({navigation}) => {
             <View style={styles.title}>
                 <ScreenTitle title="지갑 선택" />
             </View>
-            <View>
-                <SubmitButton onPress={open}>{isConnected ? 'View Account' : 'Connect'}</SubmitButton>
+            <View style={styles.submitbutton}>
+                {isConnected ?
+                    <View>
+                        <Text style={{color:Colors.indigo400, fontWeight:'bold'}}>
+                            연결된 지갑 : {provider?.session?.peer.metadata.name}
+                        </Text>
+                        <WalletButton 
+                            onPress={()=>provider?.request({
+                            method: 'eth_sendTransaction',
+                            params: [{
+                                data: "0x1111",
+                                from: payinfo.mywalletaddress,
+                                to: payinfo.walletaddress,
+                            }]
+                            })
+                            } style={{backgroundColor: Colors.orange500}}>
+                            <Text style={styles.text}>{"결제 하기"}</Text>
+                        </WalletButton>
+                        <WalletButton onPress={()=>ConnectData()} style={{marginTop:16}}>
+                            <Text style={styles.text}>{'지갑 연결 데이터 확인'}</Text>
+                        </WalletButton>
+                        <WalletButton onPress={()=>killSession()} style={{marginTop:16}}>
+                            <Text style={styles.text}>{'지갑 연결 세션 종료'}</Text>
+                        </WalletButton>
+                    </View>
+                    : <SubmitButton 
+                        onPress={()=>CW()} >{'지갑 연결하기'}</SubmitButton>
+                   
+                }
             </View>
-
-            <WalletConnectModal projectId={process.env.PROJECT_ID} providerMetadata={providerMetadata} />
-            <View style={{flex:1, width:'50%',alignSelf:'center'}}>
-                    <SubmitButton onPress={() => navigation.navigate('Payinfo')}>결제 정보 확인</SubmitButton>
+            <View style={{alignSelf:'flex-end',paddingHorizontal:16}}>
+                    <Pressable style={{        
+                        borderRadius: 10,
+                        borderWidth: 2,
+                        borderColor: Colors.orange500,
+                        padding:5,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        }}onPress={() => navigation.navigate('Payinfo')}><Text style={{fontWeight:'bold', color: Colors.orange400}}>결제 정보 확인</Text></Pressable>
             </View>
             <View style={styles.WalletBlockView}>
                 <FlatList
@@ -140,7 +175,7 @@ const SelectWallet = ({navigation}) => {
                                 </View>
                                 <Text style={styles.indigo500}>{item.wallet}</Text>
                                 <TouchableOpacity 
-                                    style={[styles.button,{backgroundColor: item.selected ? '#FF8691' : null}]}
+                                    style={[styles.button,{backgroundColor: item.selected ? Colors.orange400 : null}]}
                                     onPress={()=>handleListItemPress(item)}>
                                         <Text style={[styles.indigo500,{ fontSize: 15, alignSelf: 'center' }]}>{item.selected ? '선택됨'  : '결제하기'}</Text>
                                 </TouchableOpacity>
@@ -151,6 +186,8 @@ const SelectWallet = ({navigation}) => {
                     alwaysBounceVertical={false}
                 />
             </View>
+            <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />
+
             <WalletInputModal
                     selecteditem={selectedItem}
                     visible={modalIsVisible}
@@ -218,6 +255,10 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         paddingHorizontal: 10,
         // width: '100%',
+    },
+    submitbutton:{
+        width:'40%',alignSelf:'center',
+        marginBottom:16,
     },
     text:{
         colors: Colors.indigo500,
