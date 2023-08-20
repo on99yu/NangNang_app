@@ -18,6 +18,9 @@
       "supportsTablet": true
     },
     "android": {
+      "package":"com.nangnang",
+      "versionCode":1,
+      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -26,8 +29,13 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "experiments":{
-      "tsconfigPaths":true
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "047f3939-4c95-4eba-9929-5c9a0f1c9496"
+      }
     }
   }
 }
