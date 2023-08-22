@@ -9,22 +9,22 @@ import SubmitButton from '../components/Buttons/SubmitButton';
 import ContentsBox from '../components/ContentsBox';
 import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
-
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 const PayResult = ({navigation}) => {
-    
+    const{  provider, isConnected } = useWalletConnectModal();
+
     const [payinfo, setPayinfo] = usePayinfo();
-    
     const [state, dispatch] = useContext(AuthContext)
     const PaymentComplete = ()=>{
         setPayinfo(it => ({
             ...it,
             inpayment:false
         }))
-        killSession()
+        provider?.disconnect();
         navigation.navigate('Main')
         console.log("PaymentComplete", JSON.stringify(payinfo,null,2))
-        
     }
+
     return (
         <View style={styles.PayinfoView}>
             <View style={styles.header}>
