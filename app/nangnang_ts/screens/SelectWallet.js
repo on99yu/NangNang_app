@@ -107,6 +107,25 @@ const SelectWallet = ({navigation}) => {
         setModalIsVisible(true)
     }   
 
+    const sendTxFunc = async () => {
+        provider?.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                value: "8800000000000",
+                from: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
+                to: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
+            }]
+            })
+            .then((result) => {
+            // Returns transaction id (hash)
+            console.log("result = ", result);
+            })
+            .catch((error) => {
+            // Error returned when rejected
+            console.log("error = ", error);
+            });
+    }
+
     return (
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
@@ -124,15 +143,7 @@ const SelectWallet = ({navigation}) => {
                             연결된 지갑 : {provider?.session?.peer.metadata.name}
                         </Text>
                         <WalletButton 
-                            onPress={()=>provider?.request({
-                            method: 'eth_sendTransaction',
-                            params: [{
-                                data: "0x1111",
-                                from: payinfo.mywalletaddress,
-                                to: payinfo.walletaddress,
-                            }]
-                            })
-                            } style={{backgroundColor: Colors.orange500}}>
+                            onPress={()=>sendTxFunc()} style={{backgroundColor: Colors.orange500}}>
                             <Text style={styles.text}>{"결제 하기"}</Text>
                         </WalletButton>
                         <WalletButton onPress={()=>ConnectData()} style={{marginTop:16}}>
@@ -144,7 +155,6 @@ const SelectWallet = ({navigation}) => {
                     </View>
                     : <SubmitButton 
                         onPress={()=>CW()} >{'지갑 연결하기'}</SubmitButton>
-                   
                 }
             </View>
             <View style={{alignSelf:'flex-end',paddingHorizontal:16}}>
