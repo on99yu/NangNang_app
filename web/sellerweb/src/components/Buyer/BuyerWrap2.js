@@ -27,7 +27,7 @@ const BuyerWrap2 = () => {
   console.log(randomItem);
   const showModalHandler = () => {
     window.open(
-      `http://localhost:8080/qrpage?sellerFlatform=${randomItem.sellerPlatform}&productName=${randomItem.productName}&productPrice=${randomItem.productPrice}&walletName=${randomItem.walletName}&walletContractAddress=${randomItem.walletContractAddress}&recieptNo=${receiptNo}&sellerId=${randomItem.sellerId}`,
+      `http://nanng.onrender.com/qrpage?sellerFlatform=${randomItem.sellerPlatform}&productName=${randomItem.productName}&productPrice=${randomItem.productPrice}&walletName=${randomItem.walletName}&walletContractAddress=${randomItem.walletContractAddress}&recieptNo=${receiptNo}&sellerId=${randomItem.sellerId}`,
       'PopupWin',
       'top=140, left=400, width=330, height=410, menubar=no, toolbar=no, location=no, directories=no, status=no, scrollbars=no, copyhistory=no, resizable=no'
     );

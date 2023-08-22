@@ -2,8 +2,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform A",
         "productName": "Product X",
-        "productPrice": 50.99,
-        "walletName": "Wallet A",
+        "productPrice": 10000,
+        "walletName": "Trust Wallet",
         "walletContractAddress": "0x123abc",
         "receiptNo": 12345,
         "sellerId": "SellerID001"
@@ -11,8 +11,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform B",
         "productName": "Product Y",
-        "productPrice": 30.49,
-        "walletName": "Wallet B",
+        "productPrice": 10000,
+        "walletName": "taehwanWallet",
         "walletContractAddress": "0x456def",
         "receiptNo": 23456,
         "sellerId": "SellerID002"
@@ -20,8 +20,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform A",
         "productName": "Product Z",
-        "productPrice": 20.99,
-        "walletName": "Wallet C",
+        "productPrice": 5000,
+        "walletName": "Trust Wallet",
         "walletContractAddress": "0x789ghi",
         "receiptNo": 34567,
         "sellerId": "SellerID003"
@@ -29,8 +29,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform C",
         "productName": "Product X",
-        "productPrice": 45.00,
-        "walletName": "Wallet D",
+        "productPrice": 5000,
+        "walletName": "taehwanWallet",
         "walletContractAddress": "0xabc123",
         "receiptNo": 45678,
         "sellerId": "SellerID004"
@@ -38,8 +38,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform A",
         "productName": "Product Y",
-        "productPrice": 28.75,
-        "walletName": "Wallet E",
+        "productPrice": 15000,
+        "walletName": "MetaMask",
         "walletContractAddress": "0xdef456",
         "receiptNo": 56789,
         "sellerId": "SellerID005"
@@ -47,8 +47,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform B",
         "productName": "Product Z",
-        "productPrice": 18.50,
-        "walletName": "Wallet F",
+        "productPrice": 15000,
+        "walletName": "MetaMask",
         "walletContractAddress": "0x123abc",
         "receiptNo": 67890,
         "sellerId": "SellerID006"
@@ -56,8 +56,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform C",
         "productName": "Product X",
-        "productPrice": 52.25,
-        "walletName": "Wallet G",
+        "productPrice": 10000,
+        "walletName": "Trust Wallet",
         "walletContractAddress": "0x456def",
         "receiptNo": 78901,
         "sellerId": "SellerID007"
@@ -65,8 +65,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform A",
         "productName": "Product Y",
-        "productPrice": 33.15,
-        "walletName": "Wallet H",
+        "productPrice": 10000,
+        "walletName": "Bitpay",
         "walletContractAddress": "0x789ghi",
         "receiptNo": 89012,
         "sellerId": "SellerID008"
@@ -74,8 +74,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform B",
         "productName": "Product Z",
-        "productPrice": 27.80,
-        "walletName": "Wallet I",
+        "productPrice": 5000,
+        "walletName": "Argent",
         "walletContractAddress": "0xabc123",
         "receiptNo": 90123,
         "sellerId": "SellerID009"
@@ -83,8 +83,8 @@ const mockProductData = [
     {
         "sellerPlatform": "Platform C",
         "productName": "Product X",
-        "productPrice": 38.90,
-        "walletName": "Wallet J",
+        "productPrice": 15000,
+        "walletName": "Rainbow",
         "walletContractAddress": "0xdef456",
         "receiptNo": 12345,
         "sellerId": "SellerID010"

@@ -96,6 +96,15 @@ const SelectWallet = ({navigation}) => {
                 }
             ])
             setErrorNum(0);
+        }else if (errorNum === 5000 ){
+            Alert.alert("지갑선택", "사용자가 결제를 취소하였습니다.",[
+                {
+                    text:"확인",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
+            setErrorNum(0);
         }
     },[errorNum])
     const CW = async ()=>{
@@ -133,54 +142,61 @@ const SelectWallet = ({navigation}) => {
                 const res = await provider?.request({
                     method: 'eth_sendTransaction',
                     params: [{
-                        value:1,
+                        value: 1000,
                         from: payinfo.mywalletaddress,
-                        to: "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
+                        to: payinfo.walletaddress,
                     }]
                 })
                 console.log("sendTX 해쉬값" ,res)
-                const transactionstatus = await axios({
-                    method:"GET",
-                    url:`https://api-goerli.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${res}&apikey=${goerliapi}`,
-                })
-                console.log(JSON.stringify(transactionstatus, null, 2))
-                const payresult = transactionstatus.data.status
-                if(payresult == 1 || payresult == "1"){
-                    try{
-                        const res = await axios({
-                            methood:"POST",
-                            url:`https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/storepaymentdata`,
-                            data:{
-                                "priceAddressInfo_object" : {
-                                    "payment_receipt_idx" : payinfo.receiptid,
-                                    "seller_id" : payinfo.sellerid,
-                                    "consumer_id" : state.uid,
-                                    "sender_wallet_address" : payinfo.mywalletaddress,
-                                    "receiver_wallet_address" : payinfo.walletaddress,
-                                    "total_won_price" : payinfo.price,
-                                    "total_coin_price" : payinfo.exchangedvalue
-                                    },
-                                    "products": [
-                                    {
-                                        "product_name": payinfo.product_name,
-                                        "product_won_price_per": payinfo.price,
-                                        "quantity": 1
-                                    },
-                                    ],
-                                    "networkInfo_obejct" : {
+                try{
+                    const transactionstatus = await axios({
+                        method:"GET",
+                        url:`https://api-goerli.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${res}&apikey=${goerliapi}`,
+                    })
+                    console.log(JSON.stringify(transactionstatus.data, null, 2))
+                    const payresult = transactionstatus.data.status
+                    if(payresult == 1 || payresult == "1"){
+                        try{
+                            const res = await axios({
+                                methood:"POST",
+                                url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/storepaymentdata",
+                                data:{
+                                    "priceAddressInfo_object" : {
                                         "payment_receipt_idx" : payinfo.receiptid,
-                                        "main_blockchain_name" : "Ethereum",
-                                        "detailed_network_name" : "Ethereum Mainnet",
-                                        "detailed_network_real_id_num" : "1",
-                                        "payment_wallet_name" : payinfo.selectedWallet
-                                    }
-                            }
-                        })
-                        console.log("결제 데이터 저장", JSON.stringify(res, null, 2))
-                    }catch(e){
-                        console.log(e)
+                                        "seller_id" : payinfo.sellerid,
+                                        "consumer_id" : state.uid,
+                                        "sender_wallet_address" : payinfo.mywalletaddress,
+                                        "receiver_wallet_address" : payinfo.walletaddress,
+                                        "total_won_price" : payinfo.price,
+                                        "total_coin_price" : payinfo.exchangedvalue
+                                        },
+                                        "products": [
+                                        {
+                                            "product_name": payinfo.product_name,
+                                            "product_won_price_per": payinfo.price,
+                                            "quantity": 1
+                                        },
+                                        ],
+                                        "networkInfo_obejct" : {
+                                            "payment_receipt_idx" : payinfo.receiptid,
+                                            "main_blockchain_name" : "Ethereum",
+                                            "detailed_network_name" : "Ethereum Mainnet",
+                                            "detailed_network_real_id_num" : "1",
+                                            "payment_wallet_name" : payinfo.selectedWallet
+                                        }
+                                }
+                            })
+                            console.log("결제 데이터 저장", JSON.stringify(res, null, 2))
+                            navigation.navigate("PayResult")
+                            console.log("결제 데이터 저장 완료")
+                        }catch(e){
+                            console.log("결제 데이터 저장 오류")
+                            console.log("결제 에러 ",e)
+                        }
                     }
-                    navigation.navigate("PayResult")
+                    console.log("결제 해쉬값 확인 완료")
+                }catch(e){
+                    console.log("해쉬값 확인 에러")
                 }
             }catch(e){
                 console.log("Error - ",e)
