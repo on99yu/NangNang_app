@@ -48,47 +48,6 @@ const Register = ({ navigation }) => {
         }
         setIsLoading(false)
     }
-    // const RegisterHandler = () => {
-    //     setIsLoading(true);
-    //     axios({
-    //         method:"Post",
-    //         url:"https://identitytoolkit.googleapis.com/v1/accounts:signUp",
-    //         params:{
-    //             key:'AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI',
-    //         },
-    //         data:{
-    //             email: registerInput.email,
-    //             password: registerInput.password,
-
-    //         }
-    //     }).then((res)=>{
-    //         axios({
-    //             method:'POST',
-    //             url: "https://identitytoolkit.googleapis.com/v1/accounts:update",
-    //             param:{
-    //                 key:"AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI",
-    //             },
-    //             data:{
-    //                 idToken: res.data.idToken,
-    //                 displayName: registerInput.name,
-    //             }
-    //         }).then((r)=>{
-    //         }).catch((e)=>{
-    //             console.log(e,'update profile error');
-    //             alert(e.message);
-    //         }).finally(()=>{
-    //            setIsLoading(false); 
-    //         })
-
-    //         console.log(res.data);
-
-    //     }).catch((e)=>{
-    //         console.log(warn(e));
-    //         alert(e.message);
-    //     }).finally(()=>{
-    //         setIsLoading(false); 
-    //      })
-        
     return (
         <View style={styles.RegisterView}>
             <HeaderLogo />

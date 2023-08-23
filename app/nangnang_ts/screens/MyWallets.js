@@ -28,13 +28,16 @@ const MyWallets = ({navigation}) => {
     const [state, dispatch] = useContext(AuthContext)
     const [modalIsVisible, setModalIsVisible] = useState(false); 
     const [selectedItem, setSelectedItem] = useState({});
-
-    const CloseModalHandler = () => {
+    const [walletAddress, setWalletAddress] = useState("");
+     const CloseModalHandler = () => {
         setModalIsVisible(false);
     }
     const handleListItemPress = (item) => {
+        const wallet_address = state.wallet.find(e=> e.wallet_num === item.id_num).walletaddress
         setSelectedItem(item)
         setModalIsVisible(true)
+        setWalletAddress(wallet_address)
+        console.log("handleListItemPress",wallet_address)
     }
 
     return (
@@ -80,7 +83,8 @@ const MyWallets = ({navigation}) => {
                 <WalletAddress
                     selecteditem={selectedItem}
                     visible={modalIsVisible} 
-                    oncancel={CloseModalHandler}/>
+                    oncancel={CloseModalHandler}
+                    walletAddress={walletAddress}/>
             </View>
         </View>
     );

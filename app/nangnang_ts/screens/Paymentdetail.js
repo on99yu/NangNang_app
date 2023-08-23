@@ -16,8 +16,6 @@ function Paymentdetail({route, navigation}) {
     }
     useEffect(()=>{
         console.log(JSON.stringify(data,null,2))
-        // console.log(JSON.stringify(data.data,null,2))
-        // console.log(JSON.stringify(data.data.statusInfoData,null,2))
     },[])
   return (
     <View style={styles.paymentdetailView}>
