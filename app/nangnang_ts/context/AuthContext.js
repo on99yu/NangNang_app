@@ -23,25 +23,40 @@ const initialState = {
         },
         {
             wallet_num: "3",
-            id: "bitpay",
-            walletname:'Bitpay',
-            walletaddress:'',
-            selected: false,
-        },
-        {
-            wallet_num: "4",
             id: "argent",
             walletname:'Argent',
             walletaddress:'',
             selected: false,
         },
         {
-            wallet_num: "5",
+            wallet_num: "4",
             id: "rainbow",
             walletname:'Rainbow',
             walletaddress:'',
             selected: false,
-        }]
+        },
+        {
+            wallet_num: "5",
+            id: "safe",
+            walletname:'Safe',
+            walletaddress:'',
+            selected: false,
+        },
+        {
+            wallet_num: "6",
+            id: "zerion",
+            walletname:'Zerion',
+            walletaddress:'',
+            selected: false,
+        },
+        {
+            wallet_num: "7",
+            id: "imtoken",
+            walletname:'imToken',
+            walletaddress:'',
+            selected: false,
+        },
+    ]
 };
 
 const reducer = (state, action) =>{

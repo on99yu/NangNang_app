@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert,Pressable} from 'react-native';
 import { Link } from '@react-navigation/native';
 import { WalletConnectModal, useWalletConnectModal } from '@walletconnect/modal-react-native';
@@ -29,12 +29,12 @@ const formatData = (data, numColumns) =>{
 
 const SelectWallet = ({navigation}) => {
 
-    const{ isOpen, open, close, provider, isConnected, address } = useWalletConnectModal()
+    const{ open, close, provider, isConnected, } = useWalletConnectModal()
     const projectId = '3e3f9e4ec7896dafb000678ff1af2442'
     const providerMetadata = {
-    name: 'YOUR_PROJECT_NAME',
-    description: 'YOUR_PROJECT_DESCRIPTION',
-    url: 'https://your-project-website.com/',
+    name: 'NangNang',
+    description: 'NangNang',
+    url: 'nangnang',
     icons: ['https://your-project-logo.com/'],
     redirect: {
         native: 'YOUR_APP_SCHEME://',
@@ -48,9 +48,6 @@ const SelectWallet = ({navigation}) => {
         console.log("uri = ", uri);
         const namespaces = provider?.namespaces
         console.log("namespaces = ", namespaces);
-        // const session = provider?.session
-        // console.log("\n\nsession = ", session);
-      
         const peer = provider?.session?.peer
         console.log("peer = ", peer);
         const pairingTopic = provider?.session?.pairingTopic
@@ -59,8 +56,6 @@ const SelectWallet = ({navigation}) => {
         console.log("topic = ", topic);
         const url = provider?.session?.peer.metadata.url
         console.log("url = ", url);
-      
-        // 이게 지갑 이름 알아내는 코드
         const name = provider?.session?.peer.metadata.name
         console.log("name = ", name);
       
@@ -80,6 +75,7 @@ const SelectWallet = ({navigation}) => {
     const [selectedItem, setSelectedItem] = useState({});
     const [walletlist, setWalletList] = useState([]);
     const [errorNum, setErrorNum] = useState(0);
+    const [walletAddress, setWalletAddress] = useState("");
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
@@ -158,8 +154,11 @@ const SelectWallet = ({navigation}) => {
                     if(payresult == 1 || payresult == "1"){
                         try{
                             const res = await axios({
-                                methood:"POST",
+                                method:"POST",
                                 url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/storepaymentdata",
+                                headers:{
+                                    "Content-Type":"application/json"
+                                },
                                 data:{
                                     "priceAddressInfo_object" : {
                                         "payment_receipt_idx" : payinfo.receiptid,
@@ -206,20 +205,16 @@ const SelectWallet = ({navigation}) => {
             console.log("sendTX 완료")
         }
     }
-    const ChangeConnect = async()=>{
-        try{
 
-        }catch(e){
-            console.log("Error - ", e)
-        }
-    }
     const CloseModalHandler = () => {
         setModalIsVisible(false);
     }
 
     const handleListItemPress = (item) => {
+        const wallet_address = state.wallet.find(e=> e.wallet_num === item.id_num).walletaddress
         setSelectedItem(item)
         setModalIsVisible(true)
+        setWalletAddress(wallet_address)
     }   
 
     const sendTxFunc = async () => {
@@ -257,10 +252,6 @@ const SelectWallet = ({navigation}) => {
                         <Text style={{color:Colors.indigo400, fontWeight:'bold'}}>
                             연결된 지갑 : {provider?.session?.peer.metadata.name}
                         </Text>
-                        <WalletButton 
-                            onPress={()=>{close(); open()}} style={{backgroundColor: Colors.orange500}}>
-                            <Text >{"다른 지갑 연결하기"}</Text>
-                        </WalletButton>
                         <WalletButton 
                             onPress={()=>sendTX()} style={{backgroundColor: Colors.orange500}}>
                             <Text >{"결제 하기"}</Text>
@@ -322,7 +313,8 @@ const SelectWallet = ({navigation}) => {
                     visible={modalIsVisible}
                     oncancel={CloseModalHandler}
                     walletlist={walletlist}
-                    setWalletList={setWalletList}/>
+                    setWalletList={setWalletList}
+                    walletAddress={walletAddress}/>
         </View>
     );
 };

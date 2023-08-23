@@ -1,11 +1,8 @@
-import React ,{useState,useEffect, useContext} from 'react';
-import {View,StyleSheet,Text,Button,StatusBar,Dimensions} from 'react-native';
-import { Link } from '@react-navigation/native';
+import React ,{useState,useEffect, } from 'react';
+import {View,StyleSheet,Text,Button,Dimensions} from 'react-native';
 import { BarCodeScanner} from 'expo-barcode-scanner';
 
-import Colors from '../constants/colors';
-import SubmitButton from '../components/Buttons/SubmitButton';
-import { PayinfoContext, usePayinfo } from '../context/PayinfoContext';
+import {  usePayinfo } from '../context/PayinfoContext';
 
 const {width} = Dimensions.get('window')
 
@@ -48,7 +45,6 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
       console.log(`Type: ${type}`);
       setScanData(false)
     }
-    // console.log("from QRCodeScanner - QR 코드 스캔 시간:", scanTime, "밀리초");
   } 
   if(hasPermission===null){
     return (
