@@ -10,7 +10,7 @@ const wallets = ([
         id_num:"2",
         id: "trustwallet",
         wallet: "Trust Wallet",
-        imageURL: require(`../assets/trustwallet.png`)
+        imageURL: require(`../assets/tw.png`)
     },
     {
         id_num:"3",

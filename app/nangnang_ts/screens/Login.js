@@ -2,8 +2,6 @@ import React, { useState, useEffect,useContext } from 'react';
 import { Image, Text, View, StyleSheet, ActivityIndicator} from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import Colors from '../constants/colors';
 import HeaderLogo from '../components/HeaderLogo';
 import InputText from '../components/InputText';
@@ -45,7 +43,6 @@ const Login = ({ navigation }) => {
                 method:"GET",
                 url:`https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/consumerschosenwallet?consumer_id=${loginInput.id}`,
             })
-            // console.log(JSON.stringify(walletaddress.data, null, 2))
             const wallet = state.wallet
             wallet.forEach((item)=>{
                 const {wallet_num} = item;
@@ -65,30 +62,6 @@ const Login = ({ navigation }) => {
         }
         setLoginInput(false)
     }
-    // const LoginHandler = async () => {
-    //     axios({
-    //         method:"POST",
-    //         url:"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
-    //         params:{
-    //             key:'AIzaSyDYSJighl4OVsw3HPsTul-DRREMKyu0EOI',
-    //         },
-    //         data:{
-    //             email:loginInput.email,
-    //             password:loginInput.password,
-    //         }
-    //     }).then((res)=>{
-    //         dispatch({
-    //             type:'user_login',
-    //             payload: true,
-    //             uid: res.data.localId,
-    //             email: res.data.email
-    //         })
-    //     }).catch((e)=>{
-    //         console.log(e.message);
-    //     }).finally(()=>{
-    //         navigation.navigate('Main')
-    //     })
-    // }
 
     return (
         <View style={styles.LoginView}>

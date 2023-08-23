@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from  'react';
-import { View,Text,StyleSheet,ScrollView, FlatList } from 'react-native';
+import { View,Text,StyleSheet, FlatList } from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
 
@@ -13,46 +13,9 @@ import {DataTable} from 'react-native-paper';
 
 const MyPaymentlist = ({navigation}) => {
     
-    const [payinfo, setPayinfo] = usePayinfo();
-    
     const [state, dispatch] = useContext(AuthContext)
     const [paymentList, setPaymentList] = useState([]);
 
-    // useEffect 데이터가져오기
-    const dummydata =[{
-            uid:"1",
-            paymentid:"1",
-            productname:"물김치",
-            price:10000,
-            productcount:1,
-            paymenttime:"1시"
-        },{
-            uid:"2",
-            paymentid:"2",
-            productname:"배추김치",
-            price:20000,
-            productcount:2,
-            paymenttime:"2시"
-        },{
-            uid:"3",
-            paymentid:"3",
-            productname:"열무김치",
-            price:30000,
-            productcount:3,
-            paymenttime:"3시"
-    }]
-    // const loadPaymentlist = async ()=>{
-    //     try{
-    //         const res = await axios({
-    //             methood:"GET",
-    //             url:`https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/getpaymentreceiptdata/getallpaymentreceiptdatabyuserid?user_id=${state.uid}`
-    //         })
-    //         console.log(JSON.stringify(res.data, null,2))
-    //     }catch(e){
-    //         console.log(e)
-    //     }
-        
-    // }
     useEffect(()=>{
         async function loadPaymentlist(){
             try{
@@ -76,8 +39,6 @@ const MyPaymentlist = ({navigation}) => {
         }
         loadPaymentlist();
     },[])
-    // 결제내역 가져오는 API Post
-    // Item View
     const paymentdetail = async(id) =>{
         try{
             const paymentdetailData = await axios({
@@ -127,7 +88,7 @@ const MyPaymentlist = ({navigation}) => {
                         <FlatList
                         data={paymentList}
                         renderItem={renderItem}
-                        keyExtractor={item=>item.id}
+                        keyExtractor={item=>item.payment_receipt_idx.toString()}
                         ></FlatList>
                 </DataTable>
         </View>

@@ -13,7 +13,7 @@ import { AuthContext } from '../context/AuthContext';
 const Payinfo = ({navigation}) => {
     
     const [payinfo] = usePayinfo();
-    const [state, dispatch] = useContext(AuthContext);
+    const [state] = useContext(AuthContext);
 
     return (
         <View style={styles.PayinfoView}>
