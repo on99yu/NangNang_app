@@ -38,11 +38,6 @@ const Main = ({ navigation }) => {
                     onPress={()=>navigation.navigate('SelectWallet')}>
                     <Text style={styles.text}>결제하러가기</Text>
                 </Pressable>)}
-                {/* <Pressable
-                    style={styles.button}
-                    onPress={()=>navigation.navigate('PayResult')}>
-                    <Text style={styles.text}>결제완료</Text>
-                </Pressable> */}
                 <TouchableOpacity onPress={()=>navigation.navigate('QRCodeScanner')}>
                     <Image
                         style={styles.QRcode}

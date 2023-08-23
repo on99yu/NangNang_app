@@ -11,10 +11,10 @@ import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
 import { useWalletConnectModal } from '@walletconnect/modal-react-native';
 const PayResult = ({navigation}) => {
-    const{  provider, isConnected } = useWalletConnectModal();
+    const{  provider, } = useWalletConnectModal();
 
     const [payinfo, setPayinfo] = usePayinfo();
-    const [state, dispatch] = useContext(AuthContext)
+    const [state] = useContext(AuthContext)
     const PaymentComplete = ()=>{
         setPayinfo(it => ({
             ...it,
