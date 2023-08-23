@@ -43,7 +43,7 @@ app.get('/qrpage', async (req, res) => {
   };
   console.log('영수증 번호 : ', recieptNum);
   console.log('받은 데이터 ', await checkReciept(recieptNum));
-  if ((await checkReciept(recieptNum)) === '결제완료') {
+  if ((await checkReciept(recieptNum)) === 999) {
     res.redirect('/processdone');
   }
   res.render('qrpage', { data: data });
