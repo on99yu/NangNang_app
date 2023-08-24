@@ -24,10 +24,10 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
     
     const Payinfo ={
       inpayment : true,
-      product: arrdata[1],
+      product_name: arrdata[1],
       price: parseInt(arrdata[2]),
       wallet: arrdata[4],
-      walletaddress: "0x9cF34557a9e280F37D404531cb00526C741d03D1",
+      walletaddress: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
       receiptid : arrdata[6],
       sellerid: arrdata[7],
       selectedWalletID:"",

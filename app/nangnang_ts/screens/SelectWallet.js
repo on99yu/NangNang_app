@@ -162,8 +162,8 @@ const SelectWallet = ({navigation}) => {
                                 data:{
                                     "priceAddressInfo_object" : {
                                         "payment_receipt_idx" : payinfo.receiptid,
-                                        "seller_id" : payinfo.sellerid,
-                                        "consumer_id" : state.uid,
+                                        "seller_id" : "seller1005",
+                                        "consumer_id" : "gen1005",
                                         "sender_wallet_address" : payinfo.mywalletaddress,
                                         "receiver_wallet_address" : payinfo.walletaddress,
                                         "total_won_price" : payinfo.price,
@@ -217,6 +217,25 @@ const SelectWallet = ({navigation}) => {
         setWalletAddress(wallet_address)
     }   
 
+    const sendTxFunc = async () => {
+        provider?.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                value: "8800000000000",
+                from: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
+                to: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
+            }]
+            })
+            .then((result) => {
+            // Returns transaction id (hash)
+            console.log("result = ", result);
+            })
+            .catch((error) => {
+            // Error returned when rejected
+            console.log("error = ", error);
+            });
+    }
+
     return (
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
@@ -246,7 +265,6 @@ const SelectWallet = ({navigation}) => {
                     </View>
                     : <SubmitButton 
                         onPress={()=>CW()} >{'지갑 연결하기'}</SubmitButton>
-                   
                 }
             </View>
             <View style={{alignSelf:'flex-end',paddingHorizontal:16}}>
