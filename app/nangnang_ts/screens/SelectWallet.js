@@ -162,8 +162,8 @@ const SelectWallet = ({navigation}) => {
                                 data:{
                                     "priceAddressInfo_object" : {
                                         "payment_receipt_idx" : payinfo.receiptid,
-                                        "seller_id" : payinfo.sellerid,
-                                        "consumer_id" : state.uid,
+                                        "seller_id" : "seller1005",
+                                        "consumer_id" : "gen1005",
                                         "sender_wallet_address" : payinfo.mywalletaddress,
                                         "receiver_wallet_address" : payinfo.walletaddress,
                                         "total_won_price" : payinfo.price,
