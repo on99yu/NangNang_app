@@ -42,8 +42,7 @@ app.get('/qrpage', async (req, res) => {
     sellerId: req.query.sellerId, //판매자 아이디
   };
   console.log('영수증 번호 : ', recieptNum);
-  console.log('받은 데이터 ', await checkReciept(recieptNum));
-  if ((await checkReciept(recieptNum)) === 999) {
+  if ((await checkReciept(recieptNum)) === '결제완료') {
     res.redirect('/processdone');
   }
   res.render('qrpage', { data: data });
@@ -75,7 +74,7 @@ app.post('/getBalance', async (req, res) => {
 
 async function checkReciept(recieptNum) {
   async function timer() {
-    if ((await checkApi()) === 1) {
+    if ((await checkApi()) === 999) {
       //결제 완료 신호
       console.log('결제 완료되었습니다.');
       clearInterval(timerInterval);
