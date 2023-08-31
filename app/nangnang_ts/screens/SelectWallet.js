@@ -14,6 +14,23 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import WalletButton from '../components/Buttons/WalletButton';
 
+// https://github.com/ethers-io/ethers.js/issues/3996 이거 보고 추가함
+import 'node-libs-react-native/globals';
+
+// 암호화 getRandomValues ​​shim 가져오기(**shim 이전**)
+import "react-native-get-random-values" //
+
+// ethers shim 가져오기(**ethers 이전**)
+import "@ethersproject/shims"
+
+// 에테르 라이브러리 가져오기
+import { ethers } from "ethers";
+// import { Provider } from '@ethersproject/providers';
+
+import { sanitizeHex, numberToHex } from '@walletconnect/encoding';
+
+
+
 const goerliapi = "CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD"
 const formatData = (data, numColumns) =>{
 
@@ -30,6 +47,15 @@ const formatData = (data, numColumns) =>{
 const SelectWallet = ({navigation}) => {
 
     const{ open, close, provider, isConnected, } = useWalletConnectModal()
+    const [web3Provider, setWeb3Provider] = useState(null);
+
+    useEffect(() => {
+        if (provider) {
+            const providerInstance = new ethers.providers.Web3Provider(provider);
+            setWeb3Provider(providerInstance);
+        }
+    }, [provider]);
+
     const projectId = '3e3f9e4ec7896dafb000678ff1af2442'
     const providerMetadata = {
     name: 'NangNang',
@@ -41,34 +67,7 @@ const SelectWallet = ({navigation}) => {
         universal: 'YOUR_APP_UNIVERSAL_LINK.com'
     }
     }
-    const ConnectData = () => {
-        const expiry = provider?.session?.expiry
-        console.log("expiry = ", expiry);
-        const uri = provider?.uri
-        console.log("uri = ", uri);
-        const namespaces = provider?.namespaces
-        console.log("namespaces = ", namespaces);
-        const peer = provider?.session?.peer
-        console.log("peer = ", peer);
-        const pairingTopic = provider?.session?.pairingTopic
-        console.log("pairingTopic = ", pairingTopic);
-        const topic = provider?.session?.topic
-        console.log("topic = ", topic);
-        const url = provider?.session?.peer.metadata.url
-        console.log("url = ", url);
-        const name = provider?.session?.peer.metadata.name
-        console.log("name = ", name);
-      
-      
-      
-      }
-      
-    const killSession =  () => {
-        provider?.disconnect();
-        if(isConnected){
-          console.log("아직 세션 살아있음");
-        }
-    }
+    
     const [payinfo] = usePayinfo();  
     const [state, dispatch] =useContext(AuthContext);
     const [modalIsVisible, setModalIsVisible] = useState(false); 
@@ -76,6 +75,7 @@ const SelectWallet = ({navigation}) => {
     const [walletlist, setWalletList] = useState([]);
     const [errorNum, setErrorNum] = useState(0);
     const [walletAddress, setWalletAddress] = useState("");
+
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
@@ -103,6 +103,8 @@ const SelectWallet = ({navigation}) => {
             setErrorNum(0);
         }
     },[errorNum])
+
+    
     const CW = async ()=>{
         console.log("CW 함수 실행")
         if(payinfo.selectedWalletID === "" && payinfo.mywalletaddress === ""){
@@ -123,6 +125,8 @@ const SelectWallet = ({navigation}) => {
             console.log("open 함수 실행완료")
         }
     }
+
+
     const sendTX = async()=>{
         if (payinfo.selectedWalletID === "" && payinfo.mywalletaddress === ""){
             Alert.alert("지갑선택", "결제에 사용할 지갑주소를 결정해주세요",[
@@ -205,6 +209,85 @@ const SelectWallet = ({navigation}) => {
             console.log("sendTX 완료")
         }
     }
+    const sendTransactionCallback = async () => {
+        console.log("sendTransactionCallBack start");
+        if (!web3Provider) return;
+
+        if(web3Provider) console.log("web3Provider is " + web3Provider);
+
+        try {
+            let method = "sendTransaction";
+
+            if (!web3Provider) {
+                console.log('web3Provider not connected');
+            }
+        
+            // Get the signer from the UniversalProvider
+            const signer = web3Provider.getSigner();
+            const [address] = await web3Provider.listAccounts();
+            console.log('address is ' + address);
+
+            if (!address) {
+                console.log('No address found');
+            }
+        
+            const amount = sanitizeHex(numberToHex(0));
+        
+            const transaction = {
+                from: address,
+                to: address,
+                value: amount,
+                data: '0x',
+            };
+        
+            // Send the transaction using the signer
+            const txResponse = await signer.sendTransaction(transaction);
+        
+            const transactionHash = txResponse.hash;
+            console.log('transactionHash is ' + transactionHash);
+        
+            // Wait for the transaction to be mined (optional)
+            const receipt = await txResponse.wait();
+            console.log('Transaction was mined in block:', receipt.blockNumber);
+
+            console.log("transactionHash is " + transactionHash);
+
+            // 여기서 result를 활용하여 사용자에게 표시할 처리 로직을 작성할 수 있음
+        } catch (error) {
+            console.error('sendTransaction failed:', error);
+
+        } finally {
+            console.log('sendTransactionCallBack end');
+        }
+        console.log("sendTransactionCallBack end");
+    };
+    const ConnectData = () => {
+        const expiry = provider?.session?.expiry
+        console.log("expiry = ", expiry);
+        const uri = provider?.uri
+        console.log("uri = ", uri);
+        const namespaces = provider?.namespaces
+        console.log("namespaces = ", namespaces);
+        const peer = provider?.session?.peer
+        console.log("peer = ", peer);
+        const pairingTopic = provider?.session?.pairingTopic
+        console.log("pairingTopic = ", pairingTopic);
+        const topic = provider?.session?.topic
+        console.log("topic = ", topic);
+        const url = provider?.session?.peer.metadata.url
+        console.log("url = ", url);
+        const name = provider?.session?.peer.metadata.name
+        console.log("name = ", name);
+      
+      
+      
+    }
+    const killSession =  () => {
+        provider?.disconnect();
+        if(isConnected){
+          console.log("아직 세션 살아있음");
+        }
+    }
 
     const CloseModalHandler = () => {
         setModalIsVisible(false);
@@ -255,6 +338,11 @@ const SelectWallet = ({navigation}) => {
                         <WalletButton 
                             onPress={()=>sendTX()} style={{backgroundColor: Colors.orange500}}>
                             <Text >{"결제 하기"}</Text>
+                        </WalletButton>
+                        <WalletButton 
+                            onPress={()=> sendTransactionCallback()} 
+                            style={{backgroundColor: Colors.orange500}}>
+                            <Text >{"sendTransactionCallback"}</Text>
                         </WalletButton>
                         <WalletButton onPress={()=>ConnectData()} style={{marginTop:16}}>
                             <Text >{'지갑 연결 데이터 확인'}</Text>
