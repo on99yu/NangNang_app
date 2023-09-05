@@ -6,24 +6,22 @@ import {Picker} from '@react-native-picker/picker';
 import wallets from '../constants/wallets';
 import Colors from '../constants/colors';
 import FunctionButton from './Buttons/FunctionButton';
-import SubmitButton from './Buttons/SubmitButton';
 import { AuthContext } from '../context/AuthContext';
 import { usePayinfo } from '../context/PayinfoContext';
 const WalletInputModal = (props) => {
 
-    // useImperativeHandle(ref, ()=>({
-    //     takeaddress
-    // }))
-
     const [state, dispatch] = useContext(AuthContext)
     const [payinfo, setPayinfo] = usePayinfo();   
-    const [walletAddress, setWalletAddress] = useState("0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC");
+    const [walletAddress, setWalletAddress] = useState("");
     const [ticker, setTicker] = useState("");
     const [canPay, setCanPay] = useState(false);
 
     useEffect(()=>{
         console.log('from WalletInpuModal - 지갑선택시 결제정보',JSON.stringify(payinfo,null,2));
     },[payinfo])
+    useEffect(()=>{
+        setWalletAddress(props.walletAddress)
+    },[props.walletAddress])
     useEffect(()=>{
         console.log(`현재 ${ticker} 가치`,Value.currentTickerValue)
         console.log(`현재 지갑내 ${ticker} 가치`,Value.myTickerValue)
@@ -63,7 +61,7 @@ const WalletInputModal = (props) => {
         try{
             const myTickerValue = await axios({
                 method:"POST",
-                url:"http://172.16.2.243:8080/getBalance",
+                url:"https://nanng.onrender.com/getBalance",
                 data:{
                     "walletAddress": "0x437782D686Bcf5e1D4bF1640E4c363Ab70024FBC",
                     "tokenName": ticker,
@@ -139,6 +137,15 @@ const WalletInputModal = (props) => {
             }
         }
     }
+    const Closemodal =()=>{
+        setValue({
+            currentTickerValue:0,
+            exchangedProduct_Value : 0,
+            myTickerValue:0,
+         })
+        props.oncancel();
+
+    }
     return (
             <Modal
                 animationType='fade'
@@ -180,7 +187,7 @@ const WalletInputModal = (props) => {
                         </View>
                         <FunctionButton onPress={takeAddress}>지갑주소 가져오기</FunctionButton>
                         <FunctionButton onPress={Balance}>가격 조회</FunctionButton>
-                        <FunctionButton onPress={props.oncancel}>닫기</FunctionButton>
+                        <FunctionButton onPress={Closemodal}>닫기</FunctionButton>
                         <FunctionButton onPress={walletSelect}>이 지갑 선택</FunctionButton>
                     </View>
                     

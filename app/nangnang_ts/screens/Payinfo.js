@@ -13,7 +13,7 @@ import { AuthContext } from '../context/AuthContext';
 const Payinfo = ({navigation}) => {
     
     const [payinfo] = usePayinfo();
-    const [state, dispatch] = useContext(AuthContext);
+    const [state] = useContext(AuthContext);
 
     return (
         <View style={styles.PayinfoView}>
@@ -26,7 +26,7 @@ const Payinfo = ({navigation}) => {
                 <ScreenTitle title="결제 정보" />
             </View>
             <ScrollView style={styles.content}>
-                <ContentsBox title="제품명" contents={payinfo.product}/>
+                <ContentsBox title="제품명" contents={payinfo.product_name}/>
                 <ContentsBox title="결제 금액" contents={payinfo.price}/>
                 <ContentsBox title="사용 지갑" contents={payinfo.wallet}/>
                 <ContentsBox title="보낼 지갑주소" contents={payinfo.walletaddress}/>

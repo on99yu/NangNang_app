@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, FlatList,TouchableOpacity,Alert,Pressable} from 'react-native';
 import { Link } from '@react-navigation/native';
 import { WalletConnectModal, useWalletConnectModal } from '@walletconnect/modal-react-native';
@@ -13,6 +13,25 @@ import { usePayinfo } from '../context/PayinfoContext';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import WalletButton from '../components/Buttons/WalletButton';
+
+// https://github.com/ethers-io/ethers.js/issues/3996 이거 보고 추가함
+import 'node-libs-react-native/globals';
+
+// 암호화 getRandomValues ​​shim 가져오기(**shim 이전**)
+import "react-native-get-random-values" //
+
+// ethers shim 가져오기(**ethers 이전**)
+import "@ethersproject/shims"
+
+// 에테르 라이브러리 가져오기
+import { ethers } from "ethers";
+// import { Provider } from '@ethersproject/providers';
+
+import { sanitizeHex, numberToHex } from '@walletconnect/encoding';
+
+
+
+const goerliapi = "CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD"
 const formatData = (data, numColumns) =>{
 
     const numberOfFullRows = Math.floor(data.length/numColumns)
@@ -27,18 +46,221 @@ const formatData = (data, numColumns) =>{
 
 const SelectWallet = ({navigation}) => {
 
-    const{ isOpen, open, close, provider, isConnected, address } = useWalletConnectModal()
+    const{ open, close, provider, isConnected, } = useWalletConnectModal()
+    const [web3Provider, setWeb3Provider] = useState(null);
+
+    useEffect(() => {
+        if (provider) {
+            const providerInstance = new ethers.providers.Web3Provider(provider);
+            setWeb3Provider(providerInstance);
+        }
+    }, [provider]);
+
     const projectId = '3e3f9e4ec7896dafb000678ff1af2442'
     const providerMetadata = {
-    name: 'YOUR_PROJECT_NAME',
-    description: 'YOUR_PROJECT_DESCRIPTION',
-    url: 'https://your-project-website.com/',
+    name: 'NangNang',
+    description: 'NangNang',
+    url: 'nangnang',
     icons: ['https://your-project-logo.com/'],
     redirect: {
         native: 'YOUR_APP_SCHEME://',
         universal: 'YOUR_APP_UNIVERSAL_LINK.com'
     }
     }
+    
+    const [payinfo] = usePayinfo();  
+    const [state, dispatch] =useContext(AuthContext);
+    const [modalIsVisible, setModalIsVisible] = useState(false); 
+    const [selectedItem, setSelectedItem] = useState({});
+    const [walletlist, setWalletList] = useState([]);
+    const [errorNum, setErrorNum] = useState(0);
+    const [walletAddress, setWalletAddress] = useState("");
+
+    useEffect(()=>{
+        setWalletList(wallets);
+        return ()=>{
+
+        }
+    },[])
+    useEffect(()=>{
+        if(errorNum === 5001){
+            Alert.alert("지갑선택", "결제에 사용할 지갑주소를 결정해주세요",[
+                {
+                    text:"확인",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
+            setErrorNum(0);
+        }else if (errorNum === 5000 ){
+            Alert.alert("지갑선택", "사용자가 결제를 취소하였습니다.",[
+                {
+                    text:"확인",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
+            setErrorNum(0);
+        }
+    },[errorNum])
+
+    
+    const CW = async ()=>{
+        console.log("CW 함수 실행")
+        if(payinfo.selectedWalletID === "" && payinfo.mywalletaddress === ""){
+            Alert.alert("지갑선택", "결제에 사용할 지갑주소를 결정해주세요",[
+                {
+                    text:"확인",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
+        }else{
+            try{
+                const res = await open()
+                console.log(res)
+            }catch(e){
+
+            }
+            console.log("open 함수 실행완료")
+        }
+    }
+
+
+    const sendTX = async()=>{
+        if (payinfo.selectedWalletID === "" && payinfo.mywalletaddress === ""){
+            Alert.alert("지갑선택", "결제에 사용할 지갑주소를 결정해주세요",[
+                {
+                    text:"확인",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
+        }else{
+            try{
+                console.log("결제상태 확인 - 들어왔나?")
+                const res = await provider?.request({
+                    method: 'eth_sendTransaction',
+                    params: [{
+                        value: 1000,
+                        from: payinfo.mywalletaddress,
+                        to: payinfo.walletaddress,
+                    }]
+                })
+                console.log("sendTX 해쉬값" ,res)
+                try{
+                    const transactionstatus = await axios({
+                        method:"GET",
+                        url:`https://api-goerli.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${res}&apikey=${goerliapi}`,
+                    })
+                    console.log(JSON.stringify(transactionstatus.data, null, 2))
+                    const payresult = transactionstatus.data.status
+                    if(payresult == 1 || payresult == "1"){
+                        try{
+                            const res = await axios({
+                                method:"POST",
+                                url:"https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/paymentprocess/storepaymentdata",
+                                headers:{
+                                    "Content-Type":"application/json"
+                                },
+                                data:{
+                                    "priceAddressInfo_object" : {
+                                        "payment_receipt_idx" : payinfo.receiptid,
+                                        "seller_id" : "seller1005",
+                                        "consumer_id" : "gen1005",
+                                        "sender_wallet_address" : payinfo.mywalletaddress,
+                                        "receiver_wallet_address" : payinfo.walletaddress,
+                                        "total_won_price" : payinfo.price,
+                                        "total_coin_price" : payinfo.exchangedvalue
+                                        },
+                                        "products": [
+                                        {
+                                            "product_name": payinfo.product_name,
+                                            "product_won_price_per": payinfo.price,
+                                            "quantity": 1
+                                        },
+                                        ],
+                                        "networkInfo_obejct" : {
+                                            "payment_receipt_idx" : payinfo.receiptid,
+                                            "main_blockchain_name" : "Ethereum",
+                                            "detailed_network_name" : "Ethereum Mainnet",
+                                            "detailed_network_real_id_num" : "1",
+                                            "payment_wallet_name" : payinfo.selectedWallet
+                                        }
+                                }
+                            })
+                            console.log("결제 데이터 저장", JSON.stringify(res, null, 2))
+                            navigation.navigate("PayResult")
+                            console.log("결제 데이터 저장 완료")
+                        }catch(e){
+                            console.log("결제 데이터 저장 오류")
+                            console.log("결제 에러 ",e)
+                        }
+                    }
+                    console.log("결제 해쉬값 확인 완료")
+                }catch(e){
+                    console.log("해쉬값 확인 에러")
+                }
+            }catch(e){
+                console.log("Error - ",e)
+                setErrorNum(e.code);
+            }
+            console.log(JSON.stringify(payinfo, null, 2))
+            console.log("sendTX 완료")
+        }
+    }
+    const sendTransactionCallback = async () => {
+        console.log("sendTransactionCallBack start");
+        if (!web3Provider) return;
+
+        if(web3Provider) console.log("web3Provider is " + web3Provider);
+
+        try {
+            let method = "sendTransaction";
+
+            if (!web3Provider) {
+                console.log('web3Provider not connected');
+            }
+        
+            // Get the signer from the UniversalProvider
+            const signer = web3Provider.getSigner();
+            const [address] = await web3Provider.listAccounts();
+            console.log('address is ' + address);
+
+            if (!address) {
+                console.log('No address found');
+            }
+        
+            const amount = sanitizeHex(numberToHex(0));
+        
+            const transaction = {
+                from: address,
+                to: address,
+                value: amount,
+                data: '0x',
+            };
+        
+            // Send the transaction using the signer
+            const txResponse = await signer.sendTransaction(transaction);
+        
+            const transactionHash = txResponse.hash;
+            console.log('transactionHash is ' + transactionHash);
+        
+            // Wait for the transaction to be mined (optional)
+            const receipt = await txResponse.wait();
+            console.log('Transaction was mined in block:', receipt.blockNumber);
+
+            console.log("transactionHash is " + transactionHash);
+
+            // 여기서 result를 활용하여 사용자에게 표시할 처리 로직을 작성할 수 있음
+        } catch (error) {
+            console.error('sendTransaction failed:', error);
+
+        } finally {
+            console.log('sendTransactionCallBack end');
+        }
+        console.log("sendTransactionCallBack end");
+    };
     const ConnectData = () => {
         const expiry = provider?.session?.expiry
         console.log("expiry = ", expiry);
@@ -46,9 +268,6 @@ const SelectWallet = ({navigation}) => {
         console.log("uri = ", uri);
         const namespaces = provider?.namespaces
         console.log("namespaces = ", namespaces);
-        // const session = provider?.session
-        // console.log("\n\nsession = ", session);
-      
         const peer = provider?.session?.peer
         console.log("peer = ", peer);
         const pairingTopic = provider?.session?.pairingTopic
@@ -57,55 +276,48 @@ const SelectWallet = ({navigation}) => {
         console.log("topic = ", topic);
         const url = provider?.session?.peer.metadata.url
         console.log("url = ", url);
-      
-        // 이게 지갑 이름 알아내는 코드
         const name = provider?.session?.peer.metadata.name
         console.log("name = ", name);
       
       
       
-      }
-      
+    }
     const killSession =  () => {
         provider?.disconnect();
         if(isConnected){
           console.log("아직 세션 살아있음");
         }
-      }
-    const [payinfo] = usePayinfo();  
-    const [state, dispatch] =useContext(AuthContext);
-    const [modalIsVisible, setModalIsVisible] = useState(false); 
-    const [selectedItem, setSelectedItem] = useState({});
-    const [walletlist, setWalletList] = useState([]);
-
-    useEffect(()=>{
-        setWalletList(wallets);
-        return ()=>{
-
-        }
-    },[])
-    const CW =()=>{
-        console.log("CW 함수 실행")
-        if(payinfo.selectedWalletID === ""){
-            Alert.alert("지갑선택", "결제에 사용할 지갑을 먼저 선택해주세요",[
-                {
-                    text:"확인",
-                    onPress:()=>null,
-                    style:"cancel"
-                }
-            ])
-        }else{
-            open()
-        }
     }
+
     const CloseModalHandler = () => {
         setModalIsVisible(false);
     }
 
     const handleListItemPress = (item) => {
+        const wallet_address = state.wallet.find(e=> e.wallet_num === item.id_num).walletaddress
         setSelectedItem(item)
         setModalIsVisible(true)
+        setWalletAddress(wallet_address)
     }   
+
+    const sendTxFunc = async () => {
+        provider?.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                value: "8800000000000",
+                from: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
+                to: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
+            }]
+            })
+            .then((result) => {
+            // Returns transaction id (hash)
+            console.log("result = ", result);
+            })
+            .catch((error) => {
+            // Error returned when rejected
+            console.log("error = ", error);
+            });
+    }
 
     return (
         <View style={styles.MyWalletsView}>
@@ -124,27 +336,23 @@ const SelectWallet = ({navigation}) => {
                             연결된 지갑 : {provider?.session?.peer.metadata.name}
                         </Text>
                         <WalletButton 
-                            onPress={()=>provider?.request({
-                            method: 'eth_sendTransaction',
-                            params: [{
-                                data: "0x1111",
-                                from: payinfo.mywalletaddress,
-                                to: payinfo.walletaddress,
-                            }]
-                            })
-                            } style={{backgroundColor: Colors.orange500}}>
-                            <Text style={styles.text}>{"결제 하기"}</Text>
+                            onPress={()=>sendTX()} style={{backgroundColor: Colors.orange500}}>
+                            <Text >{"결제 하기"}</Text>
+                        </WalletButton>
+                        <WalletButton 
+                            onPress={()=> sendTransactionCallback()} 
+                            style={{backgroundColor: Colors.orange500}}>
+                            <Text >{"sendTransactionCallback"}</Text>
                         </WalletButton>
                         <WalletButton onPress={()=>ConnectData()} style={{marginTop:16}}>
-                            <Text style={styles.text}>{'지갑 연결 데이터 확인'}</Text>
+                            <Text >{'지갑 연결 데이터 확인'}</Text>
                         </WalletButton>
                         <WalletButton onPress={()=>killSession()} style={{marginTop:16}}>
-                            <Text style={styles.text}>{'지갑 연결 세션 종료'}</Text>
+                            <Text >{'지갑 연결 세션 종료'}</Text>
                         </WalletButton>
                     </View>
                     : <SubmitButton 
                         onPress={()=>CW()} >{'지갑 연결하기'}</SubmitButton>
-                   
                 }
             </View>
             <View style={{alignSelf:'flex-end',paddingHorizontal:16}}>
@@ -193,7 +401,8 @@ const SelectWallet = ({navigation}) => {
                     visible={modalIsVisible}
                     oncancel={CloseModalHandler}
                     walletlist={walletlist}
-                    setWalletList={setWalletList}/>
+                    setWalletList={setWalletList}
+                    walletAddress={walletAddress}/>
         </View>
     );
 };

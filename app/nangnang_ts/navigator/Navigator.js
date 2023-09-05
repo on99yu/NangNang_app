@@ -1,7 +1,6 @@
-import React,  {useContext,useEffect} from 'react'
+import React,  {useContext} from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native';
-import { BackHandler } from 'react-native';
 import Login from '../screens/Login';
 import Main from '../screens/Main';
 import SelectWallet from '../screens/SelectWallet';
