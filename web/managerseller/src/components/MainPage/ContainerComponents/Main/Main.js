@@ -1,6 +1,5 @@
 import classes from "./Main.module.css";
-import React, { useContext } from "react";
-import UserContext from "../../../../contexts/AuthContext";
+import React from "react";
 import nangnang from "../../../../asset/images/nangnang.png";
 const Main = () => {
   // const { user } = useContext(UserContext);

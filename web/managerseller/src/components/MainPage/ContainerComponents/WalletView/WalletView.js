@@ -42,10 +42,10 @@ const WalletView = (props) => {
   else if (walletData !== {}) {
     content =
       <div>
-        {Object.entries(walletData).map(([key, value]) => (
-          <div key={key}>
-            <span>{walletArr[key]}: </span>
-            <span>{value}</span>
+        {Object.entries(walletData).map(([key, value], index) => (
+          <div key={index} className={classes.wallet}>
+            <span className={classes.wallet_name}>{walletArr[key]}: </span>
+            <span className={classes.wallet_value}>{value}</span>
             <br />
             <br />
           </div>

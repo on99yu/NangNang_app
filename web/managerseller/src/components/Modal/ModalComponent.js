@@ -2,71 +2,53 @@ import Modal from './Modal';
 import classes from './ModalComponent.module.css';
 import Web3 from 'web3';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 
 const ModalComponent = (props) => {
   const [balanceResult, setBalanceResult] = useState('');
   const [error, setError] = useState(null);
-  const [walletAddress, setWalletAddress] = useState('');
+  // const [walletAddress, setWalletAddress] = useState('');
   const [isAddressValid, setAddressValid] = useState(false);
 
   const eth = 'ether';
-
+  let address = "";
   const handleAddressChange = (e) => {
-    setWalletAddress(e.target.value);
+    // setWalletAddress(e.target.value);
   };
 
-  const requestData = {
-    walletAddress,
-    tokenName: 'ETH',
-  };
-
-  const url =
-    'https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/brofucntions/sangyunbro/WalletOne/createSellerChosenWalletFunc';
 
 
-  const { isLoading, isError, data, refetch, isSuccess } = useQuery(
-    'createSellerChosenWallet',
-    () =>
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData),
-      }).then((response) => response.json()),
-    {
-      enabled: false, // 초기에는 요청 비활성화
-      // 여기에 필요한 다른 옵션들 추가 가능
-    }
+  // seller의 아이디로 선택한 지갑에 대해 오직 하나의 wallet_address를 저장하는 함수
+  const mutation = useMutation((data) =>
+    fetch('https://nanng.onrender.com/api/brofucntions/sangyunbro/WalletOne/createSellerChosenWalletFunc', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
   );
-
-  let content = <p>Found no Acount.</p>;
-
-  if (isLoading) {
-    content = <p>Loading...</p>;
-  }
-  if (isError)
-    return (
-      <>
-        <h3>Oops, something went wrong</h3>
-        <p>{error.toString()}</p>
-      </>
-    );
-
-  /* 아직 미완성 */
-  const handleRegistration = () => {
-    if (isAddressValid) {
-      console.log(`지갑 주소 등록: `, walletAddress);
-      refetch();
-    } else {
-      console.log(`조회되지 않은 주소입니다. 등록할 수 없습니다.`);
+  // seller의 아이디로 선택한 지갑에 대해 오직 하나의 wallet_address를 저장하는 함수에 대한 FormSubmit
+  const handleFormSubmit = async () => {
+    try {
+      // API 호출을 실행합니다.
+      const formData = {
+        seller_id: 'seller9999',
+        crypto_wallet_idx: '5',
+        wallet_address: address,
+      }
+      await mutation.mutateAsync(formData);
+      // 성공적으로 호출되면 실행할 작업을 수행합니다.
+      console.log('handle form submit API 호출이 성공했습니다.');
+    } catch (error) {
+      // 호출이 실패하면 실행할 작업을 수행합니다.
+      console.error('API 호출이 실패했습니다.', error);
     }
   };
 
   const buttonHandler = () => {
     // 사용자가 입력한 지갑 주소 가져오기
-    const address = document.getElementById('walletAddress').value;
+    address = document.getElementById('walletAddress').value;
 
     // Web3 인스턴스 생성
     const web3 = new Web3(
@@ -116,7 +98,7 @@ const ModalComponent = (props) => {
             <h3 className={classes.currentasset}>자금 현황</h3>
             <ul className={classes.list}>
               <li className={classes.coinname}>
-                {content}
+
                 {balanceResult && (
                   <p>
                     {eth}: {balanceResult}
@@ -130,7 +112,10 @@ const ModalComponent = (props) => {
         <div className={classes.buttons}>
           <button
             className={classes.completebutton}
-            onClick={handleRegistration}
+            onClick={() => {
+              props.onHideModal();
+              handleFormSubmit();
+            }}
             disabled={!isAddressValid}
           >
             등록
