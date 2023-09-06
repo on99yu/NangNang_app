@@ -35,6 +35,7 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
       exchangedvalue: 0,
       mywalletaddress: "",
       ticker : "",
+      isConnected : false,
     }
     if(data){
       setScanData(true);
