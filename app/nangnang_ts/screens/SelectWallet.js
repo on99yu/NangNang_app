@@ -51,7 +51,7 @@ const SelectWallet = ({navigation}) => {
 
     useEffect(() => {
         if (provider) {
-            const providerInstance = new ethers.providers.Web3Provider(provider);
+            const providerInstance = new ethers.providers.Web3Provider(provider,"any");
             setWeb3Provider(providerInstance);
         }
     }, [provider]);
@@ -144,7 +144,7 @@ const SelectWallet = ({navigation}) => {
             };
             
             const txResponse = await signer.sendTransaction(transaction);
-            const receipt = await txResponse.wait();
+            // const receipt = await txResponse.wait();
             const transactionHash = txResponse.hash;
             console.log('트랜잭션 해쉬값 ' + transactionHash);
             const namespaces = provider?.namespaces
@@ -153,6 +153,7 @@ const SelectWallet = ({navigation}) => {
                 return match ? match[1] : null;
             });
             const networkNum = networknum[0]
+            console.log("네트워크 번호", networkNum)
             try{
                 console.log("결제상태 확인 시작")
                 let payresult = 0;
@@ -272,26 +273,10 @@ const SelectWallet = ({navigation}) => {
         setModalIsVisible(true)
         setWalletAddress(wallet_address)
     }   
-
-    // const sendTxFunc = async () => {
-    //     provider?.request({
-    //         method: 'eth_sendTransaction',
-    //         params: [{
-    //             value: "8800000000000",
-    //             from: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
-    //             to: "0xBC1B146F5C0aa68f76F8E2835A6FAe166Db8f647",
-    //         }]
-    //         })
-    //         .then((result) => {
-    //         // Returns transaction id (hash)
-    //         console.log("result = ", result);
-    //         })
-    //         .catch((error) => {
-    //         // Error returned when rejected
-    //         console.log("error = ", error);
-    //         });
-    // }
-
+    const payCancelHandeler = ()=>{
+        setLoading(false)
+    }
+    
     return (
         <View style={styles.MyWalletsView}>
             <View style={styles.header}>
@@ -319,12 +304,20 @@ const SelectWallet = ({navigation}) => {
                         <WalletButton onPress={()=>killSession()} style={{marginTop:16}}>
                             <Text >{'지갑 연결 세션 종료'}</Text>
                         </WalletButton>
+                        <WalletButton onPress={()=>killSession()} style={{marginTop:16}}>
+                            <Text >{'보낼 지갑주소 변경'}</Text>
+                        </WalletButton>
                         {isloading ? 
                             <View>
-                            <Text style={{color:Colors.indigo400, fontWeight:'bold'}}>
+                            <Text style={{marginTop:16, alignSelf:"center",color:Colors.indigo400, fontWeight:'bold'}}>
                                 결제중 입니다
                             </Text>
-                            <ActivityIndicator style={{marginTop:16,}}/> 
+                            <ActivityIndicator style={{marginTop:16,}}/>
+                            <WalletButton 
+                                onPress={()=> payCancelHandeler()} 
+                                style={{backgroundColor: Colors.orange500}}>
+                                <Text >{"결제취소"}</Text>
+                            </WalletButton> 
                             </View> : <></>}
                     </View>
                     : <SubmitButton 
