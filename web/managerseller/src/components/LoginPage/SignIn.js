@@ -1,33 +1,25 @@
 import React from "react";
-// import { Link } from 'react-router-dom';
 import classes from "./SignIn.module.css";
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-// import { LoginReturnData } from "../../databasefunction/LoginReturnDataFunc";
-import { AuthContext } from "../../contexts/AuthContext";
 import axios from "axios";
-
-const SignIn = () => {
-  const [state, dispatch] = useContext(AuthContext);
-  // const { user, updateUser } = useContext('');
-  const [signInId, setSignInId] = useState("");
-  const [signInPw, setSignInPw] = useState("");
+import UserContext from "../../contexts/UserContext";
+const SignIn = (props) => {
   const [signInInvalid, setSignInInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
+  const signIn = useContext(UserContext);
 
   const handleUsernameChange = (event) => {
-    setSignInId(event.target.value);
+    signIn.id = event.target.value;
+    // setSignInId(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
-    setSignInPw(event.target.value);
+    signIn.password = event.target.value;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // 폼 제출 기본 동작 방지
-    let id = signInId;
-    let pw = signInPw;
-
     setLoading(true);
     try {
       const res = await axios({
@@ -46,12 +38,6 @@ const SignIn = () => {
         // 빈 객체인 경우에 대한 처리
         throw new Error("Empty response data.");
       }
-      dispatch({
-        type: "USER_LOGIN",
-        payload: true,
-        id: id,
-        // real_name: res.data.real_name,
-      });
     } catch (error) {
       console.log(error);
       alert("Login failed");
@@ -61,44 +47,9 @@ const SignIn = () => {
     }
   };
 
-  // const loginHandler = useCallback(async (event) => {
-  //   event.preventDefault(); // 폼 제출 기본 동작 방지
-  //   let id = signInId;
-  //   let pw = signInPw;
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch({
-  //       method: "POST",
-  //       url: "https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/login/loginreturndata",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       data: {
-  //         input_user_id: "gen1001",
-  //         input_user_pwd: "gen1001",
-  //       },
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error("Something went wrong!");
-  //     }
-  //     const data = await response.json();
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //     alert("Login failed");
-  //     setSignInInvalid(true);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, []);
-
-  useEffect(() => {
-    setSignInInvalid(false); // 컴포넌트가 마운트될 때 count 상태를 0으로 설정
-    console.log(state);
-  }, [state]);
-
   return (
     <div className={classes.login_component}>
+      {console.log(signIn)}
       <div className={classes.wrap}>
         <h1>Seller Manager</h1>
         <h1>SignIn</h1>
@@ -155,17 +106,6 @@ const SignIn = () => {
           <p>로그인 중입니다...</p>
         ) : (
           <div>
-            {/* {user !== null ? (
-              <ul>
-                {Object.entries(user).map(([key, value]) => (
-                  <li key={key}>
-                    <strong>{key}: </strong> {value}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>로그인 데이터가 없습니다.</p>
-            )} */}
           </div>
         )}
       </div>
