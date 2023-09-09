@@ -1,8 +1,9 @@
 import classes from "./BlockchainManage.module.css";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import { useContext, useEffect } from 'react';
 import UserContext from "../../../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+
 
 
 const fetchBlockchainList = async () => {
@@ -14,7 +15,7 @@ const fetchBlockchainList = async () => {
 };
 
 const fetchSellerChosenList = async (id) => {
-  console.log(id);
+  // console.log(id);
   const response = await fetch(`https://asia-northeast3-nangnang-b59c0.cloudfunctions.net/api/brofucntions/sangyunbro/BlockchainTwo/readSellersChosenMainBlockchain?seller_id=${id}`);
   if (!response.ok) {
     throw new Error('API 호출이 실패했습니다.');
@@ -45,7 +46,6 @@ const BlockchainManage = () => {
 
   const sellerChosen = secondData?.data || [];
 
-
   return (
     <div className={classes.blockchainmanage_wrap}>
       <div className={classes.blockchainmanage}>
@@ -67,13 +67,17 @@ const BlockchainManage = () => {
                     <td className={classes.td}>
                       {value}
                     </td>
+                    {/* {console.log(typeof +key)} */}
+                    <td className={classes.td}>
+
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
         </div>
-        <button className={classes.edit_button}>수정</button>
+        {/* <button className={classes.edit_button}>수정</button> */}
       </div>
     </div>
   );
