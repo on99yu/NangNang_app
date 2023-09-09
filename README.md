@@ -1,12 +1,25 @@
 # NangNang(낭낭)
-Crypto Payment Service supporting Various Wallets based WalletConnect
+Crypto Payment Service supporting Various Wallets based WalletConnect <br>
 WalletConnect 기반 다양한 지갑을 지원하는 암호화폐 결제 서비스
 
+![nangnang144](https://github.com/on99yu/NangNang_app/assets/54887013/3beb79a9-f44a-426c-aba3-9fc60bb11a06)
+
+
 ## Description
+Graduation Project in TUKorea(Tech University of Korea)
 
-An in-depth paragraph about your project and overview of use.
 
-## BuiltWith
+
+### Built With
+##### Skills
+* React Native
+* React
+* FireBase
+* node.js
+
+##### Environment
+Windows 11
+Android
 
 ## Getting Started
 
