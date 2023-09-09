@@ -46,6 +46,7 @@ const PaymentRecords = () => {
             조회
           </button>
         </div>
+        <br />
         <div className={classes.paymentrecords_table_wrap}>{content}</div>
       </div>
     </div>

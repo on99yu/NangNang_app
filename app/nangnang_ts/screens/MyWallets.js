@@ -51,7 +51,7 @@ const MyWallets = ({navigation}) => {
                 <ScreenTitle title="내 지갑"/>
             </View>
             <View style={{flex:1, width:'50%',alignSelf:'center'}}>
-                    <SubmitButton>내 정보</SubmitButton>
+                    <SubmitButton onPress={() => navigation.navigate('Myinfo')}>내 정보</SubmitButton>
             </View>
             <View style={styles.WalletBlockView}>
                 <FlatList

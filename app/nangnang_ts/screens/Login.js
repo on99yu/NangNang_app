@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         flex:1,
     },  
     inputtext:{
-        flex:1,
+        flex:0.5,
     },
     Findpassword: {
         marginHorizontal: 20,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end'
     },
     ButtonView: {
-        flex:2,
+        flex:3,
         // paddinng:10,
         // marginTop: 10,
         width: '70%',
