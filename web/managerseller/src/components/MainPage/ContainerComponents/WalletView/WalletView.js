@@ -34,7 +34,7 @@ const WalletView = (props) => {
 
 
   useEffect(() => {
-    console.log(walletData);
+    // console.log(walletData);
   }, [walletData]); // 빈 배열을 전달하여 컴포넌트가 마운트될 때 한 번만 실행
 
 
