@@ -1,0 +1,14 @@
+.b_footer {
+  border-bottom: 20px solid;
+  width: 1365px;
+  height: 151px;
+  background-color: #00a2ae;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -400px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}

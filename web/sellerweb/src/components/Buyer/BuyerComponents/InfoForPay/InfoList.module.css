@@ -1,0 +1,6 @@
+.infoList {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  align-items: stretch;
+}

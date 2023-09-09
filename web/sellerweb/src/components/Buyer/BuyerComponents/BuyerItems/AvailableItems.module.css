@@ -1,0 +1,14 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  position: relative;
+}
+
+.item1 {
+  top: -20px;
+}
+
+.item2 {
+  top: -420px;
+}

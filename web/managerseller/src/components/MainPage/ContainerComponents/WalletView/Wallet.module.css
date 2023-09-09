@@ -1,0 +1,60 @@
+/* ==== wrap==================================================================== */
+.component_wrap {
+  width: 130px;
+  height: 130px;
+  border-radius: 20px;
+  border: 5px solid #f7a701;
+}
+.component_components {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+/* ==== component-component-no1 ================================================ */
+.component_component_no1 {
+  width: 80px;
+  height: 80px;
+  margin: 10px 25px 5px 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+}
+.wallet_name {
+  font-weight: 600;
+}
+.wallet_img {
+  width: 60px;
+  height: 60px;
+  border-radius: 15px;
+}
+/* ==== component-component-no2 ================================================ */
+.component_component_no2 {
+  width: 70px;
+  height: 25px;
+  margin: 0px 30px 10px 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.component_component_no2_button {
+  width: 70px;
+  height: 25px;
+  background-color: #f7a701;
+  padding: 0px;
+  border: 0px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.component_component_no2_button:hover { 
+  border: 2px solid #ccc;
+  background-color: white;
+  color: #f7a701;
+}

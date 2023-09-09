@@ -1,0 +1,109 @@
+.paymentrecord_wrap {
+  /* border: 1px solid black; */
+  width: 100%;
+  max-width: 881px;
+  height: 100%;
+  margin: 0 auto;
+  min-height: 565px;
+  padding: 20px 30px 20px 30px;
+}
+
+.paymentrecord {
+  width: 100%;
+  height: 100%;
+  min-height: 440px;
+}
+
+.paymentrecord_text {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.walleview_component_wrap {
+  padding: 20px 30px 20px 30px;
+  width: 100%;
+  max-width: 821px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+}
+
+.walleview_component_form {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.walleview_component_form_input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.form_button_div {
+  width: 37%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.button1 {
+  flex: 1;
+  width: 60px;
+  height: 30px;
+  background-color: #f7a701;
+  border-radius: 7px;
+  color: white;
+  font-weight: 600;
+  border: 2px solid #f7a701;
+  padding: 0px;
+}
+
+.button2and3wrap {
+  flex: 2;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.button2 {
+  width: 75px;
+  height: 30px;
+  background-color: #f7a701;
+  border-radius: 7px;
+  color: white;
+  font-weight: 600;
+  border: 2px solid #f7a701;
+  padding: 0px;
+}
+
+.button3 {
+  width: 75px;
+  height: 30px;
+  background-color: white;
+  border-radius: 7px;
+  color: #f7a701;
+  font-weight: 600;
+  border: 2px solid #f7a701;
+  padding: 0px;
+}
+
+
+.button1:hover, .button2:hover { 
+  border: 2px solid #ccc;
+  background-color: white;
+  color: #f7a701;
+}
+
+.button3:hover {
+  border: 2px solid #ccc;
+  background-color: #ff775e;
+  color: white;
+}

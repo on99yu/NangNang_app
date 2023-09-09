@@ -1,0 +1,167 @@
+/* ==== wrap ================================================================ */
+.wrap {
+  width: 100%;
+  height: 400px;
+}
+/* ==== title =============================================================== */
+.title {
+  height: 60px;
+  margin: 0 auto;
+  font-weight: 600;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 60px 0 60px;
+  border-bottom: 1px solid black;
+}
+/* ==== wallet ============================================================== */
+.wallet {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0 10px 0;
+}
+.walletimg {
+  width : 50px;
+  height: 50px;
+  border-radius: 15px;
+}
+.walletname {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: 600;
+}
+/* ==== address ============================================================= */
+.address {
+  display: flex;
+  gap: 20px;
+  padding: 10px 0 10px 0;
+}
+.inputaddress {
+  max-width: 190px;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 2px 2px 7px 0 rgb(0, 0, 0, 0.2);
+  outline: none;
+  color: dimgray;
+}
+
+.inputaddress:invalid {
+  animation: justshake 0.3s forwards;
+  color: red;
+}
+
+
+@keyframes justshake {
+  25% {
+    transform: translateX(5px);
+  }
+
+  50% {
+    transform: translateX(-5px);
+  }
+  
+  75% {
+    transform: translateX(5px);
+  }
+  
+  100% {
+    transform: translateX-(5px);
+  }
+}
+
+.buttonaddress {
+  width: 60px;
+  border-radius: 15px;
+  background-color: #f7a701;
+  color: white;
+}
+.buttonaddress:hover {
+  box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ; 
+  -webkit-box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ; 
+  -moz-box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ; 
+  font-weight: 600;
+  padding: 0px;
+  border: 0px;
+}
+/* ==== asset =============================================================== */
+.assetwrap {
+  width: 100%;
+  height: 220px;
+  padding-bottom: 10px; 
+}
+
+.asset {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.currentasset {
+  font-weight: 600;
+}
+
+.list {
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.coinname {
+  font-weight: 600;
+}
+.coinamount {
+
+}
+
+/* ==== buttons ============================================================= */
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  justify-content: center;
+  align-items: center;
+}
+.completebutton {
+  width: 95px;
+  height: 50px;
+  background-color: #f7a701;
+  border-radius: 15px;
+  color: #ffffff;
+}
+.backbutton {
+  width: 95px;
+  height: 50px;
+  border: 3px solid #f7a701;
+  border-radius: 15px;
+}
+/* ==== buttons hover ======================================================= */
+.completebutton:hover {
+	/* box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ; 
+	-webkit-box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ; 
+	-moz-box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ;  */
+  font-weight: 600;
+  padding: 0px;
+  border: 0px;
+}
+
+.backbutton:hover {
+	/* box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ; 
+	-webkit-box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ; 
+	-moz-box-shadow: 0 0 11px rgba(0, 0, 0, 0.5)  ;  */
+  font-weight: 600;
+  padding: 0px;
+  border: 1px solid #de9600;
+  background-color: #de9600;
+  color: #ffffff;
+}
