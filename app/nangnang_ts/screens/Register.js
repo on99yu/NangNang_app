@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { Text, View, StyleSheet,ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet,ActivityIndicator,Alert } from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
 
@@ -42,11 +42,18 @@ const Register = ({ navigation }) => {
                 }
             })
             console.log(JSON.stringify(res,null,2))
-            navigation.navigate("Login")
+            Alert.alert("회원가입", "회원가입이 완료되었습니다.",[
+                {
+                    text:"확인",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
         }catch(e){
             console.log(e.message)
         }
         setIsLoading(false)
+        navigation.navigate("Login")
     }
     return (
         <View style={styles.RegisterView}>

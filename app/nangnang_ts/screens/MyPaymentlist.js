@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from  'react';
-import { View,Text,StyleSheet, FlatList } from 'react-native';
+import { View,Text,StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Link } from '@react-navigation/native';
 import axios from 'axios';
 
@@ -15,9 +15,10 @@ const MyPaymentlist = ({navigation}) => {
     
     const [state, dispatch] = useContext(AuthContext)
     const [paymentList, setPaymentList] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(()=>{
         async function loadPaymentlist(){
+            setIsLoading(true);
             try{
                 const res = await axios({
                     methood:"GET",
@@ -36,8 +37,10 @@ const MyPaymentlist = ({navigation}) => {
             }catch(e){
                 console.log(e)
             }
+            setIsLoading(false);
         }
         loadPaymentlist();
+
     },[])
     const paymentdetail = async(id) =>{
         try{
@@ -76,6 +79,12 @@ const MyPaymentlist = ({navigation}) => {
             <View style={styles.title}>
                 <ScreenTitle title="결제 내역"/>
             </View>
+                {isLoading ?  
+                    <View style={{margin:16,}}>
+                        <Text style={{color:Colors.orange500, alignSelf:'center'}}
+                            >결제 데이터를 가져오는 중입니다.</Text>
+                        <ActivityIndicator/>
+                    </View> : <></>}
                 <DataTable style={styles.table}>
                     <DataTable.Header style={styles.tableheader}>
                         <DataTable.Title>결제번호</DataTable.Title>
@@ -125,6 +134,7 @@ const styles = StyleSheet.create({
         colors: Colors.indigo500,
     },
     table:{
+        flex:1.3,
         width:'90%', 
         alignSelf:'center', 
         borderWidth: 1,
