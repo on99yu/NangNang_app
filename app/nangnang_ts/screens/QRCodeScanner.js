@@ -66,10 +66,11 @@ function QRCodeScanner ({navigation, connector, connectWallet}){
 
   return (
     <View style={styles.container}>
+      <Text style={{color:'black'}}>낭낭 QR코드</Text>
       <BarCodeScanner
         style={[StyleSheet.absoluteFill, styles.qrcode]}
         onBarCodeScanned={scanData ? undefined : handlerBarCodeScanned}>
-          <Text style={styles.description}>Scan your QR code</Text>
+          <Text></Text>
       </BarCodeScanner>
       {scanData && 
         <Button style={{margin:200}} title="Scan Again?" onPress={()=> setScanData(false)}/>}

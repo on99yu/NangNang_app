@@ -19,7 +19,7 @@ const Payinfo = ({navigation}) => {
         <View style={styles.PayinfoView}>
             <View style={styles.header}>
                 <Link to={{screen:'SelectWallet'}}  style={styles.link}>뒤로 가기</Link>
-                <Text style={{color:'red'}}>사용자 : {state.email}</Text>
+                <Text style={{color:'red'}}>사용자 : {state.name}</Text>
                 <HeaderLogo />
             </View>
             <View style={styles.title}>

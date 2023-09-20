@@ -28,8 +28,6 @@ const Myinfo = ({navigation}) => {
                 <ContentsBox title="사용자 이름" contents={state.name}/>
                 <ContentsBox title="사용자 ID" contents={state.uid}/>
                 <ContentsBox title="이메일" contents={state.email}/>
-                <ContentsBox title="" contents={""}/>
-                <ContentsBox title="" contents={""}/>
             </ScrollView>
             <View style={styles.button}>
                 <SubmitButton onPress={() => navigation.navigate('MyWallets')}>내 지갑으로</SubmitButton>

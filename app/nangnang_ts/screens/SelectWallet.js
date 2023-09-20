@@ -79,7 +79,6 @@ const SelectWallet = ({navigation}) => {
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
-
         }
     },[])
     useEffect(()=>{
@@ -94,6 +93,15 @@ const SelectWallet = ({navigation}) => {
             setErrorNum(0);
         }else if (errorNum === 5000 ){
             Alert.alert("지갑선택", "사용자가 결제를 취소하였습니다.",[
+                {
+                    text:"확인",
+                    onPress:()=>null,
+                    style:"cancel"
+                }
+            ])
+            setErrorNum(0);
+        }else if(errorNum === 5300){
+            Alert.alert("오류", "오류가 발생했습니다 다시 시도해주세요",[
                 {
                     text:"확인",
                     onPress:()=>null,
@@ -135,13 +143,27 @@ const SelectWallet = ({navigation}) => {
             const [address] = await web3Provider.listAccounts();
             console.log('지갑주소 ' + address);
             
-            const amount = sanitizeHex(numberToHex(payinfo.exchangedvalue));
-            const transaction = {
-                from: payinfo.mywalletaddress,
+            console.log("payinfo.exchangedvalue) : ", payinfo.exchangedvalue*(10**18));
+            // const amountBigInt = BigInt(parseInt(payinfo.exchangedvalue*(10**18)));
+            const amountBigInt = BigInt(payinfo.exchangedvalue*(10**18));
+            console.log( "amountBigInt : ", amountBigInt);
+            const amountBigNumber = ethers.BigNumber.from(amountBigInt);
+            console.log("amountBigNumber : ", amountBigNumber)
+
+            const transaction = {   
+                from: address,
                 to: payinfo.walletaddress,
-                value: amount,
-                data: '0x',
+                value: amountBigNumber,
+                data: amountBigNumber,
             };
+
+            // const amount = sanitizeHex(numberToHex(payinfo.exchangedvalue));
+            // const transaction = {
+            //     from: address,
+            //     to: payinfo.walletaddress,
+            //     value: amount,
+            //     data: '0x',
+            // };
             
             const txResponse = await signer.sendTransaction(transaction);
             // const receipt = await txResponse.wait();
@@ -303,9 +325,6 @@ const SelectWallet = ({navigation}) => {
                         </WalletButton>
                         <WalletButton onPress={()=>killSession()} style={{marginTop:16}}>
                             <Text >{'지갑 연결 세션 종료'}</Text>
-                        </WalletButton>
-                        <WalletButton onPress={()=>killSession()} style={{marginTop:16}}>
-                            <Text >{'보낼 지갑주소 변경'}</Text>
                         </WalletButton>
                         {isloading ? 
                             <View>
