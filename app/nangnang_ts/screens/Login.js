@@ -13,8 +13,8 @@ import { AuthContext } from '../context/AuthContext';
 
 const Login = ({ navigation }) => {
     const [loginInput, setLoginInput] = useState({
-        id:"",
-        password:"",
+        id:"test",
+        password:"test123",
     });
     const [state, dispatch] =useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);

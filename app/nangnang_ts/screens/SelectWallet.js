@@ -79,7 +79,6 @@ const SelectWallet = ({navigation}) => {
     useEffect(()=>{
         setWalletList(wallets);
         return ()=>{
-
         }
     },[])
     useEffect(()=>{
@@ -144,25 +143,27 @@ const SelectWallet = ({navigation}) => {
             const [address] = await web3Provider.listAccounts();
             console.log('지갑주소 ' + address);
             
-            // const amountBigInt = BigInt(parseInt(payinfo.exchangedvalue))
-            // console.log( "amountBigInt : ", amountBigInt);
-            // const amountBigNumber = ethers.BigNumber.from(amountBigInt);
-            // console.log("amountBigNumber : ", amountBigNumber)
+            console.log("payinfo.exchangedvalue) : ", payinfo.exchangedvalue*(10**18));
+            // const amountBigInt = BigInt(parseInt(payinfo.exchangedvalue*(10**18)));
+            const amountBigInt = BigInt(payinfo.exchangedvalue*(10**18));
+            console.log( "amountBigInt : ", amountBigInt);
+            const amountBigNumber = ethers.BigNumber.from(amountBigInt);
+            console.log("amountBigNumber : ", amountBigNumber)
 
-            // const transaction = {   
-            //     from: address,
-            //     to: payinfo.walletaddress,
-            //     value: amountBigNumber,
-            //     data: amountBigNumber,
-            // };
-
-            const amount = sanitizeHex(numberToHex(payinfo.exchangedvalue));
-            const transaction = {
+            const transaction = {   
                 from: address,
                 to: payinfo.walletaddress,
-                value: amount,
-                data: '0x',
+                value: amountBigNumber,
+                data: amountBigNumber,
             };
+
+            // const amount = sanitizeHex(numberToHex(payinfo.exchangedvalue));
+            // const transaction = {
+            //     from: address,
+            //     to: payinfo.walletaddress,
+            //     value: amount,
+            //     data: '0x',
+            // };
             
             const txResponse = await signer.sendTransaction(transaction);
             // const receipt = await txResponse.wait();
