@@ -101,12 +101,10 @@ const styles = StyleSheet.create({
     },
     title:{
         flex:1,
-        // marginTop:,
     },
     WalletBlockView: {
         flex: 7,
         flexDirection: 'row',
-        // justifyContent: 'space-around',
     },
     WalletBlockInvisible:{
         backgroundColor:"transparent"
@@ -146,7 +144,6 @@ const styles = StyleSheet.create({
         marginBottom: '10%',
         paddingVertical: 5,
         paddingHorizontal: 10,
-        // width: '100%',
     },
     text:{
         colors: Colors.indigo500,
@@ -155,7 +152,7 @@ const styles = StyleSheet.create({
         color: Colors.orange500,
         fontSize:15,
         fontWeight:'bold',
-        // borderWidth:1,
+
 
         alignSelf:'flex-end', 
         padding: 30,

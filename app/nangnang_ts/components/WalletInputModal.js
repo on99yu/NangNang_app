@@ -40,17 +40,13 @@ const WalletInputModal = (props) => {
           )
           .catch((error) => {
             if (error.response) {
-              // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
               console.log(error.response.data);
               console.log(error.response.status);
               console.log(error.response.headers);
             } else if (error.request) {
-              // 요청이 이루어 졌으나 응답을 받지 못했습니다.
-              // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
-              // Node.js의 http.ClientRequest 인스턴스입니다.
+
               console.log(error.request);
             } else {
-              // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
                 console.log('Error', error.message);
                 }
                 console.log(error.config);
@@ -66,17 +62,13 @@ const WalletInputModal = (props) => {
         )
         .catch((error) => {
             if (error.response) {
-            // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+
             console.log(error.response.data);
             console.log(error.response.status);
             console.log(error.response.headers);
             } else if (error.request) {
-            // 요청이 이루어 졌으나 응답을 받지 못했습니다.
-            // `error.request`는 브라우저의 XMLHttpRequest 인스턴스 또는
-            // Node.js의 http.ClientRequest 인스턴스입니다.
             console.log(error.request);
             } else {
-            // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생했습니다.
             console.log('Error', error.message);
             }
             console.log(error.config);
@@ -108,14 +100,6 @@ const WalletInputModal = (props) => {
         }
         try{
             console.log("잔액 조회 시작")
-            // https://nanng.onrender.com/getTokenMarketBalance?tokenName=ETH
-            // https://api.upbit.com/v1/ticker?markets=USDT-${ticker}
-            // const currentTickerValue = await axios.get(`https://nanng.onrender.com/getTokenMarketBalance?tokenName=${ticker}`,{
-            //     headers:{
-            //         Accept: 'application/json',
-            //     },
-            // })
-            // console.log("원 환산 ", JSON.stringify(currentTickerValue))
             const dollarbalance = await getTokenBalance(ticker)
             const currentTickerValue = await dollarToWon(dollarbalance)
             console.log(currentTickerValue)
@@ -148,7 +132,6 @@ const WalletInputModal = (props) => {
         }
         setisLoading(false)
     }
-    //지갑주소가져오는 함수
     const takeAddress = async ()=> {
         try {
             const walletaddress =  await state.wallet.find(e => e.id === props.selecteditem.id)
@@ -315,7 +298,6 @@ const styles = StyleSheet.create({
         borderRadius: 30
     },
     iconwrapper: {
-        // margin: '10%',
         width: 100,
         height: 100,
         borderRadius: 100 / 2,
@@ -325,7 +307,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     picker: {
-        // marginVertical: 30,
         width: 150,
         padding: 10,
         borderWidth: 1,

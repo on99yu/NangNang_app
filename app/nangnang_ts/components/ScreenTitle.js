@@ -15,8 +15,6 @@ const styles =StyleSheet.create({
     title:{
         color: Colors.orange500,
         fontSize: 40,
-        // fontWeight:'bold',
-        // marginTop: '10%',
         textAlign: 'center',
     },
     content:{

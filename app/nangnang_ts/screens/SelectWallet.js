@@ -14,21 +14,10 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import WalletButton from '../components/Buttons/WalletButton';
 
-// https://github.com/ethers-io/ethers.js/issues/3996 이거 보고 추가함
 import 'node-libs-react-native/globals';
-
-// 암호화 getRandomValues ​​shim 가져오기(**shim 이전**)
-import "react-native-get-random-values" //
-
-// ethers shim 가져오기(**ethers 이전**)
+import "react-native-get-random-values" 
 import "@ethersproject/shims"
-
-// 에테르 라이브러리 가져오기
-import { ethers } from "ethers";
-// import { Provider } from '@ethersproject/providers';
-
-import { sanitizeHex, numberToHex } from '@walletconnect/encoding';
-
+import { ethers } from "ethers";;
 
 
 const goerliapi = "CDFTCSDIJ4HNYU41CJYRP2I3SSCNJ7PGYD"
@@ -46,7 +35,7 @@ const formatData = (data, numColumns) =>{
 
 const SelectWallet = ({navigation}) => {
 
-    const{ open, close, provider, isConnected} = useWalletConnectModal()
+    const{ open, provider, isConnected} = useWalletConnectModal()
     const [web3Provider, setWeb3Provider] = useState(null);
 
     useEffect(() => {
@@ -144,7 +133,6 @@ const SelectWallet = ({navigation}) => {
             console.log('지갑주소 ' + address);
             
             console.log("payinfo.exchangedvalue) : ", payinfo.exchangedvalue*(10**18));
-            // const amountBigInt = BigInt(parseInt(payinfo.exchangedvalue*(10**18)));
             const amountBigInt = BigInt(payinfo.exchangedvalue*(10**18));
             console.log( "amountBigInt : ", amountBigInt);
             const amountBigNumber = ethers.BigNumber.from(amountBigInt);
@@ -157,16 +145,8 @@ const SelectWallet = ({navigation}) => {
                 data: amountBigNumber,
             };
 
-            // const amount = sanitizeHex(numberToHex(payinfo.exchangedvalue));
-            // const transaction = {
-            //     from: address,
-            //     to: payinfo.walletaddress,
-            //     value: amount,
-            //     data: '0x',
-            // };
-            
+
             const txResponse = await signer.sendTransaction(transaction);
-            // const receipt = await txResponse.wait();
             const transactionHash = txResponse.hash;
             console.log('트랜잭션 해쉬값 ' + transactionHash);
             const namespaces = provider?.namespaces
@@ -251,7 +231,6 @@ const SelectWallet = ({navigation}) => {
         }finally{
             setLoading(false)
         }
-        // 여기서 result를 활용하여 사용자에게 표시할 처리 로직을 작성할 수 있음
         console.log("sendTransactionCallBack end");
     };
     const ConnectData = () => {
@@ -406,12 +385,10 @@ const styles = StyleSheet.create({
     },
     title:{
         flex:1,
-        // marginTop:,
     },
     WalletBlockView: {
         flex: 7,
         flexDirection: 'row',
-        // justifyContent: 'space-around',
     },
     WalletBlockInvisible:{
         backgroundColor:"transparent"
@@ -451,7 +428,6 @@ const styles = StyleSheet.create({
         marginBottom: '10%',
         paddingVertical: 5,
         paddingHorizontal: 10,
-        // width: '100%',
     },
     submitbutton:{
         width:'40%',alignSelf:'center',
@@ -464,8 +440,6 @@ const styles = StyleSheet.create({
         color: Colors.orange500,
         fontSize:15,
         fontWeight:'bold',
-        // borderWidth:1,
-
         alignSelf:'flex-end', 
         padding: 30,
         marginVertical: 16,
