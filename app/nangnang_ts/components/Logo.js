@@ -15,7 +15,6 @@ const Logo = () => {
 
 const styles= StyleSheet.create({
     LogoView:{
-        // flex:1,
         justifyContent:'center',
         alignItems:'center'
     },

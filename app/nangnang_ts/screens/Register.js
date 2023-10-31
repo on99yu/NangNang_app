@@ -113,8 +113,6 @@ const styles = StyleSheet.create({
     },
     ButtonView: {
         flex: 2,
-        // paddinng:10,
-        // marginTop: 10,
         width: '70%',
         flexDirection: 'column',
         justifyContent: 'center',

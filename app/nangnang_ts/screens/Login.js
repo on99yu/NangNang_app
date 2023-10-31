@@ -13,8 +13,8 @@ import { AuthContext } from '../context/AuthContext';
 
 const Login = ({ navigation }) => {
     const [loginInput, setLoginInput] = useState({
-        id:"test",
-        password:"test123",
+        id:"",
+        password:"",
     });
     const [state, dispatch] =useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
@@ -115,17 +115,13 @@ const styles = StyleSheet.create({
     Findpassword: {
         marginHorizontal: 20,
         marginTop: '5%',
-        // marginBottom:'10%',
         width: '70%',
-
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignSelf: 'flex-end'
     },
     ButtonView: {
         flex:3,
-        // paddinng:10,
-        // marginTop: 10,
         width: '70%',
         flexDirection: 'column',
         justifyContent: 'center',

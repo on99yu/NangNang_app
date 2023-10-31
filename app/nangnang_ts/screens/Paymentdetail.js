@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header:{
-        // flex:1,
+
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center'
@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
         color: Colors.orange500,
         fontSize:15,
         fontWeight:'bold',
-        // borderWidth:1,
 
         alignSelf:'flex-end', 
         padding: 30,
@@ -73,7 +72,6 @@ const styles = StyleSheet.create({
         flex:0.3,
         width:'70%',
         alignSelf:'center',
-        // alignItems:'center'
     }
 })
 export default Paymentdetail

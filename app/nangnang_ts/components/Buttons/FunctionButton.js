@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
 
         alignItems:'center',
         alignSelf: 'center',
-        // margin: '10%',
         paddingVertical: 10,
         width: 120,
     },

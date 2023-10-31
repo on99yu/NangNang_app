@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   container :{
     flex:1,
     backgroundColor:'#fff',
-    // alignItems:'center',
+
     flexDirection:'column',
     justifyContent:'flex-end',
   },
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
 
   footer:{
     flex:1,
-    // flexDirection:'row',
     justifyContent:'flex-end',
     alignSelf:'center',
     marginBottom: 20,
@@ -110,7 +109,6 @@ const styles = StyleSheet.create({
     fontSize: width * 0.09,
     marginTop: '10%',
     textAlign: 'center',
-    // alignItems:'flex-start',
     width: '70%',
     color: 'white',
   },
